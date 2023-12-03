@@ -1,0 +1,9 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+  
+  <ItemGroup>
+    <Folder Include="Entities\" />
+    <Folder Include="Features\" />
+    <Folder Include="Infrastructure\" />
+  </ItemGroup>
+
+</Project>
