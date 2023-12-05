@@ -1,5 +1,3 @@
-using Gears.Host.Configuration;
-
 var builder = WebApplication.CreateBuilder(args);
 
 ConfigureConfiguration();

@@ -1,13 +1,11 @@
-﻿using Microsoft.Extensions.Options;
-
-namespace Gears.Host.Configuration;
+﻿namespace Gears.Host.Configuration;
 
 internal sealed class SwaggerSettings
 {
     public bool IsEnabled { get; init; }
 }
 
-internal static class SwaggerStartup
+internal static class SwaggerConfiguration
 {
     public static WebApplicationBuilder ConfigureSwaggerSettings(this WebApplicationBuilder builder)
     {
