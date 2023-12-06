@@ -1,4 +1,4 @@
-﻿namespace Gears.Host.Configuration.Db;
+﻿namespace Gears.Host.Configuration;
 
 internal sealed class DbSettings
 {
@@ -7,8 +7,6 @@ internal sealed class DbSettings
 
 internal static class DbConfiguration
 {
-    private const string MsSqlMigrationAssembly = "Gears.MsSql";
-
     public static WebApplicationBuilder ConfigureDbSettings(this WebApplicationBuilder builder)
     {
         builder.Services.Configure<DbSettings>(builder.Configuration.GetSection("Db"));
@@ -18,12 +16,13 @@ internal static class DbConfiguration
 
     public static WebApplicationBuilder ConfigureDbServices(this WebApplicationBuilder builder)
     {
-        using var sp = builder.Services.BuildServiceProvider();
-        var options = sp.GetRequiredService<IOptions<DbSettings>>();
-        var connectionString = options.Value.ConnectionString;
+        builder.Services.AddDbContext<ApplicationDbContext>((sp, options) =>
+            {
+                var dbOptions = sp.GetRequiredService<IOptions<DbSettings>>();
+                options.UseSqlServer(dbOptions.Value.ConnectionString);
+            });
 
-        builder.Services.AddDbContext<ApplicationDbContext>(
-            x => x.UseSqlServer(connectionString, y => y.MigrationsAssembly(MsSqlMigrationAssembly)));
+        builder.Services.AddScoped<IApplicationDbContext>(sp => sp.GetRequiredService<ApplicationDbContext>());
 
         return builder;
     }
