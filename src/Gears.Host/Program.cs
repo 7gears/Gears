@@ -1,6 +1,6 @@
 var builder = WebApplication.CreateBuilder(args);
 
-ConfigureConfiguration();
+ConfigureSettings();
 ConfigureServices();
 
 var app = builder.Build();
@@ -10,13 +10,15 @@ ConfigureEndpoints();
 
 app.Run();
 
-void ConfigureConfiguration()
+void ConfigureSettings()
 {
+    builder.ConfigureDbSettings();
     builder.ConfigureSwaggerSettings();
 }
 
 void ConfigureServices()
 {
+    builder.ConfigureDbServices();
     builder.ConfigureSwaggerServices();
 }
 

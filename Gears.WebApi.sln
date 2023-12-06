@@ -18,7 +18,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Gears.IntegrationTests", "t
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Gears.UnitTests", "tests\Gears.UnitTests\Gears.UnitTests.csproj", "{99637891-C19C-4D52-B5C7-6B4172308A3F}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Gears.Host", "src\Gears.Host\Gears.Host.csproj", "{19477BD0-9473-4381-B05E-49B6B828A795}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Gears.Host", "src\Gears.Host\Gears.Host.csproj", "{19477BD0-9473-4381-B05E-49B6B828A795}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
