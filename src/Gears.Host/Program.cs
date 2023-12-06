@@ -20,6 +20,7 @@ void ConfigureConfiguration()
 
 void ConfigureServices()
 {
+    builder.ConfigureDbServices();
     builder.ConfigureSwaggerServices();
 }
 

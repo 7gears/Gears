@@ -7,6 +7,8 @@ internal sealed class DbSettings
 
 internal static class DbConfiguration
 {
+    private const string MsSqlMigrationAssembly = "Gears.MsSql";
+
     public static WebApplicationBuilder ConfigureDbSettings(this WebApplicationBuilder builder)
     {
         builder.Services.Configure<DbSettings>(builder.Configuration.GetSection("Db"));
@@ -16,11 +18,13 @@ internal static class DbConfiguration
 
     public static WebApplicationBuilder ConfigureDbServices(this WebApplicationBuilder builder)
     {
-        return builder;
-    }
+        using var sp = builder.Services.BuildServiceProvider();
+        var options = sp.GetRequiredService<IOptions<DbSettings>>();
+        var connectionString = options.Value.ConnectionString;
 
-    public static IApplicationBuilder ConfigureDbMiddleware(this IApplicationBuilder app)
-    {
-        return app;
+        builder.Services.AddDbContext<ApplicationDbContext>(
+            x => x.UseSqlServer(connectionString, y => y.MigrationsAssembly(MsSqlMigrationAssembly)));
+
+        return builder;
     }
 }

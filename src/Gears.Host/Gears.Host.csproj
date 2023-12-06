@@ -5,5 +5,6 @@
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Gears.Application\Gears.Application.csproj" />
+    <ProjectReference Include="..\Gears.MsSql\Gears.MsSql.csproj" />
   </ItemGroup>
 </Project>

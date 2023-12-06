@@ -1,8 +1,7 @@
-﻿namespace Gears.Host.Configuration.Db;
+﻿using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 
-public sealed class ApplicationDbContext : IApplicationDbContext
+namespace Gears.Host.Configuration.Db;
+
+public sealed class ApplicationDbContext : IdentityDbContext<User, Role, string>, IApplicationDbContext
 {
-    public DbSet<User> Users { get; }
-
-    public DbSet<Role> Roles { get; }
 }
