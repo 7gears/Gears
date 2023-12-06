@@ -1,3 +1,5 @@
+using Gears.Host.Configuration.Db;
+
 var builder = WebApplication.CreateBuilder(args);
 
 ConfigureConfiguration();
@@ -12,6 +14,7 @@ app.Run();
 
 void ConfigureConfiguration()
 {
+    builder.ConfigureDbSettings();
     builder.ConfigureSwaggerSettings();
 }
 
