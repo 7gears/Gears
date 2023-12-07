@@ -1,4 +1,4 @@
-﻿namespace Gears.Host.Configuration;
+﻿namespace Gears.Host.Swagger;
 
 internal sealed class SwaggerSettings
 {

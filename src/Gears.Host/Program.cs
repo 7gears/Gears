@@ -12,14 +12,17 @@ app.Run();
 
 void ConfigureSettings()
 {
-    builder.ConfigureDbSettings();
-    builder.ConfigureSwaggerSettings();
+    builder
+        .ConfigureDbSettings()
+        .ConfigureIdentityServices()
+        .ConfigureSwaggerSettings();
 }
 
 void ConfigureServices()
 {
-    builder.ConfigureDbServices();
-    builder.ConfigureSwaggerServices();
+    builder
+        .ConfigureDbServices()
+        .ConfigureSwaggerServices();
 }
 
 void ConfigureMiddleware()
@@ -29,5 +32,10 @@ void ConfigureMiddleware()
 
 void ConfigureEndpoints()
 {
-    app.MapGet("/", () => "Hello World!");
+    app.MapGet("/", (UserManager<User> userManager) =>
+    {
+        var users = userManager.Users.ToList();
+
+        return "Hello World!";
+    });
 }

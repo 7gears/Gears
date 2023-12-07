@@ -1,7 +1,4 @@
-﻿using Gears.Application.Entities;
-using Microsoft.EntityFrameworkCore;
-
-namespace Gears.Application.Infrastructure;
+﻿namespace Gears.Application.Infrastructure;
 
 public interface IApplicationDbContext
 {
