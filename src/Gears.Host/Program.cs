@@ -1,3 +1,5 @@
+using FastEndpoints;
+
 var builder = WebApplication.CreateBuilder(args);
 
 ConfigureSettings();
@@ -6,7 +8,6 @@ ConfigureServices();
 var app = builder.Build();
 
 ConfigureMiddleware();
-ConfigureEndpoints();
 
 app.Run();
 
@@ -14,28 +15,25 @@ void ConfigureSettings()
 {
     builder
         .ConfigureDbSettings()
-        .ConfigureIdentityServices()
         .ConfigureSwaggerSettings();
 }
 
 void ConfigureServices()
 {
-    builder
+    builder.Services
+        .AddFastEndpoints(x =>
+        {
+            x.DisableAutoDiscovery = true;
+            x.Assemblies = new[] { typeof(Gears.Application.Features.Users.GetAllUsersEndpoint).Assembly };
+        })
+        .ConfigureIdentityServices()
         .ConfigureDbServices()
         .ConfigureSwaggerServices();
 }
 
 void ConfigureMiddleware()
 {
-    app.ConfigureSwaggerMiddleware();
-}
-
-void ConfigureEndpoints()
-{
-    app.MapGet("/", (UserManager<User> userManager) =>
-    {
-        var users = userManager.Users.ToList();
-
-        return "Hello World!";
-    });
+    app
+        .UseFastEndpoints()
+        .ConfigureSwaggerMiddleware();
 }

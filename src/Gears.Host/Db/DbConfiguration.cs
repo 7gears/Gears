@@ -14,16 +14,16 @@ internal static class DbConfiguration
         return builder;
     }
 
-    public static WebApplicationBuilder ConfigureDbServices(this WebApplicationBuilder builder)
+    public static IServiceCollection ConfigureDbServices(this IServiceCollection services)
     {
-        builder.Services.AddDbContext<ApplicationDbContext>((sp, options) =>
+        services.AddDbContext<ApplicationDbContext>((sp, options) =>
             {
                 var dbOptions = sp.GetRequiredService<IOptions<DbSettings>>();
                 options.UseSqlServer(dbOptions.Value.ConnectionString);
             });
 
-        builder.Services.AddScoped<IApplicationDbContext>(sp => sp.GetRequiredService<ApplicationDbContext>());
+        services.AddScoped<IApplicationDbContext>(sp => sp.GetRequiredService<ApplicationDbContext>());
 
-        return builder;
+        return services;
     }
 }

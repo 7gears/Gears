@@ -1,4 +1,6 @@
-﻿namespace Gears.Host.Swagger;
+﻿using FastEndpoints.Swagger;
+
+namespace Gears.Host.Swagger;
 
 internal sealed class SwaggerSettings
 {
@@ -14,12 +16,11 @@ internal static class SwaggerConfiguration
         return builder;
     }
 
-    public static WebApplicationBuilder ConfigureSwaggerServices(this WebApplicationBuilder builder)
+    public static IServiceCollection ConfigureSwaggerServices(this IServiceCollection services)
     {
-        builder.Services.AddEndpointsApiExplorer();
-        builder.Services.AddSwaggerGen();
+        services.SwaggerDocument();
 
-        return builder;
+        return services;
     }
 
     public static IApplicationBuilder ConfigureSwaggerMiddleware(this IApplicationBuilder app)
@@ -27,8 +28,7 @@ internal static class SwaggerConfiguration
         var options = app.ApplicationServices.GetRequiredService<IOptions<SwaggerSettings>>();
         if (options.Value.IsEnabled)
         {
-            app.UseSwagger();
-            app.UseSwaggerUI();
+            app.UseSwaggerGen();
         }
 
         return app;

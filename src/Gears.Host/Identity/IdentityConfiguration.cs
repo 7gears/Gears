@@ -2,13 +2,13 @@
 
 internal static class IdentityConfiguration
 {
-    public static WebApplicationBuilder ConfigureIdentityServices(this WebApplicationBuilder builder)
+    public static IServiceCollection ConfigureIdentityServices(this IServiceCollection services)
     {
-        builder.Services
+        services
             .AddIdentityCore<User>()
             .AddRoles<Role>()
             .AddEntityFrameworkStores<ApplicationDbContext>();
 
-        return builder;
+        return services;
     }
 }
