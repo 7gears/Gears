@@ -6,6 +6,7 @@
     <EnforceCodeStyleInBuild>true</EnforceCodeStyleInBuild>
     <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
     <ImplicitUsings>enable</ImplicitUsings>
+    <NoWarn>CA2016</NoWarn>
     <Nullable>disable</Nullable>
     <TargetFramework>net8.0</TargetFramework>
     <TreatWarningsAsErrors>True</TreatWarningsAsErrors>

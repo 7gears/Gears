@@ -1,39 +1,27 @@
-using FastEndpoints;
-
 var builder = WebApplication.CreateBuilder(args);
 
-ConfigureSettings();
 ConfigureServices();
 
 var app = builder.Build();
 
 ConfigureMiddleware();
+ConfigureData();
 
 app.Run();
 
-void ConfigureSettings()
-{
+void ConfigureServices() =>
     builder
-        .ConfigureDbSettings()
-        .ConfigureSwaggerSettings();
-}
-
-void ConfigureServices()
-{
-    builder.Services
-        .AddFastEndpoints(x =>
-        {
-            x.DisableAutoDiscovery = true;
-            x.Assemblies = new[] { typeof(Gears.Application.Features.Users.GetAllUsersEndpoint).Assembly };
-        })
+        .ConfigureFastEndpointsServices()
         .ConfigureIdentityServices()
         .ConfigureDbServices()
         .ConfigureSwaggerServices();
-}
 
-void ConfigureMiddleware()
-{
+void ConfigureMiddleware() =>
     app
-        .UseFastEndpoints()
+        .ConfigureIdentityMiddleware()
+        .ConfigureFastEndpointsMiddleware()
         .ConfigureSwaggerMiddleware();
-}
+
+void ConfigureData() =>
+    app
+        .ConfigureIdentityData();

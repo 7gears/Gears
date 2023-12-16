@@ -3,3 +3,4 @@ global using Microsoft.EntityFrameworkCore;
 global using FastEndpoints;
 
 global using Gears.Application.Entities;
+global using Gears.Application.Infrastructure;

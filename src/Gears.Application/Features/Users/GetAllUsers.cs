@@ -1,8 +1,8 @@
 ﻿namespace Gears.Application.Features.Users;
 
-public record GetAllUsersRequest;
+public sealed record GetAllUsersRequest;
 
-public record GetAllUsersResponse;
+public sealed record GetAllUsersResponse;
 
 public sealed class GetAllUsersEndpoint : Endpoint<GetAllUsersRequest, GetAllUsersResponse>
 {
@@ -13,6 +13,6 @@ public sealed class GetAllUsersEndpoint : Endpoint<GetAllUsersRequest, GetAllUse
 
     public override async Task HandleAsync(GetAllUsersRequest request, CancellationToken ct)
     {
-        await SendAsync(new GetAllUsersResponse(), 200, ct);
+        await SendAsync(new GetAllUsersResponse());
     }
 }

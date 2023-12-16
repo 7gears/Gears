@@ -9,28 +9,23 @@ internal sealed class SwaggerSettings
 
 internal static class SwaggerConfiguration
 {
-    public static WebApplicationBuilder ConfigureSwaggerSettings(this WebApplicationBuilder builder)
+    public static WebApplicationBuilder ConfigureSwaggerServices(this WebApplicationBuilder builder)
     {
-        builder.Services.Configure<SwaggerSettings>(builder.Configuration.GetSection("Swagger"));
+        builder.Services
+            .Configure<SwaggerSettings>(builder.Configuration.GetSection("Swagger"))
+            .SwaggerDocument();
 
         return builder;
     }
 
-    public static IServiceCollection ConfigureSwaggerServices(this IServiceCollection services)
+    public static IApplicationBuilder ConfigureSwaggerMiddleware(this IApplicationBuilder builder)
     {
-        services.SwaggerDocument();
-
-        return services;
-    }
-
-    public static IApplicationBuilder ConfigureSwaggerMiddleware(this IApplicationBuilder app)
-    {
-        var options = app.ApplicationServices.GetRequiredService<IOptions<SwaggerSettings>>();
+        var options = builder.ApplicationServices.GetRequiredService<IOptions<SwaggerSettings>>();
         if (options.Value.IsEnabled)
         {
-            app.UseSwaggerGen();
+            builder.UseSwaggerGen();
         }
 
-        return app;
+        return builder;
     }
 }
