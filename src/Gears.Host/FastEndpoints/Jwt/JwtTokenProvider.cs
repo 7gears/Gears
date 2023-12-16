@@ -1,9 +1,4 @@
-﻿using System.IdentityModel.Tokens.Jwt;
-using Microsoft.IdentityModel.Tokens;
-using System.Text;
-using System.Security.Claims;
-
-namespace Gears.Host.FastEndpoints.Jwt;
+﻿namespace Gears.Host.FastEndpoints.Jwt;
 
 [RegisterService<IJwtTokenProvider>(LifeTime.Scoped)]
 internal sealed class JwtTokenProvider

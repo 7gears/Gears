@@ -11,6 +11,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Gears.Application", "src\Ge
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "build", "build", "{F6D221A4-6C09-491B-8815-77F0E0751CC5}"
 	ProjectSection(SolutionItems) = preProject
+		api.http = api.http
 		Directory.Build.props = Directory.Build.props
 	EndProjectSection
 EndProject

@@ -1,6 +1,4 @@
-﻿using Gears.Host.FastEndpoints.Jwt;
-
-namespace Gears.Host.FastEndpoints;
+﻿namespace Gears.Host.FastEndpoints;
 
 internal static class FastEndpointsConfiguration
 {
@@ -22,5 +20,9 @@ internal static class FastEndpointsConfiguration
     }
 
     public static IApplicationBuilder ConfigureFastEndpointsMiddleware(this IApplicationBuilder builder) =>
-        builder.UseFastEndpoints();
+        builder.UseFastEndpoints(x =>
+        {
+            x.Errors.ProducesMetadataType = typeof(ProblemDetails);
+            x.Errors.UseProblemDetails();
+        });
 }

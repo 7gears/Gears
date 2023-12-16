@@ -1,6 +1,4 @@
-﻿using FastEndpoints.Swagger;
-
-namespace Gears.Host.Swagger;
+﻿namespace Gears.Host.Swagger;
 
 internal sealed class SwaggerSettings
 {
