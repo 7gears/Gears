@@ -3,15 +3,16 @@ var builder = WebApplication.CreateBuilder(args);
 builder
     .ConfigureFastEndpointsServices()
     .ConfigureIdentityServices()
-    .ConfigureDbServices()
-    .ConfigureSwaggerServices();
+    .ConfigureDbServices();
 
 var app = builder.Build();
 
 app
     .ConfigureIdentityMiddleware()
-    .ConfigureFastEndpointsMiddleware()
-    .ConfigureSwaggerMiddleware();
+    .ConfigureFastEndpointsMiddleware();
+
+app
+    .ConfigureGeneratedClientEndpoints();
 
 app
     .ConfigureIdentityData();

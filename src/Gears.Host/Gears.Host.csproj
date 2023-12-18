@@ -1,6 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk.Web">
   <ItemGroup>
     <PackageReference Include="FastEndpoints" Version="5.20.1" />
+    <PackageReference Include="FastEndpoints.ClientGen" Version="5.20.1" />
     <PackageReference Include="FastEndpoints.Generator" Version="5.20.1">
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>

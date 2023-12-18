@@ -8,6 +8,7 @@ global using Microsoft.Extensions.Options;
 global using Microsoft.IdentityModel.Tokens;
 
 global using FastEndpoints;
+global using FastEndpoints.ClientGen;
 global using FastEndpoints.Security;
 global using FastEndpoints.Swagger;
 
@@ -15,7 +16,5 @@ global using Gears.Host.Db;
 global using Gears.Host.Identity;
 global using Gears.Host.FastEndpoints;
 global using Gears.Host.FastEndpoints.Jwt;
-global using Gears.Host.Swagger;
 global using Gears.Application.Entities;
 global using Gears.Application.Infrastructure;
-
