@@ -1,4 +1,6 @@
-﻿namespace Gears.Host.FastEndpoints;
+﻿using NSwag.CodeGeneration.TypeScript;
+
+namespace Gears.Host.FastEndpoints;
 
 internal sealed class SwaggerSettings
 {
@@ -65,10 +67,14 @@ internal static class FastEndpointsConfiguration
                 s.CSharpGeneratorSettings.Namespace = "Gears";
             });
 
-            app.MapTypeScriptClientEndpoint("/ts-client", DocumentName, s =>
+            app.MapTypeScriptClientEndpoint("/ts-angular-client", DocumentName, s =>
             {
                 s.ClassName = "ApiClient";
-                s.TypeScriptGeneratorSettings.Namespace = "Gears";
+                s.InjectionTokenType = InjectionTokenType.InjectionToken;
+                s.Template = TypeScriptTemplate.Angular;
+                s.TypeScriptGeneratorSettings.Namespace = string.Empty;
+                s.TypeScriptGeneratorSettings.TypeScriptVersion = 5.3M;
+                s.RxJsVersion = 7.8M;
             });
         }
 
