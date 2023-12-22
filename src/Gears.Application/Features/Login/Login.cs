@@ -72,5 +72,4 @@ public sealed class Login : Endpoint<LoginRequest, Results<Ok<LoginResponse>, No
 
         return Ok(new LoginResponse(token));
     }
-
 }

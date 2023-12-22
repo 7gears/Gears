@@ -20,7 +20,6 @@ internal static class FastEndpointsConfiguration
             .Configure<SwaggerSettings>(builder.Configuration.GetSection("Swagger"))
             .AddFastEndpoints(x =>
             {
-                
                 x.DisableAutoDiscovery = true;
                 x.Assemblies = new[] { typeof(Application.Features.Users.GetAllUsersEndpoint).Assembly };
             })
