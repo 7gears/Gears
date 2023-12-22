@@ -11,7 +11,7 @@ internal static class FastEndpointsConfiguration
 {
     private const string DocumentName = "default";
 
-    public static WebApplicationBuilder ConfigureFastEndpointsServices(this WebApplicationBuilder builder)
+    public static WebApplicationBuilder AddFastEndpointsServices(this WebApplicationBuilder builder)
     {
         var key = builder.Configuration.GetValue<string>($"Jwt:{nameof(JwtConfiguration.Key)}");
 
@@ -38,7 +38,7 @@ internal static class FastEndpointsConfiguration
         return builder;
     }
 
-    public static IApplicationBuilder ConfigureFastEndpointsMiddleware(this IApplicationBuilder builder)
+    public static IApplicationBuilder AddFastEndpointsMiddleware(this IApplicationBuilder builder)
     {
         builder.UseFastEndpoints(x =>
         {
@@ -56,7 +56,7 @@ internal static class FastEndpointsConfiguration
         return builder;
     }
 
-    public static WebApplication ConfigureGeneratedClientEndpoints(this WebApplication app)
+    public static WebApplication AddGeneratedClientEndpoints(this WebApplication app)
     {
         var options = app.Services.GetRequiredService<IOptions<SwaggerSettings>>();
         if (options.Value.IsEnabled)

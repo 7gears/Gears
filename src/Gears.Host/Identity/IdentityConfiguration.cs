@@ -2,7 +2,7 @@
 
 internal static class IdentityConfiguration
 {
-    public static WebApplicationBuilder ConfigureIdentityServices(this WebApplicationBuilder builder)
+    public static WebApplicationBuilder AddIdentityServices(this WebApplicationBuilder builder)
     {
         builder.Services
             .AddIdentityCore<User>()
@@ -15,12 +15,12 @@ internal static class IdentityConfiguration
         return builder;
     }
 
-    public static IApplicationBuilder ConfigureIdentityMiddleware(this IApplicationBuilder builder) =>
+    public static IApplicationBuilder AddIdentityMiddleware(this IApplicationBuilder builder) =>
         builder
             .UseAuthentication()
             .UseAuthorization();
 
-    public static IApplicationBuilder ConfigureIdentityData(this IApplicationBuilder builder)
+    public static IApplicationBuilder AddIdentityData(this IApplicationBuilder builder)
     {
         using var scope = builder.ApplicationServices.CreateScope();
         

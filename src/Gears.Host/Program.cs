@@ -1,20 +1,20 @@
 var builder = WebApplication.CreateBuilder(args);
 
 builder
-    .ConfigureFastEndpointsServices()
-    .ConfigureIdentityServices()
-    .ConfigureDbServices();
+    .AddCorsServices()
+    .AddFastEndpointsServices()
+    .AddIdentityServices()
+    .AddDbServices();
 
 var app = builder.Build();
 
 app
-    .ConfigureIdentityMiddleware()
-    .ConfigureFastEndpointsMiddleware();
-
+    .AddCors()
+    .AddIdentityMiddleware()
+    .AddFastEndpointsMiddleware();
 app
-    .ConfigureGeneratedClientEndpoints();
-
+    .AddGeneratedClientEndpoints();
 app
-    .ConfigureIdentityData();
+    .AddIdentityData();
 
 app.Run();

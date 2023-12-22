@@ -7,7 +7,7 @@ internal sealed class DbSettings
 
 internal static class DbConfiguration
 {
-    public static WebApplicationBuilder ConfigureDbServices(this WebApplicationBuilder builder)
+    public static WebApplicationBuilder AddDbServices(this WebApplicationBuilder builder)
     {
         builder.Services
             .Configure<DbSettings>(builder.Configuration.GetSection("Db"))
