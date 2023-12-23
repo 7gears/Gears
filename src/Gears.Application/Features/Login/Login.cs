@@ -2,7 +2,7 @@
 
 public sealed record LoginRequest
 (
-    string Username,
+    string Email,
     string Password
 );
 
@@ -15,9 +15,10 @@ public sealed class LoginValidator : Validator<LoginRequest>
 {
     public LoginValidator()
     {
-        RuleFor(x => x.Username)
+        RuleFor(x => x.Email)
             .NotEmpty()
-            .WithMessage("Username is required");
+            .WithMessage("Email is required")
+            .EmailAddress();
 
         RuleFor(x => x.Password)
             .NotEmpty()
@@ -57,7 +58,7 @@ public sealed class Login : Endpoint<LoginRequest, Results<Ok<LoginResponse>, No
 
     public override async Task<Results<Ok<LoginResponse>, NotFound, UnauthorizedHttpResult>> ExecuteAsync(LoginRequest request, CancellationToken ct)
     {
-        var user = await _userManager.FindByNameAsync(request.Username);
+        var user = await _userManager.FindByEmailAsync(request.Email);
         if (user == null)
             return NotFound();
 

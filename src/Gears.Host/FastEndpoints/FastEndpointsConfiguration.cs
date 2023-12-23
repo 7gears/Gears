@@ -70,10 +70,11 @@ internal static class FastEndpointsConfiguration
             {
                 s.ClassName = "ApiClient";
                 s.InjectionTokenType = InjectionTokenType.InjectionToken;
+                s.RxJsVersion = 7.8M;
                 s.Template = TypeScriptTemplate.Angular;
                 s.TypeScriptGeneratorSettings.Namespace = string.Empty;
                 s.TypeScriptGeneratorSettings.TypeScriptVersion = 5.3M;
-                s.RxJsVersion = 7.8M;
+                s.UseSingletonProvider = true;
             });
         }
 
