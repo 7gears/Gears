@@ -2,8 +2,7 @@
 
 using SignInResponseResultType = Results<Ok<SignInResponse>, NotFound, UnauthorizedHttpResult>;
 
-public sealed record SignInRequest
-(
+public sealed record SignInRequest(
     string Email,
     string Password
 );

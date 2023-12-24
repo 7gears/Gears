@@ -8,6 +8,7 @@
     </PackageReference>
     <PackageReference Include="FastEndpoints.Security" Version="5.20.1" />
     <PackageReference Include="FastEndpoints.Swagger" Version="5.20.1" />
+    <PackageReference Include="MailKit" Version="4.3.0" />
     <PackageReference Include="Microsoft.EntityFrameworkCore" Version="8.0.0" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="8.0.0" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="8.0.0">

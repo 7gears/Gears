@@ -7,16 +7,22 @@ internal sealed class SwaggerSettings
     public bool IsEnabled { get; init; }
 }
 
+public sealed class JwtSettings
+{
+    public string Key { get; set; }
+    public int DurationInSeconds { get; set; }
+}
+
 internal static class FastEndpointsConfiguration
 {
     private const string DocumentName = "default";
 
     public static WebApplicationBuilder AddFastEndpointsServices(this WebApplicationBuilder builder)
     {
-        var key = builder.Configuration.GetValue<string>($"Jwt:{nameof(JwtConfiguration.Key)}");
+        var key = builder.Configuration.GetValue<string>($"Jwt:{nameof(JwtSettings.Key)}");
 
         builder.Services
-            .Configure<JwtConfiguration>(builder.Configuration.GetSection("Jwt"))
+            .Configure<JwtSettings>(builder.Configuration.GetSection("Jwt"))
             .Configure<SwaggerSettings>(builder.Configuration.GetSection("Swagger"))
             .AddFastEndpoints(x =>
             {

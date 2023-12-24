@@ -13,9 +13,13 @@ global using FastEndpoints.ClientGen;
 global using FastEndpoints.Security;
 global using FastEndpoints.Swagger;
 
+global using MailKit.Net.Smtp;
+global using MailKit.Security;
+global using MimeKit;
+
 global using Gears.Host.Db;
 global using Gears.Host.Identity;
 global using Gears.Host.FastEndpoints;
-global using Gears.Host.FastEndpoints.Jwt;
+global using Gears.Host.Mail;
 global using Gears.Application.Entities;
 global using Gears.Application.Infrastructure;

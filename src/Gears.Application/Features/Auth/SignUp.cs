@@ -32,13 +32,16 @@ public sealed class SignUp : Endpoint<SignUpRequest, SignUpResponseResultType>
 {
     private readonly UserManager<User> _userManager;
     private readonly IPasswordHasher<User> _passwordHasher;
+    private readonly IMailService _mailService;
 
     public SignUp(
         UserManager<User> userManager,
-        IPasswordHasher<User> passwordHasher)
+        IPasswordHasher<User> passwordHasher,
+        IMailService mailService)
     {
         _userManager = userManager;
         _passwordHasher = passwordHasher;
+        _mailService = mailService;
     }
 
     public override void Configure()

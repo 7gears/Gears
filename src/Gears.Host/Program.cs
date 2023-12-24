@@ -4,6 +4,7 @@ builder
     .AddCorsServices()
     .AddFastEndpointsServices()
     .AddIdentityServices()
+    .AddMailServices()
     .AddDbServices();
 
 var app = builder.Build();
