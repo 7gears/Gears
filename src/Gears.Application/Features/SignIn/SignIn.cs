@@ -1,19 +1,19 @@
-﻿namespace Gears.Application.Features.Login;
+﻿namespace Gears.Application.Features.SignIn;
 
-public sealed record LoginRequest
+public sealed record SignInRequest
 (
     string Email,
     string Password
 );
 
-public sealed record LoginResponse
+public sealed record SignInResponse
 (
     string Token
 );
 
-public sealed class LoginValidator : Validator<LoginRequest>
+public sealed class SignInValidator : Validator<SignInRequest>
 {
-    public LoginValidator()
+    public SignInValidator()
     {
         RuleFor(x => x.Email)
             .NotEmpty()
@@ -26,23 +26,23 @@ public sealed class LoginValidator : Validator<LoginRequest>
     }
 }
 
-public sealed class LoginSwaggerSummary : Summary<Login>
+public sealed class SignInSwaggerSummary : Summary<SignIn>
 {
-    public LoginSwaggerSummary()
+    public SignInSwaggerSummary()
     {
-        Response<LoginResponse>();
+        Response<SignInResponse>();
         Response(400);
         Response(401);
         Response(404);
     }
 }
 
-public sealed class Login : Endpoint<LoginRequest, Results<Ok<LoginResponse>, NotFound, UnauthorizedHttpResult>>
+public sealed class SignIn : Endpoint<SignInRequest, Results<Ok<SignInResponse>, NotFound, UnauthorizedHttpResult>>
 {
     private readonly UserManager<User> _userManager;
     private readonly IJwtTokenProvider _jwtTokenProvider;
 
-    public Login(
+    public SignIn(
         UserManager<User> userManager,
         IJwtTokenProvider jwtTokenProvider)
     {
@@ -52,11 +52,11 @@ public sealed class Login : Endpoint<LoginRequest, Results<Ok<LoginResponse>, No
 
     public override void Configure()
     {
-        Post("api/login");
+        Post("api/signin");
         AllowAnonymous();
     }
 
-    public override async Task<Results<Ok<LoginResponse>, NotFound, UnauthorizedHttpResult>> ExecuteAsync(LoginRequest request, CancellationToken ct)
+    public override async Task<Results<Ok<SignInResponse>, NotFound, UnauthorizedHttpResult>> ExecuteAsync(SignInRequest request, CancellationToken ct)
     {
         var user = await _userManager.FindByEmailAsync(request.Email);
         if (user == null)
@@ -71,6 +71,6 @@ public sealed class Login : Endpoint<LoginRequest, Results<Ok<LoginResponse>, No
 
         var token = await _jwtTokenProvider.GetToken(user);
 
-        return Ok(new LoginResponse(token));
+        return Ok(new SignInResponse(token));
     }
 }

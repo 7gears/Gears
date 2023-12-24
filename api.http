@@ -1,5 +1,6 @@
-# Login
-POST https://localhost:5001/api/login
+# 
+
+POST https://localhost:5001/api/signin
 Content-Type: application/json
 
 {
