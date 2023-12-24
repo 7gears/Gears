@@ -1,4 +1,6 @@
-﻿namespace Gears.Application.Features.SignIn;
+﻿namespace Gears.Application.Features.Auth;
+
+using SignInResponseResultType = Results<Ok<SignInResponse>, NotFound, UnauthorizedHttpResult>;
 
 public sealed record SignInRequest
 (
@@ -11,9 +13,9 @@ public sealed record SignInResponse
     string Token
 );
 
-public sealed class SignInValidator : Validator<SignInRequest>
+public sealed class SignInRequestValidator : Validator<SignInRequest>
 {
-    public SignInValidator()
+    public SignInRequestValidator()
     {
         RuleFor(x => x.Email)
             .NotEmpty()
@@ -26,18 +28,7 @@ public sealed class SignInValidator : Validator<SignInRequest>
     }
 }
 
-public sealed class SignInSwaggerSummary : Summary<SignIn>
-{
-    public SignInSwaggerSummary()
-    {
-        Response<SignInResponse>();
-        Response(400);
-        Response(401);
-        Response(404);
-    }
-}
-
-public sealed class SignIn : Endpoint<SignInRequest, Results<Ok<SignInResponse>, NotFound, UnauthorizedHttpResult>>
+public sealed class SignIn : Endpoint<SignInRequest, SignInResponseResultType>
 {
     private readonly UserManager<User> _userManager;
     private readonly IJwtTokenProvider _jwtTokenProvider;
@@ -56,13 +47,13 @@ public sealed class SignIn : Endpoint<SignInRequest, Results<Ok<SignInResponse>,
         AllowAnonymous();
     }
 
-    public override async Task<Results<Ok<SignInResponse>, NotFound, UnauthorizedHttpResult>> ExecuteAsync(SignInRequest request, CancellationToken ct)
+    public override async Task<SignInResponseResultType> ExecuteAsync(SignInRequest request, CancellationToken ct)
     {
         var user = await _userManager.FindByEmailAsync(request.Email);
         if (user == null)
             return NotFound();
 
-        if(!user.EmailConfirmed)
+        if (!user.EmailConfirmed)
             return Unauthorized();
 
         var isPasswordValid = await _userManager.CheckPasswordAsync(user, request.Password);
@@ -72,5 +63,16 @@ public sealed class SignIn : Endpoint<SignInRequest, Results<Ok<SignInResponse>,
         var token = await _jwtTokenProvider.GetToken(user);
 
         return Ok(new SignInResponse(token));
+    }
+}
+
+public sealed class SignInSwaggerSummary : Summary<SignIn>
+{
+    public SignInSwaggerSummary()
+    {
+        Response<SignInResponse>();
+        Response(400);
+        Response(401);
+        Response(404);
     }
 }
