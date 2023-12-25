@@ -2,6 +2,7 @@
 global using System.Text;
 global using System.Security.Claims;
 global using Microsoft.AspNetCore.Cors.Infrastructure;
+global using Microsoft.AspNetCore.DataProtection;
 global using Microsoft.AspNetCore.Identity;
 global using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 global using Microsoft.EntityFrameworkCore;

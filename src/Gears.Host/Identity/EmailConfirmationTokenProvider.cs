@@ -1,16 +1,13 @@
-﻿using Microsoft.AspNetCore.DataProtection;
+﻿namespace Gears.Host.Identity;
 
-namespace Gears.Host.Identity;
-
-public sealed class EmailConfirmationTokenProvider<TUser> : DataProtectorTokenProvider<TUser> where TUser : class
+internal sealed class EmailConfirmationTokenProvider : DataProtectorTokenProvider<User>
 {
-    public EmailConfirmationTokenProvider(IDataProtectionProvider dataProtectionProvider,
+    public EmailConfirmationTokenProvider(
+        IDataProtectionProvider dataProtectionProvider,
         IOptions<EmailConfirmationTokenProviderOptions> options,
-        ILogger<DataProtectorTokenProvider<TUser>> logger)
-        : base(dataProtectionProvider, options, logger)
+        ILogger<DataProtectorTokenProvider<User>> logger) : base(dataProtectionProvider, options, logger)
     {
     }
 }
-public sealed class EmailConfirmationTokenProviderOptions : DataProtectionTokenProviderOptions
-{
-}
+
+internal sealed class EmailConfirmationTokenProviderOptions : DataProtectionTokenProviderOptions;

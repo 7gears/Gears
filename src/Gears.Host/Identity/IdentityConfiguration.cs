@@ -3,6 +3,7 @@
 internal static class IdentityConfiguration
 {
     private const string EmailConfirmationTokenProviderName = "EmailConfirmation";
+    private const string PasswordResetTokenProviderName = "PasswordReset";
 
     public static WebApplicationBuilder AddIdentityServices(this WebApplicationBuilder builder)
     {
@@ -10,13 +11,18 @@ internal static class IdentityConfiguration
             .AddIdentityCore<User>(x =>
             {
                 x.Tokens.EmailConfirmationTokenProvider = EmailConfirmationTokenProviderName;
+                x.Tokens.PasswordResetTokenProvider = PasswordResetTokenProviderName;
             })
             .AddRoles<Role>()
             .AddEntityFrameworkStores<ApplicationDbContext>()
-            .AddTokenProvider<EmailConfirmationTokenProvider<User>>(EmailConfirmationTokenProviderName);
+            .AddTokenProvider<EmailConfirmationTokenProvider>(EmailConfirmationTokenProviderName)
+            .AddTokenProvider<PasswordResetTokenProvider>(PasswordResetTokenProviderName);
 
         builder.Services.Configure<EmailConfirmationTokenProviderOptions>(opt =>
             opt.TokenLifespan = TimeSpan.FromDays(3));
+
+        builder.Services.Configure<EmailConfirmationTokenProviderOptions>(opt =>
+            opt.TokenLifespan = TimeSpan.FromDays(1));
 
         builder.Services
             .AddAuthorization();

@@ -12,7 +12,13 @@ internal sealed class HttpContextService : IHttpContextService
 
     public string GetOrigin()
     {
-        return Request.Headers.Origin;
+        var result = Request.Headers.Origin;
+        if (string.IsNullOrEmpty(result))
+        {
+            result = $"{Request.Scheme}://{Request.Host.Value}{Request.PathBase.Value}";
+        }
+
+        return result;
     }
 
     private HttpRequest Request => _httpContextAccessor.HttpContext!.Request;
