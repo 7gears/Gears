@@ -2,12 +2,21 @@
 
 internal static class IdentityConfiguration
 {
+    private const string EmailConfirmationTokenProviderName = "EmailConfirmation";
+
     public static WebApplicationBuilder AddIdentityServices(this WebApplicationBuilder builder)
     {
         builder.Services
-            .AddIdentityCore<User>()
+            .AddIdentityCore<User>(x =>
+            {
+                x.Tokens.EmailConfirmationTokenProvider = EmailConfirmationTokenProviderName;
+            })
             .AddRoles<Role>()
-            .AddEntityFrameworkStores<ApplicationDbContext>();
+            .AddEntityFrameworkStores<ApplicationDbContext>()
+            .AddTokenProvider<EmailConfirmationTokenProvider<User>>(EmailConfirmationTokenProviderName);
+
+        builder.Services.Configure<EmailConfirmationTokenProviderOptions>(opt =>
+            opt.TokenLifespan = TimeSpan.FromDays(3));
 
         builder.Services
             .AddAuthorization();

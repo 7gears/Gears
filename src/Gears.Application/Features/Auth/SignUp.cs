@@ -33,15 +33,18 @@ public sealed class SignUp : Endpoint<SignUpRequest, SignUpResponseResultType>
     private readonly UserManager<User> _userManager;
     private readonly IPasswordHasher<User> _passwordHasher;
     private readonly IMailService _mailService;
+    private readonly IHttpContextService _httpContextService;
 
     public SignUp(
         UserManager<User> userManager,
         IPasswordHasher<User> passwordHasher,
-        IMailService mailService)
+        IMailService mailService,
+        IHttpContextService httpContextService)
     {
         _userManager = userManager;
         _passwordHasher = passwordHasher;
         _mailService = mailService;
+        _httpContextService = httpContextService;
     }
 
     public override void Configure()
@@ -66,7 +69,29 @@ public sealed class SignUp : Endpoint<SignUpRequest, SignUpResponseResultType>
 
         await _userManager.CreateAsync(user);
 
-        return Created(string.Empty, new SignUpResponse(string.Empty));
+        var link = await GenerateConfirmEmailLink(user);
+        var mailRequest = new MailRequest(user.Email, "Confirm Email", link);
+
+        await _mailService.Send(mailRequest);
+
+        return Created(string.Empty, new SignUpResponse(user.Id));
+    }
+
+    private async Task<string> GenerateConfirmEmailLink(User user)
+    {
+        var origin = _httpContextService.GetOrigin();
+        var token = await _userManager.GenerateEmailConfirmationTokenAsync(user);
+
+        UriBuilder builder = new (origin)
+        {
+            Path = "confirm-email"
+        };
+        var query = HttpUtility.ParseQueryString(builder.Query);
+        query["Id"] = user.Id;
+        query["Token"] = token;
+        builder.Query = query.ToString()!;
+
+        return builder.ToString();
     }
 }
 
