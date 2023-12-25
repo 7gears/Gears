@@ -2,12 +2,12 @@
 
 internal sealed class CorsSettings
 {
-    public string AllowedOrigins { get; set; }
-    public string AllowedMethods { get; set; }
-    public string AllowedHeaders { get; set; }
-    public string ExposedHeaders { get; set; }
-    public bool AllowCredentials { get; set; }
-    public int PreflightMaxAgeInSeconds { get; set; }
+    public string AllowedOrigins { get; init; }
+    public string AllowedMethods { get; init; }
+    public string AllowedHeaders { get; init; }
+    public string ExposedHeaders { get; init; }
+    public bool AllowCredentials { get; init; }
+    public int PreflightMaxAgeInSeconds { get; init; }
 }
 
 internal static class CorsConfiguration
