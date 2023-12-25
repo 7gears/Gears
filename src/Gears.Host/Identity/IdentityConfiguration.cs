@@ -2,8 +2,8 @@
 
 internal static class IdentityConfiguration
 {
-    private const string EmailConfirmationTokenProviderName = "EmailConfirmation";
-    private const string PasswordResetTokenProviderName = "PasswordReset";
+    private const string EmailConfirmationTokenProviderName = nameof(EmailConfirmationTokenProviderName);
+    private const string PasswordResetTokenProviderName = nameof(PasswordResetTokenProviderName);
 
     public static WebApplicationBuilder AddIdentityServices(this WebApplicationBuilder builder)
     {
