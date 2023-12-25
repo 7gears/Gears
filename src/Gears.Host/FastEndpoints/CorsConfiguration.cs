@@ -43,9 +43,13 @@ internal static class CorsConfiguration
                 if (!settings.AllowedOrigins.Equals("*"))
                 {
                     if (settings.AllowCredentials)
+                    {
                         builder.AllowCredentials();
+                    }
                     else
+                    {
                         builder.DisallowCredentials();
+                    }
                 }
             };
 }
