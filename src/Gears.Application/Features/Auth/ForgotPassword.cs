@@ -1,14 +1,14 @@
 ﻿namespace Gears.Application.Features.Auth;
 
-using ResetPasswordStartResultType = Results<Ok, NotFound>;
+using ForgotPasswordResultType = Results<Ok, NotFound>;
 
-public sealed record ResetPasswordStartRequest(
+public sealed record ForgotPasswordRequest(
     string Email
 );
 
-public sealed class ResetPasswordStartRequestValidator : Validator<ResetPasswordStartRequest>
+public sealed class ForgotPasswordRequestValidator : Validator<ForgotPasswordRequest>
 {
-    public ResetPasswordStartRequestValidator()
+    public ForgotPasswordRequestValidator()
     {
         RuleFor(x => x.Email)
             .NotEmpty()
@@ -17,13 +17,13 @@ public sealed class ResetPasswordStartRequestValidator : Validator<ResetPassword
     }
 }
 
-public sealed class ResetPasswordStart : Endpoint<ResetPasswordStartRequest, ResetPasswordStartResultType>
+public sealed class ForgotPassword : Endpoint<ForgotPasswordRequest, ForgotPasswordResultType>
 {
     private readonly UserManager<User> _userManager;
     private readonly IMailService _mailService;
     private readonly IHttpContextService _httpContextService;
 
-    public ResetPasswordStart(
+    public ForgotPassword(
         UserManager<User> userManager,
         IMailService mailService,
         IHttpContextService httpContextService)
@@ -35,11 +35,11 @@ public sealed class ResetPasswordStart : Endpoint<ResetPasswordStartRequest, Res
 
     public override void Configure()
     {
-        Post("api/reset-password-start");
+        Post("api/forgot-password");
         AllowAnonymous();
     }
 
-    public override async Task<ResetPasswordStartResultType> ExecuteAsync(ResetPasswordStartRequest request, CancellationToken ct)
+    public override async Task<ForgotPasswordResultType> ExecuteAsync(ForgotPasswordRequest request, CancellationToken ct)
     {
         var user = await _userManager.FindByEmailAsync(request.Email);
         if (user == null)
@@ -63,7 +63,7 @@ public sealed class ResetPasswordStart : Endpoint<ResetPasswordStartRequest, Res
 
         UriBuilder builder = new(origin)
         {
-            Path = "reset-password-start"
+            Path = "forgot-password"
         };
         var query = HttpUtility.ParseQueryString(builder.Query);
         query["Email"] = user.Email;
@@ -74,9 +74,9 @@ public sealed class ResetPasswordStart : Endpoint<ResetPasswordStartRequest, Res
     }
 }
 
-public sealed class ResetPasswordStartSummary : Summary<ResetPasswordStart>
+public sealed class ForgotPasswordSummary : Summary<ForgotPassword>
 {
-    public ResetPasswordStartSummary()
+    public ForgotPasswordSummary()
     {
         Response();
         Response(400);

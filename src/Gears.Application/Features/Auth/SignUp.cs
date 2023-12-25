@@ -57,7 +57,9 @@ public sealed class SignUp : Endpoint<SignUpRequest, SignUpResponseResultType>
     {
         var user = await _userManager.FindByEmailAsync(request.Email);
         if (user != null)
+        {
             return Conflict();
+        }
 
         user = new User
         {

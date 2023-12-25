@@ -40,7 +40,9 @@ public sealed class ConfirmEmail : Endpoint<ConfirmEmailRequest, ConfirmEmailRes
     {
         var user = await _userManager.FindByIdAsync(request.Id);
         if (user == null)
+        {
             return NotFound();
+        }
 
         var result = await _userManager.ConfirmEmailAsync(user, request.Token);
 

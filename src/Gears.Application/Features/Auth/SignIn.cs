@@ -50,14 +50,20 @@ public sealed class SignIn : Endpoint<SignInRequest, SignInResponseResultType>
     {
         var user = await _userManager.FindByEmailAsync(request.Email);
         if (user == null)
+        {
             return NotFound();
+        }
 
         if (!user.EmailConfirmed)
+        {
             return Unauthorized();
+        }
 
         var isPasswordValid = await _userManager.CheckPasswordAsync(user, request.Password);
         if (!isPasswordValid)
+        {
             return Unauthorized();
+        }
 
         var token = await _jwtTokenProvider.GetToken(user);
 
