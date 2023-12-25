@@ -32,7 +32,7 @@ public sealed class ConfirmEmail : Endpoint<ConfirmEmailRequest, ConfirmEmailRes
 
     public override void Configure()
     {
-        Get("api/confirm-email");
+        Post("api/confirm-email");
         AllowAnonymous();
     }
 
