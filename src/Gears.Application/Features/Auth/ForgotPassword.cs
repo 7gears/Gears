@@ -62,10 +62,10 @@ public sealed class ForgotPassword : Endpoint<ForgotPasswordRequest, Ok>
 
         UriBuilder builder = new(origin)
         {
-            Path = "forgot-password"
+            Path = "forgot-password-complete"
         };
         var query = HttpUtility.ParseQueryString(builder.Query);
-        query["Email"] = user.Email;
+        query["Id"] = user.Id;
         query["Token"] = token;
         builder.Query = query.ToString()!;
 
