@@ -1,0 +1,15 @@
+﻿global using System.Data.Common;
+global using System.Net;
+global using FastEndpoints;
+global using FastEndpoints.Testing;
+global using FluentAssertions;
+global using Gears.Application.Features.Auth;
+global using Gears.Host.Db;
+global using Gears.IntegrationTests.Infrastructure;
+global using Microsoft.Data.Sqlite;
+global using Microsoft.EntityFrameworkCore;
+global using Microsoft.EntityFrameworkCore.Diagnostics;
+global using Microsoft.Extensions.DependencyInjection;
+global using Microsoft.Extensions.Logging.Abstractions;
+global using Xunit;
+global using Xunit.Abstractions;

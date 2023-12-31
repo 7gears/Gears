@@ -19,3 +19,8 @@ app
     .AddIdentityData();
 
 app.Run();
+
+namespace Gears.Host
+{
+    public sealed class Program;
+}

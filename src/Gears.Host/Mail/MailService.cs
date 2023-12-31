@@ -16,7 +16,7 @@ internal sealed class MailService : IMailService
         {
             Subject = request.Subject
         };
-        email.From.Add(new MailboxAddress(_mailSettings.DisplayName,  _mailSettings.From));
+        email.From.Add(new MailboxAddress(_mailSettings.DisplayName, _mailSettings.From));
         email.To.Add(MailboxAddress.Parse(request.To));
 
         BodyBuilder builder = new()

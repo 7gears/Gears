@@ -38,7 +38,7 @@ internal static class IdentityConfiguration
     public static IApplicationBuilder AddIdentityData(this IApplicationBuilder builder)
     {
         using var scope = builder.ApplicationServices.CreateScope();
-        
+
         var context = scope.ServiceProvider.GetRequiredService<ApplicationDbContext>();
         SeedIdentity(context);
 
