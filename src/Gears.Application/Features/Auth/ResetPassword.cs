@@ -1,16 +1,16 @@
 ﻿namespace Gears.Application.Features.Auth;
 
-using ForgotPasswordCompleteResultType = Results<Ok, NotFound, UnprocessableEntity>;
+using ResetPasswordResultType = Results<Ok, NotFound, UnprocessableEntity>;
 
-public sealed record ForgotPasswordCompleteRequest(
+public sealed record ResetPasswordRequest(
     string Id,
     string Token,
     string Password
 );
 
-public sealed class ForgotPasswordCompleteRequestValidator : Validator<ForgotPasswordCompleteRequest>
+public sealed class ResetPasswordRequestValidator : Validator<ResetPasswordRequest>
 {
-    public ForgotPasswordCompleteRequestValidator()
+    public ResetPasswordRequestValidator()
     {
         RuleFor(x => x.Id)
             .NotEmpty()
@@ -19,23 +19,26 @@ public sealed class ForgotPasswordCompleteRequestValidator : Validator<ForgotPas
         RuleFor(x => x.Token)
             .NotEmpty()
             .WithMessage("Token is required");
+
+        RuleFor(x => x.Password)
+            .NotEmpty()
+            .WithMessage("Password is required");
     }
 }
 
-public sealed class ForgotPasswordComplete(
+public sealed class ResetPassword(
     UserManager<User> userManager,
     IPasswordHasher<User> passwordHasher
 )
-    : Endpoint<ForgotPasswordCompleteRequest, ForgotPasswordCompleteResultType>
+    : Endpoint<ResetPasswordRequest, ResetPasswordResultType>
 {
     public override void Configure()
     {
-        Post("api/forgot-password-complete");
+        Post("api/reset-password");
         AllowAnonymous();
     }
 
-    public override async Task<ForgotPasswordCompleteResultType> ExecuteAsync(ForgotPasswordCompleteRequest request,
-        CancellationToken ct)
+    public override async Task<ResetPasswordResultType> ExecuteAsync(ResetPasswordRequest request, CancellationToken ct)
     {
         var user = await userManager.FindByIdAsync(request.Id);
         if (user == null)
@@ -62,9 +65,9 @@ public sealed class ForgotPasswordComplete(
     }
 }
 
-public sealed class ForgotPasswordCompleteSummary : Summary<ForgotPasswordComplete>
+public sealed class ResetPasswordSummary : Summary<ResetPassword>
 {
-    public ForgotPasswordCompleteSummary()
+    public ResetPasswordSummary()
     {
         Response();
         Response(400);
