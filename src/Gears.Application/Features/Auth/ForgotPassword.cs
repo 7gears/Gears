@@ -51,7 +51,7 @@ public sealed class ForgotPassword(
         var origin = httpContextService.GetOrigin();
         var token = await userManager.GeneratePasswordResetTokenAsync(user);
 
-        UriBuilder builder = new(origin) { Path = "forgot-password-complete" };
+        UriBuilder builder = new(origin) { Path = "reset-password" };
         var query = HttpUtility.ParseQueryString(builder.Query);
         query["Id"] = user.Id;
         query["Token"] = token;
