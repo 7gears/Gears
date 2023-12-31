@@ -7,8 +7,7 @@ public sealed record SignInRequest(
     string Password
 );
 
-public sealed record SignInResponse
-(
+public sealed record SignInResponse(
     string Token
 );
 
@@ -27,19 +26,12 @@ public sealed class SignInRequestValidator : Validator<SignInRequest>
     }
 }
 
-public sealed class SignIn : Endpoint<SignInRequest, SignInResponseResultType>
+public sealed class SignIn(
+    UserManager<User> userManager,
+    IJwtTokenProvider jwtTokenProvider
+)
+    : Endpoint<SignInRequest, SignInResponseResultType>
 {
-    private readonly UserManager<User> _userManager;
-    private readonly IJwtTokenProvider _jwtTokenProvider;
-
-    public SignIn(
-        UserManager<User> userManager,
-        IJwtTokenProvider jwtTokenProvider)
-    {
-        _userManager = userManager;
-        _jwtTokenProvider = jwtTokenProvider;
-    }
-
     public override void Configure()
     {
         Post("api/signin");
@@ -48,7 +40,7 @@ public sealed class SignIn : Endpoint<SignInRequest, SignInResponseResultType>
 
     public override async Task<SignInResponseResultType> ExecuteAsync(SignInRequest request, CancellationToken ct)
     {
-        var user = await _userManager.FindByEmailAsync(request.Email);
+        var user = await userManager.FindByEmailAsync(request.Email);
         if (user == null)
         {
             return NotFound();
@@ -59,13 +51,13 @@ public sealed class SignIn : Endpoint<SignInRequest, SignInResponseResultType>
             return Unauthorized();
         }
 
-        var isPasswordValid = await _userManager.CheckPasswordAsync(user, request.Password);
+        var isPasswordValid = await userManager.CheckPasswordAsync(user, request.Password);
         if (!isPasswordValid)
         {
             return Unauthorized();
         }
 
-        var token = await _jwtTokenProvider.GetToken(user);
+        var token = await jwtTokenProvider.GetToken(user);
 
         return Ok(new SignInResponse(token));
     }

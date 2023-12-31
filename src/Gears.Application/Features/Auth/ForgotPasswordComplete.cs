@@ -22,34 +22,30 @@ public sealed class ForgotPasswordCompleteRequestValidator : Validator<ForgotPas
     }
 }
 
-public sealed class ForgotPasswordComplete : Endpoint<ForgotPasswordCompleteRequest, ForgotPasswordCompleteResultType>
+public sealed class ForgotPasswordComplete(
+    UserManager<User> userManager,
+    IPasswordHasher<User> passwordHasher
+)
+    : Endpoint<ForgotPasswordCompleteRequest, ForgotPasswordCompleteResultType>
 {
-    private readonly UserManager<User> _userManager;
-    private readonly IPasswordHasher<User> _passwordHasher;
-
-    public ForgotPasswordComplete(UserManager<User> userManager, IPasswordHasher<User> passwordHasher)
-    {
-        _userManager = userManager;
-        _passwordHasher = passwordHasher;
-    }
-
     public override void Configure()
     {
         Post("api/forgot-password-complete");
         AllowAnonymous();
     }
 
-    public override async Task<ForgotPasswordCompleteResultType> ExecuteAsync(ForgotPasswordCompleteRequest request, CancellationToken ct)
+    public override async Task<ForgotPasswordCompleteResultType> ExecuteAsync(ForgotPasswordCompleteRequest request,
+        CancellationToken ct)
     {
-        var user = await _userManager.FindByIdAsync(request.Id);
+        var user = await userManager.FindByIdAsync(request.Id);
         if (user == null)
         {
             return NotFound();
         }
 
-        var result = await _userManager.VerifyUserTokenAsync(
+        var result = await userManager.VerifyUserTokenAsync(
             user,
-            _userManager.Options.Tokens.PasswordResetTokenProvider,
+            userManager.Options.Tokens.PasswordResetTokenProvider,
             UserManager<User>.ResetPasswordTokenPurpose,
             request.Token);
 
@@ -58,9 +54,9 @@ public sealed class ForgotPasswordComplete : Endpoint<ForgotPasswordCompleteRequ
             return UnprocessableEntity();
         }
 
-        var encryptedPassword = _passwordHasher.HashPassword(user, request.Password);
+        var encryptedPassword = passwordHasher.HashPassword(user, request.Password);
         user.PasswordHash = encryptedPassword;
-        await _userManager.UpdateAsync(user);
+        await userManager.UpdateAsync(user);
 
         return Ok();
     }

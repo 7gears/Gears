@@ -28,25 +28,14 @@ public sealed class SignUpRequestValidator : Validator<SignUpRequest>
     }
 }
 
-public sealed class SignUp : Endpoint<SignUpRequest, SignUpResponseResultType>
+public sealed class SignUp(
+    UserManager<User> userManager,
+    IPasswordHasher<User> passwordHasher,
+    IMailService mailService,
+    IHttpContextService httpContextService
+)
+    : Endpoint<SignUpRequest, SignUpResponseResultType>
 {
-    private readonly UserManager<User> _userManager;
-    private readonly IPasswordHasher<User> _passwordHasher;
-    private readonly IMailService _mailService;
-    private readonly IHttpContextService _httpContextService;
-
-    public SignUp(
-        UserManager<User> userManager,
-        IPasswordHasher<User> passwordHasher,
-        IMailService mailService,
-        IHttpContextService httpContextService)
-    {
-        _userManager = userManager;
-        _passwordHasher = passwordHasher;
-        _mailService = mailService;
-        _httpContextService = httpContextService;
-    }
-
     public override void Configure()
     {
         Post("api/signup");
@@ -55,7 +44,7 @@ public sealed class SignUp : Endpoint<SignUpRequest, SignUpResponseResultType>
 
     public override async Task<SignUpResponseResultType> ExecuteAsync(SignUpRequest request, CancellationToken ct)
     {
-        var user = await _userManager.FindByEmailAsync(request.Email);
+        var user = await userManager.FindByEmailAsync(request.Email);
         if (user != null)
         {
             return Conflict();
@@ -66,25 +55,25 @@ public sealed class SignUp : Endpoint<SignUpRequest, SignUpResponseResultType>
             UserName = request.Email,
             Email = request.Email,
             EmailConfirmed = false,
-            PasswordHash = _passwordHasher.HashPassword(null!, request.Password)
+            PasswordHash = passwordHasher.HashPassword(null!, request.Password)
         };
 
-        await _userManager.CreateAsync(user);
+        await userManager.CreateAsync(user);
 
         var link = await GenerateConfirmEmailLink(user);
         var mailRequest = new MailRequest(user.Email, "Confirm Email", link);
 
-        await _mailService.Send(mailRequest);
+        await mailService.Send(mailRequest);
 
         return Created(string.Empty, new SignUpResponse(user.Id));
     }
 
     private async Task<string> GenerateConfirmEmailLink(User user)
     {
-        var origin = _httpContextService.GetOrigin();
-        var token = await _userManager.GenerateEmailConfirmationTokenAsync(user);
+        var origin = httpContextService.GetOrigin();
+        var token = await userManager.GenerateEmailConfirmationTokenAsync(user);
 
-        UriBuilder builder = new (origin)
+        UriBuilder builder = new(origin)
         {
             Path = "confirm-email"
         };

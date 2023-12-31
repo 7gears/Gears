@@ -15,22 +15,13 @@ public sealed class ForgotPasswordRequestValidator : Validator<ForgotPasswordReq
     }
 }
 
-public sealed class ForgotPassword : Endpoint<ForgotPasswordRequest, Ok>
+public sealed class ForgotPassword(
+    UserManager<User> userManager,
+    IMailService mailService,
+    IHttpContextService httpContextService
+)
+    : Endpoint<ForgotPasswordRequest, Ok>
 {
-    private readonly UserManager<User> _userManager;
-    private readonly IMailService _mailService;
-    private readonly IHttpContextService _httpContextService;
-
-    public ForgotPassword(
-        UserManager<User> userManager,
-        IMailService mailService,
-        IHttpContextService httpContextService)
-    {
-        _userManager = userManager;
-        _mailService = mailService;
-        _httpContextService = httpContextService;
-    }
-
     public override void Configure()
     {
         Post("api/forgot-password");
@@ -39,7 +30,7 @@ public sealed class ForgotPassword : Endpoint<ForgotPasswordRequest, Ok>
 
     public override async Task<Ok> ExecuteAsync(ForgotPasswordRequest request, CancellationToken ct)
     {
-        var user = await _userManager.FindByEmailAsync(request.Email);
+        var user = await userManager.FindByEmailAsync(request.Email);
         if (user == null)
         {
             // Return a consistent response for both existent and non-existent accounts
@@ -50,20 +41,17 @@ public sealed class ForgotPassword : Endpoint<ForgotPasswordRequest, Ok>
 
         var mailRequest = new MailRequest(user.Email, "Reset Password", link);
 
-        await _mailService.Send(mailRequest);
+        await mailService.Send(mailRequest);
 
         return Ok();
     }
 
     private async Task<string> GenerateResetPasswordLink(User user)
     {
-        var origin = _httpContextService.GetOrigin();
-        var token = await _userManager.GeneratePasswordResetTokenAsync(user);
+        var origin = httpContextService.GetOrigin();
+        var token = await userManager.GeneratePasswordResetTokenAsync(user);
 
-        UriBuilder builder = new(origin)
-        {
-            Path = "forgot-password-complete"
-        };
+        UriBuilder builder = new(origin) { Path = "forgot-password-complete" };
         var query = HttpUtility.ParseQueryString(builder.Query);
         query["Id"] = user.Id;
         query["Token"] = token;

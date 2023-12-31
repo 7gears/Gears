@@ -21,30 +21,28 @@ public sealed class ConfirmEmailRequestValidator : Validator<ConfirmEmailRequest
     }
 }
 
-public sealed class ConfirmEmail : Endpoint<ConfirmEmailRequest, ConfirmEmailResponseResultType>
+public sealed class ConfirmEmail(
+    UserManager<User> userManager
+)
+    : Endpoint<ConfirmEmailRequest, ConfirmEmailResponseResultType>
 {
-    private readonly UserManager<User> _userManager;
-
-    public ConfirmEmail(UserManager<User> userManager)
-    {
-        _userManager = userManager;
-    }
-
     public override void Configure()
     {
         Post("api/confirm-email");
         AllowAnonymous();
     }
 
-    public override async Task<ConfirmEmailResponseResultType> ExecuteAsync(ConfirmEmailRequest request, CancellationToken ct)
+    public override async Task<ConfirmEmailResponseResultType> ExecuteAsync(
+        ConfirmEmailRequest request,
+        CancellationToken ct)
     {
-        var user = await _userManager.FindByIdAsync(request.Id);
+        var user = await userManager.FindByIdAsync(request.Id);
         if (user == null)
         {
             return NotFound();
         }
 
-        var result = await _userManager.ConfirmEmailAsync(user, request.Token);
+        var result = await userManager.ConfirmEmailAsync(user, request.Token);
 
         return result.Succeeded ? Ok() : UnprocessableEntity();
     }
