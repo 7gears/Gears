@@ -1,4 +1,4 @@
-var builder = WebApplication.CreateBuilder(args);
+﻿var builder = WebApplication.CreateBuilder(args);
 
 builder
     .AddCorsServices()
@@ -11,8 +11,8 @@ var app = builder.Build();
 
 app
     .AddCors()
-    .AddIdentityMiddleware()
-    .AddFastEndpointsMiddleware();
+    .AddIdentity()
+    .AddFastEndpoints();
 app
     .AddGeneratedClientEndpoints();
 app

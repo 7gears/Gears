@@ -1,6 +1,6 @@
 ﻿namespace Gears.Host.Mail;
 
-public sealed class MailSettings
+internal sealed class MailSettings
 {
     public string From { get; init; }
     public string Host { get; init; }

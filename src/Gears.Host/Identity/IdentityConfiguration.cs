@@ -30,7 +30,7 @@ internal static class IdentityConfiguration
         return builder;
     }
 
-    public static IApplicationBuilder AddIdentityMiddleware(this IApplicationBuilder builder) =>
+    public static IApplicationBuilder AddIdentity(this IApplicationBuilder builder) =>
         builder
             .UseAuthentication()
             .UseAuthorization();

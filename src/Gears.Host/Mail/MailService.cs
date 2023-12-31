@@ -1,14 +1,11 @@
 ﻿namespace Gears.Host.Mail;
 
 [RegisterService<IMailService>(LifeTime.Scoped)]
-internal sealed class MailService : IMailService
+internal sealed class MailService(
+    IOptions<MailSettings> mailOptions
+) : IMailService
 {
-    private readonly MailSettings _mailSettings;
-
-    public MailService(IOptions<MailSettings> mailOptions)
-    {
-        _mailSettings = mailOptions.Value;
-    }
+    private readonly MailSettings _mailSettings = mailOptions.Value;
 
     public async Task Send(MailRequest request)
     {

@@ -7,10 +7,10 @@ internal sealed class SwaggerSettings
     public bool IsEnabled { get; init; }
 }
 
-public sealed class JwtSettings
+internal sealed class JwtSettings
 {
-    public string Key { get; set; }
-    public int DurationInSeconds { get; set; }
+    public string Key { get; init; }
+    public int DurationInSeconds { get; init; }
 }
 
 internal static class FastEndpointsConfiguration
@@ -43,7 +43,7 @@ internal static class FastEndpointsConfiguration
         return builder;
     }
 
-    public static IApplicationBuilder AddFastEndpointsMiddleware(this IApplicationBuilder builder)
+    public static IApplicationBuilder AddFastEndpoints(this IApplicationBuilder builder)
     {
         builder.UseFastEndpoints(x =>
         {

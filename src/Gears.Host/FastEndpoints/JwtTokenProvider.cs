@@ -1,26 +1,19 @@
 ﻿namespace Gears.Host.FastEndpoints;
 
 [RegisterService<IJwtTokenProvider>(LifeTime.Scoped)]
-internal sealed class JwtTokenProvider : IJwtTokenProvider
+internal sealed class JwtTokenProvider(
+    IOptions<JwtSettings> jwtOptions,
+    TimeProvider timeProvider,
+    UserManager<User> userManager
+)
+    : IJwtTokenProvider
 {
-    private readonly JwtSettings _jwtSettings;
-    private readonly TimeProvider _timeProvider;
-    private readonly UserManager<User> _userManager;
-
-    public JwtTokenProvider(
-        IOptions<JwtSettings> jwtOptions,
-        TimeProvider timeProvider,
-        UserManager<User> userManager)
-    {
-        _timeProvider = timeProvider;
-        _userManager = userManager;
-        _jwtSettings = jwtOptions.Value;
-    }
+    private readonly JwtSettings _jwtSettings = jwtOptions.Value;
 
     public async Task<string> GetToken(User user)
     {
         var claims = await GetClaims(user);
-        var expires = _timeProvider.GetUtcNow().AddSeconds(_jwtSettings.DurationInSeconds).DateTime;
+        var expires = timeProvider.GetUtcNow().AddSeconds(_jwtSettings.DurationInSeconds).DateTime;
 
         SymmetricSecurityKey symmetricSecurityKey = new(Encoding.UTF8.GetBytes(_jwtSettings.Key));
         SigningCredentials signingCredentials = new(symmetricSecurityKey, SecurityAlgorithms.HmacSha256);
@@ -41,7 +34,7 @@ internal sealed class JwtTokenProvider : IJwtTokenProvider
             claims.Add(new Claim(ClaimTypes.Name, user.UserName));
         }
 
-        var roles = await _userManager.GetRolesAsync(user);
+        var roles = await userManager.GetRolesAsync(user);
         foreach (var role in roles)
         {
             claims.Add(new Claim(ClaimTypes.Role, role));
