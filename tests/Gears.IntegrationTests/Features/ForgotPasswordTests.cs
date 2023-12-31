@@ -7,7 +7,7 @@ public sealed class ForgotPasswordTests(InMemoryFixture f, ITestOutputHelper o) 
     [InlineData("")]
     [InlineData("   ")]
     [InlineData("root")]
-    public async void ForgotPassword_BadRequest(string email)
+    public async Task ForgotPassword_BadRequest(string email)
     {
         var request = new ForgotPasswordRequest(email);
         var result = await Fixture.Client.POSTAsync<ForgotPassword, ForgotPasswordRequest>(request);
@@ -16,7 +16,7 @@ public sealed class ForgotPasswordTests(InMemoryFixture f, ITestOutputHelper o) 
     }
 
     [Fact]
-    public async void ForgotPassword_ExistingUser_Success()
+    public async Task ForgotPassword_ExistingUser_Success()
     {
         var request = new ForgotPasswordRequest("root@root");
         var result = await Fixture.Client.POSTAsync<ForgotPassword, ForgotPasswordRequest>(request);
@@ -25,7 +25,7 @@ public sealed class ForgotPasswordTests(InMemoryFixture f, ITestOutputHelper o) 
     }
 
     [Fact]
-    public async void ForgotPassword_NonExistingUser_Success()
+    public async Task ForgotPassword_NonExistingUser_Success()
     {
         var request = new ForgotPasswordRequest("test@test");
         var result = await Fixture.Client.POSTAsync<ForgotPassword, ForgotPasswordRequest>(request);
