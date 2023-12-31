@@ -52,7 +52,7 @@ public sealed class ResetPassword(
             UserManager<User>.ResetPasswordTokenPurpose,
             request.Token);
 
-        if (result == false)
+        if (!result)
         {
             return UnprocessableEntity();
         }
