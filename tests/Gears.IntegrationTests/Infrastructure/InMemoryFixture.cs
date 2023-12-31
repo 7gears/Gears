@@ -1,13 +1,4 @@
-﻿using FastEndpoints.Testing;
-using Gears.Host.Db;
-using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.DependencyInjection;
-using System.Data.Common;
-using Microsoft.Extensions.Logging.Abstractions;
-using Microsoft.Data.Sqlite;
-using Microsoft.EntityFrameworkCore.Diagnostics;
-
-namespace Gears.IntegrationTests.Infrastructure;
+﻿namespace Gears.IntegrationTests.Infrastructure;
 
 public sealed class InMemoryFixture : TestFixture<Host.Program>
 {
@@ -30,8 +21,8 @@ public sealed class InMemoryFixture : TestFixture<Host.Program>
 
         var options = new DbContextOptionsBuilder<ApplicationDbContext>()
             .UseLoggerFactory(new NullLoggerFactory())
-        .UseSqlite(_connection!)
-        .Options;
+            .UseSqlite(_connection!)
+            .Options;
 
         var context = new ApplicationDbContext(options);
         _connection!.Open();
