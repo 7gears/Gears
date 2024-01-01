@@ -11,7 +11,9 @@ public sealed class InMemoryFixture : TestFixture<Host.Program>
 
         services.Remove(typeof(DbContextOptions<ApplicationDbContext>));
         services.Remove(typeof(DbConnection));
+        services.Remove(typeof(IMailService));
 
+        services.AddSingleton(_ => A.Fake<IMailService>());
         services.AddDbContext<ApplicationDbContext>(
             context => context
                 .UseLoggerFactory(new NullLoggerFactory())

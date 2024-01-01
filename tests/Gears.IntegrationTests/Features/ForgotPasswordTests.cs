@@ -22,6 +22,11 @@ public sealed class ForgotPasswordTests(InMemoryFixture f, ITestOutputHelper o) 
         var result = await Fixture.Client.POSTAsync<ForgotPassword, ForgotPasswordRequest>(request);
 
         result.StatusCode.Should().Be(HttpStatusCode.OK);
+
+        var mailService = Fixture.Services.GetRequiredService<IMailService>();
+        A.CallTo(
+            () => mailService.Send(A<MailRequest>.That.Matches(x => x.To == "root@root"))
+        ).MustHaveHappened(1, Times.Exactly);
     }
 
     [Fact]
@@ -31,5 +36,10 @@ public sealed class ForgotPasswordTests(InMemoryFixture f, ITestOutputHelper o) 
         var result = await Fixture.Client.POSTAsync<ForgotPassword, ForgotPasswordRequest>(request);
 
         result.StatusCode.Should().Be(HttpStatusCode.OK);
+
+        var mailService = Fixture.Services.GetRequiredService<IMailService>();
+        A.CallTo(
+            () => mailService.Send(A<MailRequest>.That.Matches(x => x.To == "test@test"))
+        ).MustHaveHappened(0, Times.Exactly);
     }
 }

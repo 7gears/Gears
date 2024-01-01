@@ -1,9 +1,11 @@
 ﻿global using System.Data.Common;
 global using System.Net;
+global using FakeItEasy;
 global using FastEndpoints;
 global using FastEndpoints.Testing;
 global using FluentAssertions;
 global using Gears.Application.Features.Auth;
+global using Gears.Application.Infrastructure;
 global using Gears.Host.Db;
 global using Gears.IntegrationTests.Infrastructure;
 global using Microsoft.Data.Sqlite;
