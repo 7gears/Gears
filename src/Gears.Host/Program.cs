@@ -16,6 +16,7 @@ app
 app
     .AddGeneratedClientEndpoints();
 app
+    .AddDbData()
     .AddIdentityData();
 
 app.Run();

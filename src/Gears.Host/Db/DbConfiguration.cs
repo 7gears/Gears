@@ -19,4 +19,17 @@ internal static class DbConfiguration
 
         return builder;
     }
+
+    public static IApplicationBuilder AddDbData(this IApplicationBuilder builder)
+    {
+        using var scope = builder.ApplicationServices.CreateScope();
+        var context = scope.ServiceProvider.GetRequiredService<ApplicationDbContext>();
+
+        if (context.Database.GetPendingMigrations().Any())
+        {
+            context.Database.Migrate();
+        }
+
+        return builder;
+    }
 }
