@@ -34,10 +34,10 @@ internal static class CorsConfiguration
         builder =>
             {
                 builder
-                    .WithOrigins(settings.AllowedOrigins)
-                    .WithMethods(settings.AllowedMethods)
-                    .WithHeaders(settings.AllowedHeaders)
-                    .WithExposedHeaders(settings.ExposedHeaders)
+                    .WithOrigins(settings.AllowedOrigins.Split(','))
+                    .WithMethods(settings.AllowedMethods.Split(','))
+                    .WithHeaders(settings.AllowedHeaders.Split(','))
+                    .WithExposedHeaders(settings.ExposedHeaders.Split(','))
                     .SetPreflightMaxAge(TimeSpan.FromSeconds(settings.PreflightMaxAgeInSeconds));
 
                 if (!settings.AllowedOrigins.Equals("*"))
