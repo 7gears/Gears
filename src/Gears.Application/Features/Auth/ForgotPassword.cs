@@ -41,7 +41,7 @@ public sealed class ForgotPassword(
 
         var mailRequest = new MailRequest(user.Email, "Reset Password", link);
 
-        await mailService.Send(mailRequest);
+        _ = mailService.Send(mailRequest);
 
         return Ok();
     }

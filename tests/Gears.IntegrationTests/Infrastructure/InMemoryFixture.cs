@@ -9,8 +9,8 @@ public sealed class InMemoryFixture : TestFixture<Host.Program>
         var connectionStringBuilder = new SqliteConnectionStringBuilder { DataSource = ":memory:" };
         _connection = new SqliteConnection(connectionStringBuilder.ConnectionString);
 
-        services.Remove(services.SingleOrDefault(service => typeof(DbContextOptions<ApplicationDbContext>) == service.ServiceType));
-        services.Remove(services.SingleOrDefault(service => typeof(DbConnection) == service.ServiceType));
+        services.Remove(typeof(DbContextOptions<ApplicationDbContext>));
+        services.Remove(typeof(DbConnection));
 
         services.AddDbContext<ApplicationDbContext>(
             context => context

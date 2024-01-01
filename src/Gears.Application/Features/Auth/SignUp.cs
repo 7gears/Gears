@@ -2,14 +2,12 @@
 
 using SignUpResponseResultType = Results<Created<SignUpResponse>, Conflict>;
 
-public sealed record SignUpRequest
-(
+public sealed record SignUpRequest(
     string Email,
     string Password
 );
 
-public sealed record SignUpResponse
-(
+public sealed record SignUpResponse(
     string Id
 );
 
@@ -63,7 +61,7 @@ public sealed class SignUp(
         var link = await GenerateConfirmEmailLink(user);
         var mailRequest = new MailRequest(user.Email, "Confirm Email", link);
 
-        await mailService.Send(mailRequest);
+        _ = mailService.Send(mailRequest);
 
         return Created(string.Empty, new SignUpResponse(user.Id));
     }

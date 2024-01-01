@@ -12,6 +12,13 @@ internal static class IdentityConfiguration
             {
                 x.Tokens.EmailConfirmationTokenProvider = EmailConfirmationTokenProviderName;
                 x.Tokens.PasswordResetTokenProvider = PasswordResetTokenProviderName;
+
+                x.User.RequireUniqueEmail = true;
+                x.Password.RequiredLength = 8;
+                x.Password.RequireDigit = false;
+                x.Password.RequireLowercase = false;
+                x.Password.RequireUppercase = false;
+                x.Password.RequireNonAlphanumeric = false;
             })
             .AddRoles<Role>()
             .AddEntityFrameworkStores<ApplicationDbContext>()
