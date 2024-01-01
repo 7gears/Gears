@@ -4,6 +4,11 @@ public sealed class InMemoryFixture : TestFixture<Host.Program>
 {
     private SqliteConnection _connection;
 
+    protected override void ConfigureApp(IWebHostBuilder builder)
+    {
+        builder.UseSetting("SkipMigrations", true.ToString());
+    }
+
     protected override void ConfigureServices(IServiceCollection services)
     {
         var connectionStringBuilder = new SqliteConnectionStringBuilder { DataSource = ":memory:" };

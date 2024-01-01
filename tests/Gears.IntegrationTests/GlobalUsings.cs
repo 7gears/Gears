@@ -8,6 +8,7 @@ global using Gears.Application.Features.Auth;
 global using Gears.Application.Infrastructure;
 global using Gears.Host.Db;
 global using Gears.IntegrationTests.Infrastructure;
+global using Microsoft.AspNetCore.Hosting;
 global using Microsoft.Data.Sqlite;
 global using Microsoft.EntityFrameworkCore;
 global using Microsoft.EntityFrameworkCore.Diagnostics;

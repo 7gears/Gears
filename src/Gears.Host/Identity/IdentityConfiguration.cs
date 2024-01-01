@@ -42,14 +42,14 @@ internal static class IdentityConfiguration
             .UseAuthentication()
             .UseAuthorization();
 
-    public static IApplicationBuilder AddIdentityData(this IApplicationBuilder builder)
+    public static WebApplication AddIdentityData(this WebApplication app)
     {
-        using var scope = builder.ApplicationServices.CreateScope();
+        using var scope = app.Services.CreateScope();
 
         var context = scope.ServiceProvider.GetRequiredService<ApplicationDbContext>();
         SeedIdentity(context);
 
-        return builder;
+        return app;
     }
 
     private static void SeedIdentity(ApplicationDbContext context)

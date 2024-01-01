@@ -20,9 +20,14 @@ internal static class DbConfiguration
         return builder;
     }
 
-    public static IApplicationBuilder AddDbData(this IApplicationBuilder builder)
+    public static WebApplication AddDbData(this WebApplication app)
     {
-        using var scope = builder.ApplicationServices.CreateScope();
+        if (string.Equals(app.Configuration["SkipMigrations"], "true", StringComparison.OrdinalIgnoreCase))
+        {
+            return app;
+        }
+
+        using var scope = app.Services.CreateScope();
         var context = scope.ServiceProvider.GetRequiredService<ApplicationDbContext>();
 
         if (context.Database.GetPendingMigrations().Any())
@@ -30,6 +35,6 @@ internal static class DbConfiguration
             context.Database.Migrate();
         }
 
-        return builder;
+        return app;
     }
 }
