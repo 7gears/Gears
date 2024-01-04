@@ -6,7 +6,7 @@ public sealed class InMemoryFixture : TestFixture<Host.Program>
 
     protected override void ConfigureApp(IWebHostBuilder builder)
     {
-        builder.UseSetting("SkipMigrations", true.ToString());
+        builder.UseSetting("Db:UseMigrations", false.ToString());
     }
 
     protected override void ConfigureServices(IServiceCollection services)

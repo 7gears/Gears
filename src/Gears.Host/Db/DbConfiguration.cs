@@ -3,6 +3,8 @@
 internal sealed class DbSettings
 {
     public string ConnectionString { get; init; }
+
+    public bool UseMigrations { get; init; }
 }
 
 internal static class DbConfiguration
@@ -22,15 +24,11 @@ internal static class DbConfiguration
 
     public static WebApplication AddDbData(this WebApplication app)
     {
-        if (string.Equals(app.Configuration["SkipMigrations"], "true", StringComparison.OrdinalIgnoreCase))
-        {
-            return app;
-        }
-
         using var scope = app.Services.CreateScope();
         var context = scope.ServiceProvider.GetRequiredService<ApplicationDbContext>();
+        var options = scope.ServiceProvider.GetRequiredService<IOptions<DbSettings>>();
 
-        if (context.Database.GetPendingMigrations().Any())
+        if (options.Value.UseMigrations && context.Database.GetPendingMigrations().Any())
         {
             context.Database.Migrate();
         }
