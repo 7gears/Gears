@@ -1,6 +1,6 @@
 ﻿namespace Gears.Application.Features.Auth;
 
-using SignUpResponseResult = Results<Created<SignUpResponse>, Conflict>;
+using SignUpResponseResult = Results<Created<SignUpResponse>, BadRequest, Conflict>;
 
 public sealed record SignUpRequest(
     string Email,
@@ -57,6 +57,15 @@ public sealed class SignUp(
             PasswordHash = passwordHasher.HashPassword(null!, request.Password)
         };
 
+        foreach (var passwordValidator in userManager.PasswordValidators)
+        {
+            var passwordValidationResult = await passwordValidator.ValidateAsync(userManager, user, request.Password);
+            if (passwordValidationResult != IdentityResult.Success)
+            {
+                return BadRequest();
+            }
+        }
+
         await userManager.CreateAsync(user);
 
         var link = await GenerateConfirmEmailLink(user);
@@ -82,15 +91,5 @@ public sealed class SignUp(
         builder.Query = query.ToString()!;
 
         return builder.ToString();
-    }
-}
-
-public sealed class SignUpSwaggerSummary : Summary<SignUp>
-{
-    public SignUpSwaggerSummary()
-    {
-        Response<SignUpResponse>(201);
-        Response(400);
-        Response(409);
     }
 }
