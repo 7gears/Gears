@@ -8,3 +8,8 @@ global using Microsoft.AspNetCore.Http.HttpResults;
 global using Microsoft.AspNetCore.Identity;
 global using Microsoft.EntityFrameworkCore;
 global using static Microsoft.AspNetCore.Http.TypedResults;
+
+namespace Gears.Application
+{
+    public sealed class Info;
+}
