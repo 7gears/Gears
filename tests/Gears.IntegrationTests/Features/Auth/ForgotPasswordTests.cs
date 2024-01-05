@@ -1,4 +1,4 @@
-﻿namespace Gears.IntegrationTests.Features;
+﻿namespace Gears.IntegrationTests.Features.Auth;
 
 public sealed class ForgotPasswordTests(InMemoryFixture f, ITestOutputHelper o) : TestClass<InMemoryFixture>(f, o)
 {

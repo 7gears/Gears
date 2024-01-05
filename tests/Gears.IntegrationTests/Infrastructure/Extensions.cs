@@ -1,6 +1,6 @@
 ﻿namespace Gears.IntegrationTests.Infrastructure;
 
-internal static class Utils
+internal static class Extensions
 {
     public static void Remove(this IServiceCollection services, Type type)
     {
