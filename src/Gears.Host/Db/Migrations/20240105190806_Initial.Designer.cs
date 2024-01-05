@@ -9,10 +9,10 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
 
-namespace Gears.Host.Db.Migrations
+namespace Gears.Host.DB.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20240101221726_Initial")]
+    [Migration("20240105190806_Initial")]
     partial class Initial
     {
         /// <inheritdoc />
@@ -72,10 +72,15 @@ namespace Gears.Host.Db.Migrations
                         .HasColumnType("bit");
 
                     b.Property<string>("FirstName")
-                        .HasColumnType("nvarchar(max)");
+                        .HasMaxLength(256)
+                        .HasColumnType("nvarchar(256)");
+
+                    b.Property<bool>("IsActive")
+                        .HasColumnType("bit");
 
                     b.Property<string>("LastName")
-                        .HasColumnType("nvarchar(max)");
+                        .HasMaxLength(256)
+                        .HasColumnType("nvarchar(256)");
 
                     b.Property<bool>("LockoutEnabled")
                         .HasColumnType("bit");

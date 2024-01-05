@@ -41,7 +41,7 @@ public sealed class ResetPassword(
     public override async Task<ResetPasswordResult> ExecuteAsync(ResetPasswordRequest request, CancellationToken ct)
     {
         var user = await userManager.FindByIdAsync(request.Id);
-        if (user == null)
+        if (user is not { IsActive: true })
         {
             return NotFound();
         }

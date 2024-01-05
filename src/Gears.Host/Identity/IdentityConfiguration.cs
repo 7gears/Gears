@@ -71,7 +71,8 @@ internal static class IdentityConfiguration
             NormalizedUserName = "ROOT",
             Email = "root@root",
             NormalizedEmail = "ROOT@ROOT",
-            EmailConfirmed = true
+            EmailConfirmed = true,
+            IsActive = true
         };
 
         PasswordHasher<User> hasher = new();

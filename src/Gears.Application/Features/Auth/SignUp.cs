@@ -53,6 +53,7 @@ public sealed class SignUp(
             UserName = request.Email,
             Email = request.Email,
             EmailConfirmed = false,
+            IsActive = true,
             PasswordHash = passwordHasher.HashPassword(null!, request.Password)
         };
 

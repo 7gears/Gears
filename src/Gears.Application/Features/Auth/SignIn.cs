@@ -41,7 +41,7 @@ public sealed class SignIn(
     public override async Task<SignInResponseResult> ExecuteAsync(SignInRequest request, CancellationToken ct)
     {
         var user = await userManager.FindByEmailAsync(request.Email);
-        if (user == null)
+        if (user is not { IsActive: true })
         {
             return NotFound();
         }

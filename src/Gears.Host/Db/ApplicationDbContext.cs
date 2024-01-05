@@ -11,39 +11,41 @@ public sealed class ApplicationDbContext : IdentityDbContext<User, Role, string>
     {
         base.OnModelCreating(builder);
 
-        builder.Entity<User>(entity =>
+        builder.Entity<User>(x =>
         {
-            entity.ToTable("Users");
+            x.Property(c => c.FirstName).HasMaxLength(256);
+            x.Property(c => c.LastName).HasMaxLength(256);
+            x.ToTable("Users");
         });
 
-        builder.Entity<Role>(entity =>
+        builder.Entity<Role>(x =>
         {
-            entity.ToTable("Roles");
+            x.ToTable("Roles");
         });
 
-        builder.Entity<IdentityRoleClaim<string>>(entity =>
+        builder.Entity<IdentityRoleClaim<string>>(x =>
         {
-            entity.ToTable("RoleClaims");
+            x.ToTable("RoleClaims");
         });
 
-        builder.Entity<IdentityUserRole<string>>(entity =>
+        builder.Entity<IdentityUserRole<string>>(x =>
         {
-            entity.ToTable("UserRoles");
+            x.ToTable("UserRoles");
         });
 
-        builder.Entity<IdentityUserClaim<string>>(entity =>
+        builder.Entity<IdentityUserClaim<string>>(x =>
         {
-            entity.ToTable("UserClaims");
+            x.ToTable("UserClaims");
         });
 
-        builder.Entity<IdentityUserLogin<string>>(entity =>
+        builder.Entity<IdentityUserLogin<string>>(x =>
         {
-            entity.ToTable("UserLogins");
+            x.ToTable("UserLogins");
         });
 
-        builder.Entity<IdentityUserToken<string>>(entity =>
+        builder.Entity<IdentityUserToken<string>>(x =>
         {
-            entity.ToTable("UserTokens");
+            x.ToTable("UserTokens");
         });
     }
 }

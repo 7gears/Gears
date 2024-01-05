@@ -31,7 +31,7 @@ public sealed class ForgotPassword(
     public override async Task<Ok> ExecuteAsync(ForgotPasswordRequest request, CancellationToken ct)
     {
         var user = await userManager.FindByEmailAsync(request.Email);
-        if (user == null)
+        if (user is not { IsActive: true })
         {
             // Return a consistent response for both existent and non-existent accounts
             return Ok();
