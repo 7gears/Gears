@@ -1,6 +1,6 @@
 ﻿namespace Gears.Application.Features.Auth;
 
-using ResetPasswordResultType = Results<Ok, NotFound, UnprocessableEntity>;
+using ResetPasswordResult = Results<Ok, NotFound, UnprocessableEntity>;
 
 public sealed record ResetPasswordRequest(
     string Id,
@@ -30,7 +30,7 @@ public sealed class ResetPassword(
     UserManager<User> userManager,
     IPasswordHasher<User> passwordHasher
 )
-    : Endpoint<ResetPasswordRequest, ResetPasswordResultType>
+    : Endpoint<ResetPasswordRequest, ResetPasswordResult>
 {
     public override void Configure()
     {
@@ -38,7 +38,7 @@ public sealed class ResetPassword(
         AllowAnonymous();
     }
 
-    public override async Task<ResetPasswordResultType> ExecuteAsync(ResetPasswordRequest request, CancellationToken ct)
+    public override async Task<ResetPasswordResult> ExecuteAsync(ResetPasswordRequest request, CancellationToken ct)
     {
         var user = await userManager.FindByIdAsync(request.Id);
         if (user == null)

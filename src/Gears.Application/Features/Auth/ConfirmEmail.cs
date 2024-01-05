@@ -1,6 +1,6 @@
 ﻿namespace Gears.Application.Features.Auth;
 
-using ConfirmEmailResponseResultType = Results<Ok, NotFound, UnprocessableEntity>;
+using ConfirmEmailResponseResult = Results<Ok, NotFound, UnprocessableEntity>;
 
 public sealed record ConfirmEmailRequest(
     string Id,
@@ -24,7 +24,7 @@ public sealed class ConfirmEmailRequestValidator : Validator<ConfirmEmailRequest
 public sealed class ConfirmEmail(
     UserManager<User> userManager
 )
-    : Endpoint<ConfirmEmailRequest, ConfirmEmailResponseResultType>
+    : Endpoint<ConfirmEmailRequest, ConfirmEmailResponseResult>
 {
     public override void Configure()
     {
@@ -32,7 +32,7 @@ public sealed class ConfirmEmail(
         AllowAnonymous();
     }
 
-    public override async Task<ConfirmEmailResponseResultType> ExecuteAsync(
+    public override async Task<ConfirmEmailResponseResult> ExecuteAsync(
         ConfirmEmailRequest request,
         CancellationToken ct)
     {

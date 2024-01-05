@@ -1,6 +1,6 @@
 ﻿namespace Gears.Application.Features.Auth;
 
-using SignInResponseResultType = Results<Ok<SignInResponse>, NotFound, UnauthorizedHttpResult>;
+using SignInResponseResult = Results<Ok<SignInResponse>, NotFound, UnauthorizedHttpResult>;
 
 public sealed record SignInRequest(
     string Email,
@@ -30,7 +30,7 @@ public sealed class SignIn(
     UserManager<User> userManager,
     IJwtTokenProvider jwtTokenProvider
 )
-    : Endpoint<SignInRequest, SignInResponseResultType>
+    : Endpoint<SignInRequest, SignInResponseResult>
 {
     public override void Configure()
     {
@@ -38,7 +38,7 @@ public sealed class SignIn(
         AllowAnonymous();
     }
 
-    public override async Task<SignInResponseResultType> ExecuteAsync(SignInRequest request, CancellationToken ct)
+    public override async Task<SignInResponseResult> ExecuteAsync(SignInRequest request, CancellationToken ct)
     {
         var user = await userManager.FindByEmailAsync(request.Email);
         if (user == null)
