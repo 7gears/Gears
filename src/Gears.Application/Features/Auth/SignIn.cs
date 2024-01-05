@@ -34,7 +34,7 @@ public sealed class SignIn(
 {
     public override void Configure()
     {
-        Post("api/signin");
+        Post("api/auth/signin");
         AllowAnonymous();
     }
 

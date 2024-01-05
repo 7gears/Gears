@@ -36,7 +36,7 @@ public sealed class SignUp(
 {
     public override void Configure()
     {
-        Post("api/signup");
+        Post("api/auth/signup");
         AllowAnonymous();
     }
 

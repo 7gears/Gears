@@ -3,6 +3,7 @@
 builder
     .AddCorsServices()
     .AddFastEndpointsServices()
+    .AddSwaggerServices()
     .AddIdentityServices()
     .AddMailServices()
     .AddDbServices();
@@ -12,7 +13,8 @@ var app = builder.Build();
 app
     .AddCors()
     .AddIdentity()
-    .AddFastEndpoints();
+    .AddFastEndpoints()
+    .AddSwagger();
 app
     .AddGeneratedClientEndpoints();
 app

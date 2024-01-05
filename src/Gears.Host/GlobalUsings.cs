@@ -21,3 +21,4 @@ global using Microsoft.EntityFrameworkCore;
 global using Microsoft.Extensions.Options;
 global using Microsoft.IdentityModel.Tokens;
 global using MimeKit;
+global using NSwag.CodeGeneration.TypeScript;

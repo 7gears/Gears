@@ -28,7 +28,7 @@ public sealed class ConfirmEmail(
 {
     public override void Configure()
     {
-        Post("api/confirm-email");
+        Post("api/auth/confirm-email");
         AllowAnonymous();
     }
 

@@ -34,7 +34,7 @@ public sealed class ResetPassword(
 {
     public override void Configure()
     {
-        Post("api/reset-password");
+        Post("api/auth/reset-password");
         AllowAnonymous();
     }
 

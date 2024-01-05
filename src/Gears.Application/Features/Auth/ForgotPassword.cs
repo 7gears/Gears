@@ -24,7 +24,7 @@ public sealed class ForgotPassword(
 {
     public override void Configure()
     {
-        Post("api/forgot-password");
+        Post("api/auth/forgot-password");
         AllowAnonymous();
     }
 
