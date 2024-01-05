@@ -4,22 +4,9 @@ using UpdateProfileResponseResult = Results<Ok, NotFound>;
 
 public sealed record UpdateProfileRequest(
     string FirstName,
-    string LastName
+    string LastName,
+    string PhoneNumber
 );
-
-public sealed class UpdateProfileRequestValidator : Validator<UpdateProfileRequest>
-{
-    public UpdateProfileRequestValidator()
-    {
-        RuleFor(x => x.FirstName)
-            .NotEmpty()
-            .WithMessage("First name is required");
-
-        RuleFor(x => x.LastName)
-            .NotEmpty()
-            .WithMessage("Last name is required");
-    }
-}
 
 public sealed class UpdateProfile(
     IHttpContextAccessor httpContextAccessor,
@@ -44,6 +31,7 @@ public sealed class UpdateProfile(
 
         user.FirstName = request.FirstName;
         user.LastName = request.LastName;
+        user.PhoneNumber = request.PhoneNumber;
 
         await userManager.UpdateAsync(user);
 

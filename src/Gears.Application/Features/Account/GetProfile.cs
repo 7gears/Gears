@@ -4,7 +4,8 @@ using GetProfileResponseResult = Results<Ok<GetProfileResponse>, NotFound>;
 
 public sealed record GetProfileResponse(
     string FirstName,
-    string LastName
+    string LastName,
+    string PhoneNumber
 );
 
 public sealed class GetProfile(
@@ -28,7 +29,10 @@ public sealed class GetProfile(
             return NotFound();
         }
 
-        var response = new GetProfileResponse(user.FirstName, user.LastName);
+        var response = new GetProfileResponse(
+            user.FirstName,
+            user.LastName,
+            user.PhoneNumber);
 
         return Ok(response);
     }
