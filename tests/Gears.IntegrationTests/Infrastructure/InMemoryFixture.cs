@@ -1,6 +1,6 @@
 ﻿namespace Gears.IntegrationTests.Infrastructure;
 
-public sealed class InMemoryFixture : TestFixture<Host.Program>
+public class InMemoryFixture : TestFixture<Host.Program>
 {
     private SqliteConnection _connection;
 
