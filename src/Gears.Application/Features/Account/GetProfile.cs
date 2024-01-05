@@ -20,10 +20,8 @@ public sealed class GetProfile(
 
     public override async Task<GetProfileResponseResultType> ExecuteAsync(CancellationToken ct)
     {
-        var userName = userManager.GetUserName(httpContextAccessor.HttpContext!.User);
-
-        var user = await userManager.Users.AsNoTracking()
-            .SingleOrDefaultAsync(x => x.UserName == userName, ct);
+        var userId = userManager.GetUserId(httpContextAccessor.HttpContext!.User);
+        var user = await userManager.FindByIdAsync(userId!);
 
         if (user == null)
         {

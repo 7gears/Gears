@@ -28,7 +28,11 @@ internal sealed class JwtTokenProvider(
 
     private async Task<List<Claim>> GetClaims(User user)
     {
-        var claims = new List<Claim>();
+        var claims = new List<Claim>
+        {
+            new(ClaimTypes.NameIdentifier, user.Id),
+        };
+
         if (user.UserName != null)
         {
             claims.Add(new Claim(ClaimTypes.Name, user.UserName));
