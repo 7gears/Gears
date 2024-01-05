@@ -1,20 +1,16 @@
 ﻿namespace Gears.IntegrationTests.Features.Auth;
 
-public sealed class ForgotPasswordTests : TestClass<ForgotPasswordTestsFixture>, IDisposable
+public sealed class ForgotPasswordTests(
+    ForgotPasswordFixture f,
+    ITestOutputHelper o)
+    : TestClass<ForgotPasswordFixture>(f, o), IDisposable
 {
-    private readonly IMailService _mailService;
-
-    public ForgotPasswordTests(ForgotPasswordTestsFixture f, ITestOutputHelper o) : base(f, o)
-    {
-        _mailService = Fixture.Services.GetRequiredService<IMailService>();
-    }
-
     [Theory]
     [InlineData(null)]
     [InlineData("")]
     [InlineData("   ")]
     [InlineData("root")]
-    public async Task ForgotPassword_BadRequest(string email)
+    public async Task BadRequest(string email)
     {
         var request = new ForgotPasswordRequest(email);
         var result = await Act(request);
@@ -25,7 +21,7 @@ public sealed class ForgotPasswordTests : TestClass<ForgotPasswordTestsFixture>,
     [Theory]
     [InlineData("root@root")]
     [InlineData("roOt@rOOt")]
-    public async Task ForgotPassword_ExistingUser_Success(string email)
+    public async Task ExistingUser_Success(string email)
     {
         var request = new ForgotPasswordRequest(email);
         var result = await Act(request);
@@ -37,7 +33,7 @@ public sealed class ForgotPasswordTests : TestClass<ForgotPasswordTestsFixture>,
     [Theory]
     [InlineData("not@active")]
     [InlineData("NOT@Active")]
-    public async Task ForgotPassword_ExistingDeactivatedUser_Success(string email)
+    public async Task ExistingDeactivatedUser_Success(string email)
     {
         var request = new ForgotPasswordRequest(email);
         var result = await Act(request);
@@ -49,7 +45,7 @@ public sealed class ForgotPasswordTests : TestClass<ForgotPasswordTestsFixture>,
     [Theory]
     [InlineData("not@existing")]
     [InlineData("nOt@ExIsting")]
-    public async Task ForgotPassword_NonExistingUser_Success(string email)
+    public async Task NonExistingUser_Success(string email)
     {
         var request = new ForgotPasswordRequest(email);
         var result = await Act(request);
@@ -59,7 +55,7 @@ public sealed class ForgotPasswordTests : TestClass<ForgotPasswordTestsFixture>,
     }
 
     public void Dispose() =>
-        FakeItEasy.Fake.ClearRecordedCalls(_mailService);
+        FakeItEasy.Fake.ClearRecordedCalls(Fixture.MailService);
 
     private Task<HttpResponseMessage> Act(ForgotPasswordRequest request) =>
         Fixture.Client.POSTAsync<ForgotPassword, ForgotPasswordRequest>(request);
@@ -67,16 +63,20 @@ public sealed class ForgotPasswordTests : TestClass<ForgotPasswordTestsFixture>,
     private void AssertMailService(string email, int numberOfTimes)
     {
         A.CallTo(
-            () => _mailService.Send(A<MailRequest>.That.Matches(x => string.Equals(x.To, email, StringComparison.OrdinalIgnoreCase)))
+            () => Fixture.MailService.Send(A<MailRequest>.That.Matches(x => string.Equals(x.To, email, StringComparison.OrdinalIgnoreCase)))
         ).MustHaveHappened(numberOfTimes, Times.Exactly);
     }
 }
 
-public sealed class ForgotPasswordTestsFixture : InMemoryFixture
+public sealed class ForgotPasswordFixture : InMemoryFixture
 {
+    public IMailService MailService { get; set; }
+
     protected override async Task SetupAsync()
     {
         await base.SetupAsync();
+
+        MailService = Services.GetRequiredService<IMailService>();
 
         var userManager = Services.GetRequiredService<UserManager<User>>();
         await userManager.CreateAsync(new User
@@ -87,4 +87,3 @@ public sealed class ForgotPasswordTestsFixture : InMemoryFixture
         });
     }
 }
-

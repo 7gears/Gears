@@ -1,6 +1,6 @@
 ﻿namespace Gears.Application.Features.Auth;
 
-using ResetPasswordResult = Results<Ok, NotFound, UnprocessableEntity>;
+using ResetPasswordResult = Results<Ok, BadRequest, NotFound>;
 
 public sealed record ResetPasswordRequest(
     string Id,
@@ -46,15 +46,24 @@ public sealed class ResetPassword(
             return NotFound();
         }
 
-        var result = await userManager.VerifyUserTokenAsync(
+        foreach (var passwordValidator in userManager.PasswordValidators)
+        {
+            var passwordValidationResult = await passwordValidator.ValidateAsync(userManager, user, request.Password);
+            if (passwordValidationResult != IdentityResult.Success)
+            {
+                return BadRequest();
+            }
+        }
+
+        var tokenValidationResult = await userManager.VerifyUserTokenAsync(
             user,
             userManager.Options.Tokens.PasswordResetTokenProvider,
             UserManager<User>.ResetPasswordTokenPurpose,
             request.Token);
 
-        if (!result)
+        if (!tokenValidationResult)
         {
-            return UnprocessableEntity();
+            return BadRequest();
         }
 
         var encryptedPassword = passwordHasher.HashPassword(user, request.Password);
@@ -62,16 +71,5 @@ public sealed class ResetPassword(
         await userManager.UpdateAsync(user);
 
         return Ok();
-    }
-}
-
-public sealed class ResetPasswordSummary : Summary<ResetPassword>
-{
-    public ResetPasswordSummary()
-    {
-        Response();
-        Response(400);
-        Response(404);
-        Response(422);
     }
 }

@@ -3,7 +3,8 @@
 [RegisterService<IMailService>(LifeTime.Scoped)]
 internal sealed class MailService(
     IOptions<MailSettings> mailOptions
-) : IMailService
+)
+    : IMailService
 {
     private readonly MailSettings _mailSettings = mailOptions.Value;
 
