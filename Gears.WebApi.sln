@@ -12,7 +12,6 @@ EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "settings", "settings", "{F6D221A4-6C09-491B-8815-77F0E0751CC5}"
 	ProjectSection(SolutionItems) = preProject
 		.editorconfig = .editorconfig
-		api.http = api.http
 		Directory.Build.props = Directory.Build.props
 	EndProjectSection
 EndProject
