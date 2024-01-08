@@ -42,15 +42,6 @@ public sealed class ChangePassword(
             return NotFound();
         }
 
-        foreach (var passwordValidator in userManager.PasswordValidators)
-        {
-            var passwordValidationResult = await passwordValidator.ValidateAsync(userManager, user, request.Password);
-            if (passwordValidationResult != IdentityResult.Success)
-            {
-                return BadRequest();
-            }
-        }
-
         var result = await userManager.ChangePasswordAsync(user, request.Password, request.NewPassword);
         if (!result.Succeeded)
         {
