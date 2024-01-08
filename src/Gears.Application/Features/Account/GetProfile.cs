@@ -1,6 +1,6 @@
 ﻿namespace Gears.Application.Features.Account;
 
-using GetProfileResponseResult = Results<Ok<GetProfileResponse>, NotFound>;
+using GetProfileResult = Results<Ok<GetProfileResponse>, NotFound>;
 
 public sealed record GetProfileResponse(
     string FirstName,
@@ -12,14 +12,14 @@ public sealed class GetProfile(
     IHttpContextAccessor httpContextAccessor,
     UserManager<User> userManager
 )
-    : EndpointWithoutRequest<GetProfileResponseResult>
+    : EndpointWithoutRequest<GetProfileResult>
 {
     public override void Configure()
     {
         Get("api/account/profile");
     }
 
-    public override async Task<GetProfileResponseResult> ExecuteAsync(CancellationToken ct)
+    public override async Task<GetProfileResult> ExecuteAsync(CancellationToken ct)
     {
         var userId = userManager.GetUserId(httpContextAccessor.HttpContext!.User);
         var user = await userManager.FindByIdAsync(userId!);

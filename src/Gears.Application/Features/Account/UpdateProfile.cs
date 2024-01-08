@@ -1,6 +1,6 @@
 ﻿namespace Gears.Application.Features.Account;
 
-using UpdateProfileResponseResult = Results<Ok, NotFound>;
+using UpdateProfileResult = Results<Ok, NotFound>;
 
 public sealed record UpdateProfileRequest(
     string FirstName,
@@ -12,14 +12,14 @@ public sealed class UpdateProfile(
     IHttpContextAccessor httpContextAccessor,
     UserManager<User> userManager
 )
-    : Endpoint<UpdateProfileRequest, UpdateProfileResponseResult>
+    : Endpoint<UpdateProfileRequest, UpdateProfileResult>
 {
     public override void Configure()
     {
         Patch("api/account/profile");
     }
 
-    public override async Task<UpdateProfileResponseResult> ExecuteAsync(UpdateProfileRequest request, CancellationToken ct)
+    public override async Task<UpdateProfileResult> ExecuteAsync(UpdateProfileRequest request, CancellationToken ct)
     {
         var userId = userManager.GetUserId(httpContextAccessor.HttpContext!.User);
         var user = await userManager.FindByIdAsync(userId!);
