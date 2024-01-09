@@ -13,17 +13,15 @@ internal sealed class JwtTokenProvider(
     public async Task<string> GetToken(User user)
     {
         var claims = await GetClaims(user);
-        var expires = timeProvider.GetUtcNow().AddSeconds(_jwtSettings.DurationInSeconds).DateTime;
+        var expireAt = timeProvider.GetUtcNow().AddSeconds(_jwtSettings.DurationInSeconds).DateTime;
 
-        SymmetricSecurityKey symmetricSecurityKey = new(Encoding.UTF8.GetBytes(_jwtSettings.Key));
-        SigningCredentials signingCredentials = new(symmetricSecurityKey, SecurityAlgorithms.HmacSha256);
+        var token = JWTBearer.CreateToken(
+            signingKey: _jwtSettings.Key,
+            expireAt: expireAt,
+            claims: claims
+        );
 
-        JwtSecurityToken jwtSecurityToken = new(
-            claims: claims,
-            expires: expires,
-            signingCredentials: signingCredentials);
-
-        return new JwtSecurityTokenHandler().WriteToken(jwtSecurityToken);
+        return token;
     }
 
     private async Task<List<Claim>> GetClaims(User user)

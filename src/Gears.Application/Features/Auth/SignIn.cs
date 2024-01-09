@@ -57,6 +57,8 @@ public sealed class SignIn(
             return Unauthorized();
         }
 
+
+
         var token = await jwtTokenProvider.GetToken(user);
 
         return Ok(new SignInResponse(token));
