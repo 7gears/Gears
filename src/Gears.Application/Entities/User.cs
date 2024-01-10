@@ -7,4 +7,6 @@ public sealed class User : IdentityUser
     public string LastName { get; set; }
 
     public bool IsActive { get; set; } = true;
+
+
 }

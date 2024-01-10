@@ -20,6 +20,7 @@ public sealed class ApplicationDbContext : IdentityDbContext<User, Role, string>
 
         builder.Entity<Role>(x =>
         {
+            x.Property(c => c.Description).HasMaxLength(1024);
             x.ToTable("Roles");
         });
 

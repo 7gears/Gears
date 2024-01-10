@@ -12,23 +12,28 @@ internal sealed class JwtTokenProvider(
 
     public async Task<string> GetToken(User user)
     {
-        var claims = await GetClaims(user);
+        var roles = await userManager.GetRolesAsync(user);
+        var claims = GetClaims(user);
+        var permissions = GetPermissions([.. roles]);
+
         var expireAt = timeProvider.GetUtcNow().AddSeconds(_jwtSettings.DurationInSeconds).DateTime;
 
         var token = JWTBearer.CreateToken(
             signingKey: _jwtSettings.Key,
             expireAt: expireAt,
-            claims: claims
+            claims: claims,
+            roles: roles,
+            permissions: permissions
         );
 
         return token;
     }
 
-    private async Task<List<Claim>> GetClaims(User user)
+    private static IEnumerable<Claim> GetClaims(User user)
     {
         var claims = new List<Claim>
         {
-            new(ClaimTypes.NameIdentifier, user.Id),
+            new(ClaimTypes.NameIdentifier, user.Id)
         };
 
         if (user.UserName != null)
@@ -36,12 +41,16 @@ internal sealed class JwtTokenProvider(
             claims.Add(new Claim(ClaimTypes.Name, user.UserName));
         }
 
-        var roles = await userManager.GetRolesAsync(user);
-        foreach (var role in roles)
+        return claims;
+    }
+
+    private static IEnumerable<string> GetPermissions(HashSet<string> roles)
+    {
+        if (roles.Contains(Consts.Auth.RootRole))
         {
-            claims.Add(new Claim(ClaimTypes.Role, role));
+            return Allow.AllCodes();
         }
 
-        return claims;
+        return Enumerable.Empty<string>();
     }
 }

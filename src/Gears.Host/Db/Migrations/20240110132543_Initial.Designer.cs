@@ -9,10 +9,10 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
 
-namespace Gears.Host.DB.Migrations
+namespace Gears.Host.Db.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20240105190806_Initial")]
+    [Migration("20240110132543_Initial")]
     partial class Initial
     {
         /// <inheritdoc />
@@ -33,6 +33,16 @@ namespace Gears.Host.DB.Migrations
                     b.Property<string>("ConcurrencyStamp")
                         .IsConcurrencyToken()
                         .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Description")
+                        .HasMaxLength(1024)
+                        .HasColumnType("nvarchar(1024)");
+
+                    b.Property<bool>("IsDefault")
+                        .HasColumnType("bit");
+
+                    b.Property<bool>("IsDeletable")
+                        .HasColumnType("bit");
 
                     b.Property<string>("Name")
                         .HasMaxLength(256)

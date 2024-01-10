@@ -23,4 +23,7 @@
   <ItemGroup>
     <ProjectReference Include="..\Gears.Application\Gears.Application.csproj" />
   </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Db\Migrations\" />
+  </ItemGroup>
 </Project>
