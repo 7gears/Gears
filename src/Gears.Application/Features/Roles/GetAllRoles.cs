@@ -21,7 +21,7 @@ public sealed class GetAllRoles(
         AccessControl("Roles-GetAll", Apply.ToThisEndpoint);
     }
 
-    public override async Task HandleAsync(GetAllRolesRequest req, CancellationToken ct)
+    public override async Task HandleAsync(GetAllRolesRequest request, CancellationToken ct)
     {
         var result = await db.Roles.AsNoTracking()
             .Select(x => new GetAllRolesResponse(

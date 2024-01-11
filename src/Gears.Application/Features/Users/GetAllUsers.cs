@@ -22,7 +22,7 @@ public sealed class GetAllUsers(
         AccessControl("Users-GetAll", Apply.ToThisEndpoint);
     }
 
-    public override async Task HandleAsync(GetAllUsersRequest req, CancellationToken ct)
+    public override async Task HandleAsync(GetAllUsersRequest request, CancellationToken ct)
     {
         var result = await db.Users.AsNoTracking()
             .Where(x => x.UserName != Consts.Auth.RootUser)

@@ -1,6 +1,6 @@
 ﻿namespace Gears.Application.Features.Auth;
 
-using SignUpResult = Results<Created<SignUpResponse>, BadRequest, Conflict>;
+using SignUpResult = Results<Created<SignUpResponse>, BadRequest, UnprocessableEntity>;
 
 public sealed record SignUpRequest(
     string Email,
@@ -45,7 +45,7 @@ public sealed class SignUp(
         var user = await userManager.FindByEmailAsync(request.Email);
         if (user != null)
         {
-            return Conflict();
+            return UnprocessableEntity();
         }
 
         user = new User
@@ -66,7 +66,11 @@ public sealed class SignUp(
             }
         }
 
-        await userManager.CreateAsync(user);
+        var identityResult = await userManager.CreateAsync(user);
+        if (identityResult != IdentityResult.Success)
+        {
+            return UnprocessableEntity();
+        }
 
         var link = await GenerateConfirmEmailLink(user);
         var mailRequest = new MailRequest(user.Email, "Confirm Email", link);
