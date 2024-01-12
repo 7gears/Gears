@@ -10,7 +10,7 @@ public sealed class DeleteRoleValidator : Validator<DeleteRoleRequest>
     {
         RuleFor(x => x.Id)
             .NotEmpty()
-            .WithMessage("Name is required");
+            .WithMessage("Id is required");
     }
 }
 

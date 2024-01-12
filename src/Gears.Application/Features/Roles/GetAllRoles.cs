@@ -24,6 +24,7 @@ public sealed class GetAllRoles(
     public override async Task HandleAsync(GetAllRolesRequest request, CancellationToken ct)
     {
         var result = await db.Roles.AsNoTracking()
+            .OrderBy(x => x.Name)
             .Select(x => new GetAllRolesResponse(
                 x.Id,
                 x.Name,
