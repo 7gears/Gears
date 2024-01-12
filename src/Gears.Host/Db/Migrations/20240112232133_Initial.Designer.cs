@@ -12,7 +12,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Gears.Host.Db.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20240110132543_Initial")]
+    [Migration("20240112232133_Initial")]
     partial class Initial
     {
         /// <inheritdoc />
@@ -39,9 +39,6 @@ namespace Gears.Host.Db.Migrations
                         .HasColumnType("nvarchar(1024)");
 
                     b.Property<bool>("IsDefault")
-                        .HasColumnType("bit");
-
-                    b.Property<bool>("IsDeletable")
                         .HasColumnType("bit");
 
                     b.Property<string>("Name")

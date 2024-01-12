@@ -6,7 +6,6 @@ public sealed record GetAllRolesResponse(
     string Id,
     string Name,
     string Description,
-    bool IsDeletable,
     bool IsDefault
 );
 
@@ -24,12 +23,12 @@ public sealed class GetAllRoles(
     public override async Task HandleAsync(GetAllRolesRequest request, CancellationToken ct)
     {
         var result = await db.Roles.AsNoTracking()
+            .Where(x => x.Name != Consts.Auth.RootRole)
             .OrderBy(x => x.Name)
             .Select(x => new GetAllRolesResponse(
                 x.Id,
                 x.Name,
                 x.Description,
-                x.IsDeletable,
                 x.IsDefault))
             .ToListAsync(ct);
 

@@ -33,7 +33,7 @@ public sealed class DeleteRole(
             return NotFound();
         }
 
-        if (!role.IsDeletable)
+        if (role.Name == Consts.Auth.RootRole)
         {
             return UnprocessableEntity();
         }

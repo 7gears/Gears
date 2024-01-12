@@ -39,8 +39,7 @@ public sealed class AddRole(
         {
             Name = request.Name,
             Description = request.Description,
-            IsDefault = request.IsDefault,
-            IsDeletable = true
+            IsDefault = request.IsDefault
         };
 
         var identityResult = await roleManager.CreateAsync(role);

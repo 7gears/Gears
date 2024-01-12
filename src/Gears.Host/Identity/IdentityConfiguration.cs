@@ -64,8 +64,7 @@ internal static class IdentityConfiguration
         {
             Name = Consts.Auth.RootRole,
             NormalizedName = Consts.Auth.RootRole.ToUpper(),
-            IsDefault = false,
-            IsDeletable = false
+            IsDefault = false
         };
         var rootUser = new User
         {
