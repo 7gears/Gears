@@ -4,9 +4,9 @@ public static class Consts
 {
     public static class Auth
     {
-        public const string RootRole = "Root";
-        public const string RootUser = "Root";
+        public static readonly string RootRole = "Root";
+        public static readonly string RootUser = "Root";
         public const char PermissionDelimiter = '_';
-        public const string PermissionClaimType = "permissions";
+        public static readonly string PermissionClaimType = "permissions";
     }
 }
