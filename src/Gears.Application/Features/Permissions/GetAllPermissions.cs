@@ -2,9 +2,14 @@
 
 public sealed record GetAllPermissionsRequest;
 
-public sealed record Permission(string PermissionId, string PermissionName);
+public sealed record Permission(
+    string PermissionId,
+    string PermissionName);
 
-public sealed record PermissionGroup(string GroupId, string GroupName, List<Permission> Items);
+public sealed record PermissionGroup(
+    string GroupId,
+    string GroupName,
+    List<Permission> Items);
 
 public sealed class GetAllPermissions : Endpoint<GetAllPermissionsRequest, List<PermissionGroup>>
 {
