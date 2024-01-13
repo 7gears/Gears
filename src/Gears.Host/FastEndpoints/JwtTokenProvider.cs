@@ -4,7 +4,8 @@
 internal sealed class JwtTokenProvider(
     IOptions<JwtSettings> jwtOptions,
     TimeProvider timeProvider,
-    UserManager<User> userManager
+    UserManager<User> userManager,
+    RoleManager<Role> roleManager
 )
     : IJwtTokenProvider
 {
@@ -14,7 +15,7 @@ internal sealed class JwtTokenProvider(
     {
         var roles = await userManager.GetRolesAsync(user);
         var claims = GetClaims(user);
-        var permissions = GetPermissions([.. roles]);
+        var permissions = await GetPermissions([.. roles]);
 
         var expireAt = timeProvider.GetUtcNow().AddSeconds(_jwtSettings.DurationInSeconds).DateTime;
 
@@ -44,13 +45,33 @@ internal sealed class JwtTokenProvider(
         return claims;
     }
 
-    private static IEnumerable<string> GetPermissions(HashSet<string> roles)
+    private async Task<IEnumerable<string>> GetPermissions(HashSet<string> roles)
     {
         if (roles.Contains(Consts.Auth.RootRole))
         {
-            return Allow.AllCodes();
+            return Allow.AllPermissions()
+                .Where(x => !string.Equals(x.PermissionName, "Descriptions", StringComparison.Ordinal))
+                .Select(x => x.PermissionCode);
         }
 
-        return Enumerable.Empty<string>();
+
+        var map = Allow.AllPermissions()
+            .ToDictionary(x => x.PermissionName, x => x.PermissionCode);
+
+        var permissions = new HashSet<string>();
+        var userRoles = roleManager.Roles.Where(x => roles.Contains(x.Name));
+        foreach (var userRole in userRoles)
+        {
+            var roleClaims = await roleManager.GetClaimsAsync(userRole);
+            foreach (var roleClaim in roleClaims)
+            {
+                if (roleClaim.Type == Consts.Auth.PermissionClaimType && map.TryGetValue(roleClaim.Value, out var code))
+                {
+                    permissions.Add(code);
+                }
+            }
+        }
+
+        return permissions;
     }
 }

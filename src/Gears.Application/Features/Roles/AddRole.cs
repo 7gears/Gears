@@ -5,8 +5,8 @@ using AddRoleResult = Results<Created<AddRoleResponse>, BadRequest, Unprocessabl
 public sealed record AddRoleRequest(
     string Name,
     string Description,
-    bool IsDefault
-);
+    bool IsDefault,
+    List<string> Permissions);
 
 public sealed record AddRoleResponse(
     string Id
@@ -42,12 +42,48 @@ public sealed class AddRole(
             IsDefault = request.IsDefault
         };
 
-        var identityResult = await roleManager.CreateAsync(role);
-        if (identityResult != IdentityResult.Success)
+        var allPermissions = Allow.AllNames().ToHashSet();
+        var claims = request.Permissions
+            .Where(x => allPermissions.Contains(x))
+            .Select(x => new Claim(Consts.Auth.PermissionClaimType, x));
+
+        var result = await Save(role, claims);
+        if (!result)
         {
             return UnprocessableEntity();
         }
 
         return Created(string.Empty, new AddRoleResponse(role.Id));
     }
+
+    private async Task<bool> Save(Role role, IEnumerable<Claim> claims)
+    {
+        using var scope = new TransactionScope(TransactionScopeAsyncFlowOption.Enabled);
+
+        try
+        {
+            var result = await roleManager.CreateAsync(role);
+            if (result != IdentityResult.Success)
+            {
+                return false;
+            }
+
+            foreach (var claim in claims)
+            {
+                result = await roleManager.AddClaimAsync(role, claim);
+                if (result != IdentityResult.Success)
+                {
+                    return false;
+                }
+            }
+
+            scope.Complete();
+            return true;
+        }
+        catch
+        {
+            return false;
+        }
+    }
+
 }

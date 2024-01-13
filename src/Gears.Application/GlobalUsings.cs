@@ -1,4 +1,6 @@
-﻿global using System.Web;
+﻿global using System.Security.Claims;
+global using System.Transactions;
+global using System.Web;
 global using FastEndpoints;
 global using FluentValidation;
 global using Gears.Application.Auth;

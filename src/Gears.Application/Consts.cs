@@ -7,5 +7,6 @@ public static class Consts
         public const string RootRole = "Root";
         public const string RootUser = "Root";
         public const char PermissionDelimiter = '_';
+        public const string PermissionClaimType = "permissions";
     }
 }
