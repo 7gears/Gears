@@ -6,7 +6,7 @@ public sealed record AddRoleRequest(
     string Name,
     string Description,
     bool IsDefault,
-    List<string> Permissions);
+    IEnumerable<string> Permissions);
 
 public sealed record AddRoleResponse(
     string Id
@@ -43,9 +43,15 @@ public sealed class AddRole(
         };
 
         var allPermissions = Allow.AllNames().ToHashSet();
-        var claims = request.Permissions
-            .Where(x => allPermissions.Contains(x))
-            .Select(x => new Claim(Consts.Auth.PermissionClaimType, x));
+
+        var claims = Enumerable.Empty<Claim>();
+        if (request.Permissions != null)
+        {
+            claims = request.Permissions
+                .Where(allPermissions.Contains)
+                .Select(x => new Claim(Consts.Auth.PermissionClaimType, x))
+                .ToHashSet();
+        }
 
         var result = await Save(role, claims);
         if (!result)
