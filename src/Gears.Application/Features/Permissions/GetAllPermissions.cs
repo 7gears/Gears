@@ -41,7 +41,9 @@ public sealed class GetAllPermissions : Endpoint<GetAllPermissionsRequest, List<
     {
         var parts = name.Split(Consts.Auth.PermissionDelimiter, StringSplitOptions.RemoveEmptyEntries);
         if (parts.Length != 2)
+        {
             return default;
+        }
 
         return new(name, parts[0], parts[1]);
     }
