@@ -8,7 +8,7 @@ public sealed class AddRoleTests(AddRoleFixture f, ITestOutputHelper o) : TestCl
     [InlineData("   ")]
     public async Task BadRequest(string name)
     {
-        var request = new AddRoleRequest(name, "description", false);
+        var request = new AddRoleRequest(name, "description", false, new List<string>());
         var testResult = await Act(request);
 
         testResult.Response.StatusCode.Should().Be(HttpStatusCode.BadRequest);
@@ -17,7 +17,7 @@ public sealed class AddRoleTests(AddRoleFixture f, ITestOutputHelper o) : TestCl
     [Fact]
     public async Task UnprocessableEntity()
     {
-        var request = new AddRoleRequest("Existing", "description", false);
+        var request = new AddRoleRequest("Existing", "description", false, new List<string>());
         var testResult = await Act(request);
 
         testResult.Response.StatusCode.Should().Be(HttpStatusCode.UnprocessableEntity);
@@ -26,7 +26,7 @@ public sealed class AddRoleTests(AddRoleFixture f, ITestOutputHelper o) : TestCl
     [Fact]
     public async Task Create()
     {
-        var request = new AddRoleRequest("NewRole", "description", false);
+        var request = new AddRoleRequest("NewRole", "description", false, new List<string>());
         var testResult = await Act(request);
 
         testResult.Response.StatusCode.Should().Be(HttpStatusCode.Created);
