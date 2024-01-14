@@ -18,8 +18,8 @@ public static class RoleManagerExtension
             this RoleManager<Role> roleManager,
             Role role,
             bool isNew,
-            IEnumerable<string> permissionsToAdd = null,
-            IEnumerable<string> permissionsToRemove = null)
+            IEnumerable<string> permissionsToAdd,
+            IEnumerable<string> permissionsToRemove)
     {
         using var scope = new TransactionScope(TransactionScopeAsyncFlowOption.Enabled);
 

@@ -50,7 +50,8 @@ public sealed class AddRole(
         var result = await roleManager.SaveRoleWithPermissions(
             role,
             true,
-            request.Permissions);
+            request.Permissions,
+            null);
 
         if (!result)
         {
