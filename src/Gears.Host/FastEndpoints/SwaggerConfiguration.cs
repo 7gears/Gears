@@ -31,7 +31,7 @@ internal static class SwaggerConfiguration
         var options = builder.ApplicationServices.GetRequiredService<IOptions<SwaggerSettings>>();
         if (options.Value.IsEnabled)
         {
-            builder.UseSwaggerGen();
+            builder.UseSwaggerGen(uiConfig: x => x.DefaultModelsExpandDepth = -1);
         }
 
         return builder;
