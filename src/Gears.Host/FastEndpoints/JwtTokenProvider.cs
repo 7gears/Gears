@@ -1,7 +1,8 @@
 ﻿namespace Gears.Host.FastEndpoints;
 
 [RegisterService<IJwtTokenProvider>(LifeTime.Scoped)]
-internal sealed class JwtTokenProvider(
+internal sealed class JwtTokenProvider
+(
     IOptions<JwtSettings> jwtOptions,
     TimeProvider timeProvider,
     UserManager<User> userManager,

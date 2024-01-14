@@ -1,6 +1,7 @@
 ﻿namespace Gears.Host.Identity;
 
-internal sealed class EmailConfirmationTokenProvider(
+internal sealed class EmailConfirmationTokenProvider
+(
     IDataProtectionProvider dataProtectionProvider,
     IOptions<EmailConfirmationTokenProviderOptions> options,
     ILogger<DataProtectorTokenProvider<User>> logger

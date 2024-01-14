@@ -8,7 +8,10 @@ public sealed record Request
     HashSet<string> Permissions
 );
 
-public sealed record Response(string Id);
+public sealed record Response
+(
+    string Id
+);
 
 public sealed class RequestValidator : Validator<Request>
 {
