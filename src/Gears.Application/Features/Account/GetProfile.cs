@@ -23,7 +23,6 @@ public sealed class GetProfile(
     {
         var userId = userManager.GetUserId(httpContextAccessor.HttpContext!.User);
         var user = await userManager.FindByIdAsync(userId!);
-
         if (user == null)
         {
             return NotFound();

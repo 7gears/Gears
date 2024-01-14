@@ -31,7 +31,7 @@ public sealed class UpdateRole(
     public override void Configure()
     {
         Put("api/roles");
-        AccessControl("Roles-Update", Apply.ToThisEndpoint);
+        AccessControl("Roles_Update", Apply.ToThisEndpoint);
     }
 
     public override async Task<UpdateRoleResult> ExecuteAsync(UpdateRoleRequest request, CancellationToken ct)

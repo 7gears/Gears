@@ -30,7 +30,7 @@ public sealed class AddRole(
     public override void Configure()
     {
         Post("api/roles");
-        AccessControl("Roles-Add", Apply.ToThisEndpoint);
+        AccessControl("Roles_Add", Apply.ToThisEndpoint);
     }
 
     public override async Task<AddRoleResult> ExecuteAsync(AddRoleRequest request, CancellationToken ct)

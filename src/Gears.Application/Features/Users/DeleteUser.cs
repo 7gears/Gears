@@ -22,7 +22,7 @@ public sealed class DeleteUser(
     public override void Configure()
     {
         Delete("api/users");
-        AccessControl("Users-Delete", Apply.ToThisEndpoint);
+        AccessControl("Users_Delete", Apply.ToThisEndpoint);
     }
 
     public override async Task<DeleteUserResult> ExecuteAsync(DeleteUserRequest request, CancellationToken ct)

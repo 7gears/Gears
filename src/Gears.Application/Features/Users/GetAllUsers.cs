@@ -12,19 +12,19 @@ public sealed record GetAllUsersResponse(
     bool IsActive);
 
 public sealed class GetAllUsers(
-    IApplicationDbContext db
+    UserManager<User> userManager
 )
     : Endpoint<GetAllUsersRequest, List<GetAllUsersResponse>>
 {
     public override void Configure()
     {
         Get("api/users");
-        AccessControl("Users-GetAll", Apply.ToThisEndpoint);
+        AccessControl("Users_GetAll", Apply.ToThisEndpoint);
     }
 
     public override async Task HandleAsync(GetAllUsersRequest request, CancellationToken ct)
     {
-        var result = await db.Users.AsNoTracking()
+        var result = await userManager.Users.AsNoTracking()
             .Where(x => x.UserName != Consts.Auth.RootUser)
             .Select(x => new GetAllUsersResponse(
                 x.Id,

@@ -22,7 +22,7 @@ public sealed class DeleteRole(
     public override void Configure()
     {
         Delete("api/roles");
-        AccessControl("Roles-Delete", Apply.ToThisEndpoint);
+        AccessControl("Roles_Delete", Apply.ToThisEndpoint);
     }
 
     public override async Task<DeleteRoleResult> ExecuteAsync(DeleteRoleRequest request, CancellationToken ct)

@@ -8,19 +8,19 @@ public sealed record GetAllRolesResponse(
 );
 
 public sealed class GetAllRoles(
-    IApplicationDbContext db
+    RoleManager<Role> roleManager
 )
     : EndpointWithoutRequest<List<GetAllRolesResponse>>
 {
     public override void Configure()
     {
         Get("api/roles");
-        AccessControl("Roles-GetAll", Apply.ToThisEndpoint);
+        AccessControl("Roles_GetAll", Apply.ToThisEndpoint);
     }
 
     public override async Task HandleAsync(CancellationToken ct)
     {
-        var result = await db.Roles.AsNoTracking()
+        var result = await roleManager.Roles.AsNoTracking()
             .Where(x => x.Name != Consts.Auth.RootRole)
             .OrderBy(x => x.Name)
             .Select(x => new GetAllRolesResponse(

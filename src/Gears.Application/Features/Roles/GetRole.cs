@@ -32,7 +32,7 @@ public sealed class GetRole(
     public override void Configure()
     {
         Get("api/roles/{id}");
-        AccessControl("Roles-Get", Apply.ToThisEndpoint);
+        AccessControl("Roles_Get", Apply.ToThisEndpoint);
     }
 
     public override async Task<GetRoleResult> ExecuteAsync(GetRoleRequest request, CancellationToken ct)

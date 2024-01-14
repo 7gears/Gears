@@ -16,7 +16,7 @@ public sealed class GetAllPermissions : Endpoint<GetAllPermissionsRequest, List<
     public override void Configure()
     {
         Get("api/permissions");
-        AccessControl("Permissions-GetAll", Apply.ToThisEndpoint);
+        AccessControl("Permissions_GetAll", Apply.ToThisEndpoint);
     }
 
     public override async Task HandleAsync(GetAllPermissionsRequest request, CancellationToken ct)

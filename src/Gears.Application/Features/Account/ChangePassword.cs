@@ -36,7 +36,6 @@ public sealed class ChangePassword(
     {
         var userId = userManager.GetUserId(httpContextAccessor.HttpContext!.User);
         var user = await userManager.FindByIdAsync(userId!);
-
         if (user == null)
         {
             return NotFound();
