@@ -1,7 +1,5 @@
 ﻿namespace Gears.Application.Features.Roles;
 
-public sealed record GetAllRolesRequest;
-
 public sealed record GetAllRolesResponse(
     string Id,
     string Name,
@@ -12,7 +10,7 @@ public sealed record GetAllRolesResponse(
 public sealed class GetAllRoles(
     IApplicationDbContext db
 )
-    : Endpoint<GetAllRolesRequest, List<GetAllRolesResponse>>
+    : EndpointWithoutRequest<List<GetAllRolesResponse>>
 {
     public override void Configure()
     {
@@ -20,7 +18,7 @@ public sealed class GetAllRoles(
         AccessControl("Roles-GetAll", Apply.ToThisEndpoint);
     }
 
-    public override async Task HandleAsync(GetAllRolesRequest request, CancellationToken ct)
+    public override async Task HandleAsync(CancellationToken ct)
     {
         var result = await db.Roles.AsNoTracking()
             .Where(x => x.Name != Consts.Auth.RootRole)

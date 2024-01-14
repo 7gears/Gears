@@ -17,7 +17,7 @@ internal static class FastEndpointsConfiguration
             .AddFastEndpoints(x =>
             {
                 x.DisableAutoDiscovery = true;
-                x.Assemblies = new[] { typeof(Application.Info).Assembly };
+                x.Assemblies = new[] { typeof(Info).Assembly };
             })
             .AddJWTBearerAuth(key)
             .RegisterServicesFromGearsHost();
