@@ -14,7 +14,7 @@ public sealed class Endpoint
 
     public override async Task HandleAsync(CancellationToken ct)
     {
-        var result = await userManager.Users.AsNoTracking()
+        var response = await userManager.Users.AsNoTracking()
             .Where(x => x.UserName != Consts.Auth.RootUser)
             .Select(x => new Response(
                 x.Id,
@@ -26,6 +26,6 @@ public sealed class Endpoint
                 x.IsActive))
             .ToListAsync(ct);
 
-        await SendAsync(result);
+        await SendAsync(response);
     }
 }

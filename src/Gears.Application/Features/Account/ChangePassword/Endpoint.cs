@@ -26,8 +26,8 @@ public sealed class Endpoint
             return NotFound();
         }
 
-        var result = await userManager.ChangePasswordAsync(user, request.Password, request.NewPassword);
-        if (!result.Succeeded)
+        var identityResult = await userManager.ChangePasswordAsync(user, request.Password, request.NewPassword);
+        if (!identityResult.Succeeded)
         {
             return BadRequest();
         }

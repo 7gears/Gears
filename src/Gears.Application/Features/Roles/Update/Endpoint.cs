@@ -46,12 +46,12 @@ public sealed class Endpoint
         role.Description = request.Description;
         role.IsDefault = request.IsDefault;
 
-        var result = await roleManager.SaveRoleWithPermissions(
+        var saveResult = await roleManager.SaveRoleWithPermissions(
             role,
             false,
             permissionsToAdd,
             permissionsToRemove);
-        if (!result)
+        if (!saveResult)
         {
             return UnprocessableEntity();
         }

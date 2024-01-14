@@ -2,7 +2,8 @@
 
 using Result = Results<
     Ok,
-    NotFound>;
+    NotFound,
+    UnprocessableEntity>;
 
 public sealed class Endpoint
 (
@@ -29,7 +30,11 @@ public sealed class Endpoint
         user.LastName = request.LastName;
         user.PhoneNumber = request.PhoneNumber;
 
-        await userManager.UpdateAsync(user);
+        var identityResult = await userManager.UpdateAsync(user);
+        if (!identityResult.Succeeded)
+        {
+            return UnprocessableEntity();
+        }
 
         return Ok();
     }

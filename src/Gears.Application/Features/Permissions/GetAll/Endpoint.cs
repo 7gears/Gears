@@ -10,7 +10,7 @@ public sealed class Endpoint : EndpointWithoutRequest<List<PermissionGroup>>
 
     public override async Task HandleAsync(CancellationToken ct)
     {
-        var result = Allow.AllNames()
+        var response = Allow.AllNames()
             .Where(x => !string.Equals(x, "Descriptions", StringComparison.Ordinal))
             .Select(Split)
             .GroupBy(x => x.GroupName)
@@ -23,7 +23,7 @@ public sealed class Endpoint : EndpointWithoutRequest<List<PermissionGroup>>
             .Select(x => new PermissionGroup(x.kvp.Key, x.kvp.Key, x.groupItems))
             .ToList();
 
-        await SendAsync(result);
+        await SendAsync(response);
     }
 
     private static PermissionsParts Split(string name)

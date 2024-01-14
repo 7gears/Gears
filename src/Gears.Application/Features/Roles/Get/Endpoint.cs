@@ -27,7 +27,7 @@ public sealed class Endpoint
 
         var permissions = await roleManager.GetRolePermissionNames(role);
 
-        var result = new Response(
+        var response = new Response(
             role.Id,
             role.Name,
             role.Description,
@@ -35,6 +35,6 @@ public sealed class Endpoint
             permissions
         );
 
-        return Ok(result);
+        return Ok(response);
     }
 }

@@ -14,7 +14,7 @@ public sealed class Endpoint
 
     public override async Task HandleAsync(CancellationToken ct)
     {
-        var result = await roleManager.Roles.AsNoTracking()
+        var response = await roleManager.Roles.AsNoTracking()
             .Where(x => x.Name != Consts.Auth.RootRole)
             .OrderBy(x => x.Name)
             .Select(x => new Response(
@@ -24,6 +24,6 @@ public sealed class Endpoint
                 x.IsDefault))
             .ToListAsync(ct);
 
-        await SendAsync(result);
+        await SendAsync(response);
     }
 }

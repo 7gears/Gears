@@ -31,13 +31,13 @@ public sealed class Endpoint
             IsDefault = request.IsDefault
         };
 
-        var result = await roleManager.SaveRoleWithPermissions(
+        var saveResult = await roleManager.SaveRoleWithPermissions(
             role,
             true,
             request.Permissions,
             null);
 
-        if (!result)
+        if (!saveResult)
         {
             return UnprocessableEntity();
         }
