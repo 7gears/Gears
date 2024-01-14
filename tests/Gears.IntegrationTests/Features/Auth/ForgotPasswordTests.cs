@@ -21,7 +21,7 @@ public sealed class ForgotPasswordTests(
     [Theory]
     [InlineData("root@root")]
     [InlineData("roOt@rOOt")]
-    public async Task ExistingUser_Success(string email)
+    public async Task Success_ExistingUser(string email)
     {
         var request = new ForgotPasswordRequest(email);
         var result = await Act(request);
@@ -33,7 +33,7 @@ public sealed class ForgotPasswordTests(
     [Theory]
     [InlineData("not@active")]
     [InlineData("NOT@Active")]
-    public async Task ExistingDeactivatedUser_Success(string email)
+    public async Task Success_ExistingDeactivatedUser(string email)
     {
         var request = new ForgotPasswordRequest(email);
         var result = await Act(request);
@@ -45,7 +45,7 @@ public sealed class ForgotPasswordTests(
     [Theory]
     [InlineData("not@existing")]
     [InlineData("nOt@ExIsting")]
-    public async Task NonExistingUser_Success(string email)
+    public async Task Success_NonExistingUser(string email)
     {
         var request = new ForgotPasswordRequest(email);
         var result = await Act(request);

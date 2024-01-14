@@ -3,7 +3,7 @@
 public sealed class ResetPasswordTests(ResetPasswordFixture f, ITestOutputHelper o) : TestClass<ResetPasswordFixture>(f, o)
 {
     [Fact]
-    public async Task NotExistingUser_NotFound()
+    public async Task NotFound_NotExistingUser()
     {
         var request = new ResetPasswordRequest("42", "token", "password");
         var result = await Act(request);
@@ -12,7 +12,7 @@ public sealed class ResetPasswordTests(ResetPasswordFixture f, ITestOutputHelper
     }
 
     [Fact]
-    public async Task NotActiveUser_NotFound()
+    public async Task NotFound_NotActiveUser()
     {
         var request = new ResetPasswordRequest(Fixture.NotActiveUserId, "token", "pass");
         var result = await Act(request);
@@ -25,7 +25,7 @@ public sealed class ResetPasswordTests(ResetPasswordFixture f, ITestOutputHelper
     [InlineData("")]
     [InlineData("   ")]
     [InlineData("pass")]
-    public async Task ActiveUser_BadPassword_BadRequest(string password)
+    public async Task BadRequest_ActiveUser_BadPassword(string password)
     {
         var request = new ResetPasswordRequest(Fixture.ActiveUserId, "token", password);
         var result = await Act(request);

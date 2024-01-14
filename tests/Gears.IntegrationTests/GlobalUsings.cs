@@ -5,6 +5,7 @@ global using FastEndpoints;
 global using FastEndpoints.Security;
 global using FastEndpoints.Testing;
 global using FluentAssertions;
+global using Gears.Application;
 global using Gears.Application.Auth;
 global using Gears.Application.Entities;
 global using Gears.Application.Features.Auth;
