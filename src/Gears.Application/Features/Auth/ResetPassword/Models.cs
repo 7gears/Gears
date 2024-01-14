@@ -11,16 +11,8 @@ public sealed class RequestValidator : Validator<Request>
 {
     public RequestValidator()
     {
-        RuleFor(x => x.Id)
-            .NotEmpty()
-            .WithMessage("Id is required");
-
-        RuleFor(x => x.Token)
-            .NotEmpty()
-            .WithMessage("Token is required");
-
-        RuleFor(x => x.Password)
-            .NotEmpty()
-            .WithMessage("Password is required");
+        RuleFor(x => x.Id).IsNotEmpty();
+        RuleFor(x => x.Token).IsNotEmpty();
+        RuleFor(x => x.Password).IsNotEmpty();
     }
 }

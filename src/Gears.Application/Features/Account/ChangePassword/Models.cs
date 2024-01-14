@@ -10,12 +10,7 @@ public sealed class RequestValidator : Validator<Request>
 {
     public RequestValidator()
     {
-        RuleFor(x => x.Password)
-            .NotEmpty()
-            .WithMessage("Password is required");
-
-        RuleFor(x => x.NewPassword)
-            .NotEmpty()
-            .WithMessage("New password is required");
+        RuleFor(x => x.Password).IsNotEmpty();
+        RuleFor(x => x.NewPassword).IsNotEmpty();
     }
 }
