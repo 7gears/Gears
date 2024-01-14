@@ -29,7 +29,6 @@ internal static class FastEndpointsConfiguration
     {
         builder.UseFastEndpoints(x =>
         {
-            x.Endpoints.ShortNames = true;
             x.Errors.ProducesMetadataType = typeof(ProblemDetails);
             x.Errors.UseProblemDetails();
         });
