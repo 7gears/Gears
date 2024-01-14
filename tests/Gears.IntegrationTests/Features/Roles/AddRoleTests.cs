@@ -20,6 +20,20 @@ public sealed class AddRoleTests(AddRoleFixture f, ITestOutputHelper o) : TestCl
     }
 
     [Fact]
+    public async Task BadRequest_WrongPermission()
+    {
+        var request = new AddRoleRequest(
+            "NewRoleWithWrongPermission",
+            "description0",
+            false,
+            ["NotExisting_AllowAll", "Roles_Get"]);
+
+        var testResult = await Act(request);
+
+        Assert.Equal(HttpStatusCode.BadRequest, testResult.Response.StatusCode);
+    }
+
+    [Fact]
     public async Task UnprocessableEntity()
     {
         var request = new AddRoleRequest(
