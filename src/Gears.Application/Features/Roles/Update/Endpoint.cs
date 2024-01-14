@@ -21,7 +21,9 @@ public sealed class Endpoint
     public override async Task<Result> ExecuteAsync(Request request, CancellationToken ct)
     {
         if (!ValidatePermissions(request.Permissions))
+        {
             return BadRequest();
+        }
 
         var role = await roleManager.FindByIdAsync(request.Id);
         if (role == null)
