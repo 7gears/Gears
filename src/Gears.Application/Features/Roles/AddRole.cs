@@ -6,7 +6,7 @@ public sealed record AddRoleRequest(
     string Name,
     string Description,
     bool IsDefault,
-    IEnumerable<string> Permissions);
+    HashSet<string> Permissions);
 
 public sealed record AddRoleResponse(
     string Id
