@@ -35,6 +35,11 @@ public sealed class AddRole(
 
     public override async Task<AddRoleResult> ExecuteAsync(AddRoleRequest request, CancellationToken ct)
     {
+        if (!ValidatePermissions(request.Permissions))
+        {
+            return BadRequest();
+        }
+
         var role = new Role
         {
             Name = request.Name,
@@ -42,18 +47,11 @@ public sealed class AddRole(
             IsDefault = request.IsDefault
         };
 
-        var allPermissions = Allow.AllNames().ToHashSet();
+        var result = await roleManager.SaveRoleWithPermissions(
+            role,
+            true,
+            request.Permissions);
 
-        var claims = Enumerable.Empty<Claim>();
-        if (request.Permissions != null)
-        {
-            claims = request.Permissions
-                .Where(allPermissions.Contains)
-                .Select(x => new Claim(Consts.Auth.PermissionClaimType, x))
-                .ToHashSet();
-        }
-
-        var result = await Save(role, claims);
         if (!result)
         {
             return UnprocessableEntity();
@@ -62,34 +60,6 @@ public sealed class AddRole(
         return Created(string.Empty, new AddRoleResponse(role.Id));
     }
 
-    private async Task<bool> Save(Role role, IEnumerable<Claim> claims)
-    {
-        using var scope = new TransactionScope(TransactionScopeAsyncFlowOption.Enabled);
-
-        try
-        {
-            var result = await roleManager.CreateAsync(role);
-            if (result != IdentityResult.Success)
-            {
-                return false;
-            }
-
-            foreach (var claim in claims)
-            {
-                result = await roleManager.AddClaimAsync(role, claim);
-                if (result != IdentityResult.Success)
-                {
-                    return false;
-                }
-            }
-
-            scope.Complete();
-            return true;
-        }
-        catch
-        {
-            return false;
-        }
-    }
-
+    private static bool ValidatePermissions(IEnumerable<string> permissions) =>
+        permissions == null || permissions.All(Allow.AllNames().ToHashSet().Contains);
 }

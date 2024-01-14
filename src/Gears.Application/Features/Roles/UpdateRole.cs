@@ -37,9 +37,7 @@ public sealed class UpdateRole(
     public override async Task<UpdateRoleResult> ExecuteAsync(UpdateRoleRequest request, CancellationToken ct)
     {
         if (!ValidatePermissions(request.Permissions))
-        {
             return BadRequest();
-        }
 
         var role = await roleManager.FindByIdAsync(request.Id);
         if (role == null)
@@ -52,11 +50,7 @@ public sealed class UpdateRole(
             return UnprocessableEntity();
         }
 
-        var claims = await roleManager.GetClaimsAsync(role);
-        var permissions = claims
-            .Where(x => x.Type == Consts.Auth.PermissionClaimType)
-            .Select(x => x.Value)
-            .ToHashSet();
+        var permissions = await roleManager.GetRolePermissionNames(role);
 
         var permissionsToAdd = request.Permissions
             .Where(x => !permissions.Contains(x));
@@ -68,7 +62,11 @@ public sealed class UpdateRole(
         role.Description = request.Description;
         role.IsDefault = request.IsDefault;
 
-        var result = await Save(role, permissionsToAdd, permissionsToRemove);
+        var result = await roleManager.SaveRoleWithPermissions(
+            role,
+            false,
+            permissionsToAdd,
+            permissionsToRemove);
         if (!result)
         {
             return UnprocessableEntity();
@@ -78,50 +76,5 @@ public sealed class UpdateRole(
     }
 
     private static bool ValidatePermissions(IEnumerable<string> permissions) =>
-        permissions.All(Allow.AllNames().ToHashSet().Contains);
-
-    private static Claim ToClaim(string permission) =>
-        new(Consts.Auth.PermissionClaimType, permission);
-
-    private async Task<bool> Save(
-        Role role,
-        IEnumerable<string> permissionsToAdd,
-        IEnumerable<string> permissionsToRemove)
-    {
-        using var scope = new TransactionScope(TransactionScopeAsyncFlowOption.Enabled);
-
-        try
-        {
-            var result = await roleManager.UpdateAsync(role);
-            if (result != IdentityResult.Success)
-            {
-                return false;
-            }
-
-            foreach (var permission in permissionsToAdd)
-            {
-                result = await roleManager.AddClaimAsync(role, ToClaim(permission));
-                if (result != IdentityResult.Success)
-                {
-                    return false;
-                }
-            }
-
-            foreach (var permission in permissionsToRemove)
-            {
-                result = await roleManager.RemoveClaimAsync(role, ToClaim(permission));
-                if (result != IdentityResult.Success)
-                {
-                    return false;
-                }
-            }
-
-            scope.Complete();
-            return true;
-        }
-        catch
-        {
-            return false;
-        }
-    }
+        permissions == null || permissions.All(Allow.AllNames().ToHashSet().Contains);
 }

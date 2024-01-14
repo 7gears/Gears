@@ -43,10 +43,7 @@ public sealed class GetRole(
             return NotFound();
         }
 
-        var claims = await roleManager.GetClaimsAsync(role);
-        var permissions = claims
-            .Where(x => x.Type == Consts.Auth.PermissionClaimType)
-            .Select(x => x.Value);
+        var permissions = await roleManager.GetRolePermissionNames(role);
 
         var result = new GetRoleResponse(
             role.Id,
