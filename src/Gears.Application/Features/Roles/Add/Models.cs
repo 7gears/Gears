@@ -14,8 +14,6 @@ public sealed class RequestValidator : Validator<Request>
 {
     public RequestValidator()
     {
-        RuleFor(x => x.Name)
-            .NotEmpty()
-            .WithMessage("Name is required");
+        RuleFor(x => x.Name).IsNotEmpty();
     }
 }
