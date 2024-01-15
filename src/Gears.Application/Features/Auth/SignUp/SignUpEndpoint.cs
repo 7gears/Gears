@@ -1,6 +1,6 @@
 ﻿namespace Gears.Application.Features.Auth.SignUp;
 
-using SignUpResult = Results<
+using Result = Results<
     Created<SignUpResponse>,
     BadRequest,
     UnprocessableEntity>;
@@ -12,7 +12,7 @@ public sealed class SignUpEndpoint
     IMailService mailService,
     IHttpContextService httpContextService
 )
-    : Endpoint<SignUpRequest, SignUpResult>
+    : Endpoint<SignUpRequest, Result>
 {
     public override void Configure()
     {
@@ -20,7 +20,7 @@ public sealed class SignUpEndpoint
         AllowAnonymous();
     }
 
-    public override async Task<SignUpResult> ExecuteAsync(SignUpRequest request, CancellationToken ct)
+    public override async Task<Result> ExecuteAsync(SignUpRequest request, CancellationToken ct)
     {
         var user = await userManager.FindByEmailAsync(request.Email);
         if (user != null)
