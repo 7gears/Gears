@@ -5,7 +5,7 @@ using Result = Results<
     NotFound,
     UnprocessableEntity>;
 
-public sealed class UpdateProfileEndpoint
+public sealed class UpdateProfile
 (
     IHttpContextAccessor httpContextAccessor,
     UserManager<User> userManager

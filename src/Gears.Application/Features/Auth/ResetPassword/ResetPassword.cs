@@ -5,7 +5,7 @@ using Result = Results<
     BadRequest,
     NotFound>;
 
-public sealed class ResetPasswordEndpoint
+public sealed class ResetPassword
 (
     UserManager<User> userManager,
     IPasswordHasher<User> passwordHasher

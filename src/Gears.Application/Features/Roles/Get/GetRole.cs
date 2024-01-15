@@ -5,7 +5,7 @@ using Result = Results<
     BadRequest,
     NotFound>;
 
-public sealed class GetRoleEndpoint
+public sealed class GetRole
 (
     RoleManager<Role> roleManager
 )

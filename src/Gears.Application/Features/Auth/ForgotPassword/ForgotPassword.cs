@@ -1,6 +1,6 @@
 ﻿namespace Gears.Application.Features.Auth.ForgotPassword;
 
-public sealed class ForgotPasswordEndpoint
+public sealed class ForgotPassword
 (
     UserManager<User> userManager,
     IMailService mailService,

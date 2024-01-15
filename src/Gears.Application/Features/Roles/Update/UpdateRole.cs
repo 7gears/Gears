@@ -6,7 +6,7 @@ using Result = Results<
     NotFound,
     UnprocessableEntity>;
 
-public sealed class UpdateRoleEndpoint
+public sealed class UpdateRole
 (
     RoleManager<Role> roleManager
 )

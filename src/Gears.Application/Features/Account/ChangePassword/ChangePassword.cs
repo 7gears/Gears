@@ -5,7 +5,7 @@ using Result = Results<
     BadRequest,
     NotFound>;
 
-public sealed class ChangePasswordEndpoint
+public sealed class ChangePassword
 (
     IHttpContextAccessor httpContextAccessor,
     UserManager<User> userManager

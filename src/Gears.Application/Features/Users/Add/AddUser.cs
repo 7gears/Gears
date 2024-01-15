@@ -7,7 +7,7 @@ using Result = Results<
     BadRequest,
     UnprocessableEntity>;
 
-public sealed class AddUserEndpoint
+public sealed class AddUser
 (
     IOptions<PasswordOptions> passwordOptions,
     UserManager<User> userManager,

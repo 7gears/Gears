@@ -5,7 +5,7 @@ using Result = Results<
     BadRequest,
     UnprocessableEntity>;
 
-public sealed class AddRoleEndpoint
+public sealed class AddRole
 (
     RoleManager<Role> roleManager
 )

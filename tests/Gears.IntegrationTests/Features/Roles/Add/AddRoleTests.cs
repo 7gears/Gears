@@ -4,9 +4,9 @@ namespace Gears.IntegrationTests.Features.Roles.Add;
 
 using Request = AddRoleRequest;
 using Response = AddRoleResponse;
-using Endpoint = AddRoleEndpoint;
+using Endpoint = AddRole;
 
-public sealed class EndpointTests(TestFixture f, ITestOutputHelper o) : TestClass<TestFixture>(f, o)
+public sealed class AddRoleTests(TestFixture f, ITestOutputHelper o) : TestClass<TestFixture>(f, o)
 {
     [Theory]
     [InlineData(null)]

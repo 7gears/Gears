@@ -1,6 +1,6 @@
 ﻿namespace Gears.Application.Features.Roles.GetAll;
 
-public sealed class GetAllRolesEndpoint
+public sealed class GetAllRoles
 (
     RoleManager<Role> roleManager
 )

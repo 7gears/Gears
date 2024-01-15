@@ -4,7 +4,7 @@ using Result = Results<
     Ok<GetProfileResponse>,
     NotFound>;
 
-public sealed class GetProfileEndpoint
+public sealed class GetProfile
 (
     IHttpContextAccessor httpContextAccessor,
     UserManager<User> userManager

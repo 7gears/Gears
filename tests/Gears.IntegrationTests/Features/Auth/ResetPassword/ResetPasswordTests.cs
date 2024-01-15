@@ -3,9 +3,9 @@
 namespace Gears.IntegrationTests.Features.Auth.ResetPassword;
 
 using Request = ResetPasswordRequest;
-using Endpoint = ResetPasswordEndpoint;
+using Endpoint = Application.Features.Auth.ResetPassword.ResetPassword;
 
-public sealed class EndpointTests(TestFixture f, ITestOutputHelper o) : TestClass<TestFixture>(f, o)
+public sealed class ResetPasswordTests(TestFixture f, ITestOutputHelper o) : TestClass<TestFixture>(f, o)
 {
     [Fact]
     public async Task NotFound_NotExistingUser()

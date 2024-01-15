@@ -5,7 +5,7 @@ using Result = Results<
     NotFound,
     UnauthorizedHttpResult>;
 
-public sealed class SignInEndpoint
+public sealed class SignIn
 (
     UserManager<User> userManager,
     IJwtTokenProvider jwtTokenProvider

@@ -5,7 +5,7 @@ using Result = Results<
     NotFound,
     UnprocessableEntity>;
 
-public sealed class ConfirmEmailEndpoint
+public sealed class ConfirmEmail
 (
     UserManager<User> userManager
 )

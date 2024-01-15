@@ -6,7 +6,7 @@ using Result = Results<
     NotFound,
     UnprocessableEntity>;
 
-public sealed class DeleteUserEndpoint
+public sealed class DeleteUser
 (
     UserManager<User> userManager
 )

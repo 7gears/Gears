@@ -1,6 +1,6 @@
 ﻿namespace Gears.Application.Features.Users.GetAll;
 
-public sealed class GetAllUsersEndpoint
+public sealed class GetAllUsers
 (
     UserManager<User> userManager
 )

@@ -5,7 +5,7 @@ using Result = Results<
     BadRequest,
     UnprocessableEntity>;
 
-public sealed class SignUpEndpoint
+public sealed class SignUp
 (
     UserManager<User> userManager,
     IPasswordHasher<User> passwordHasher,

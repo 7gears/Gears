@@ -6,7 +6,7 @@ using Result = Results<
     NotFound,
     UnprocessableEntity>;
 
-public sealed class DeleteRoleEndpoint
+public sealed class DeleteRole
 (
     RoleManager<Role> roleManager
 )
