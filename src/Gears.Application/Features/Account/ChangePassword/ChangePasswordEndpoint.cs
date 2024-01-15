@@ -5,19 +5,19 @@ using Result = Results<
     BadRequest,
     NotFound>;
 
-public sealed class Endpoint
+public sealed class ChangePasswordEndpoint
 (
     IHttpContextAccessor httpContextAccessor,
     UserManager<User> userManager
 )
-    : Endpoint<Request, Result>
+    : Endpoint<ChangePasswordRequest, Result>
 {
     public override void Configure()
     {
         Post("api/account/change-password");
     }
 
-    public override async Task<Result> ExecuteAsync(Request request, CancellationToken ct)
+    public override async Task<Result> ExecuteAsync(ChangePasswordRequest request, CancellationToken ct)
     {
         var userId = userManager.GetUserId(httpContextAccessor.HttpContext!.User);
         var user = await userManager.FindByIdAsync(userId!);

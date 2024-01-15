@@ -5,12 +5,12 @@ using Result = Results<
     BadRequest,
     NotFound>;
 
-public sealed class Endpoint
+public sealed class ResetPasswordEndpoint
 (
     UserManager<User> userManager,
     IPasswordHasher<User> passwordHasher
 )
-    : Endpoint<Request, Result>
+    : Endpoint<ResetPasswordRequest, Result>
 {
     public override void Configure()
     {
@@ -18,7 +18,7 @@ public sealed class Endpoint
         AllowAnonymous();
     }
 
-    public override async Task<Result> ExecuteAsync(Request request, CancellationToken ct)
+    public override async Task<Result> ExecuteAsync(ResetPasswordRequest request, CancellationToken ct)
     {
         var user = await userManager.FindByIdAsync(request.Id);
         if (user is not { IsActive: true })

@@ -6,11 +6,11 @@ using Result = Results<
     NotFound,
     UnprocessableEntity>;
 
-public sealed class Endpoint
+public sealed class UpdateRoleEndpoint
 (
     RoleManager<Role> roleManager
 )
-    : Endpoint<Request, Result>
+    : Endpoint<UpdateRoleRequest, Result>
 {
     public override void Configure()
     {
@@ -18,7 +18,7 @@ public sealed class Endpoint
         AccessControl("Roles_Update", Apply.ToThisEndpoint);
     }
 
-    public override async Task<Result> ExecuteAsync(Request request, CancellationToken ct)
+    public override async Task<Result> ExecuteAsync(UpdateRoleRequest request, CancellationToken ct)
     {
         if (!ValidatePermissions(request.Permissions))
         {

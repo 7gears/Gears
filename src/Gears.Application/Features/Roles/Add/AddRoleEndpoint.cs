@@ -1,15 +1,15 @@
 ﻿namespace Gears.Application.Features.Roles.Add;
 
 using Result = Results<
-    Created<Response>,
+    Created<AddRoleResponse>,
     BadRequest,
     UnprocessableEntity>;
 
-public sealed class Endpoint
+public sealed class AddRoleEndpoint
 (
     RoleManager<Role> roleManager
 )
-    : Endpoint<Request, Result>
+    : Endpoint<AddRoleRequest, Result>
 {
     public override void Configure()
     {
@@ -17,7 +17,7 @@ public sealed class Endpoint
         AccessControl("Roles_Add", Apply.ToThisEndpoint);
     }
 
-    public override async Task<Result> ExecuteAsync(Request request, CancellationToken ct)
+    public override async Task<Result> ExecuteAsync(AddRoleRequest request, CancellationToken ct)
     {
         if (!ValidatePermissions(request.Permissions))
         {
@@ -42,7 +42,7 @@ public sealed class Endpoint
             return UnprocessableEntity();
         }
 
-        return Created(string.Empty, new Response(role.Id));
+        return Created(string.Empty, new AddRoleResponse(role.Id));
     }
 
     private static bool ValidatePermissions(IEnumerable<string> permissions)

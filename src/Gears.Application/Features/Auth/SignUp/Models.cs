@@ -1,17 +1,17 @@
 ﻿namespace Gears.Application.Features.Auth.SignUp;
 
-public sealed record Request
+public sealed record SignUpRequest
 (
     string Email,
     string Password
 );
 
-public sealed record Response
+public sealed record SignUpResponse
 (
     string Id
 );
 
-public sealed class RequestValidator : Validator<Request>
+public sealed class RequestValidator : Validator<SignUpRequest>
 {
     public RequestValidator()
     {

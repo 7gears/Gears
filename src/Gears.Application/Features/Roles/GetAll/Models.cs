@@ -1,6 +1,6 @@
 ﻿namespace Gears.Application.Features.Roles.GetAll;
 
-public sealed record Response
+public sealed record GetAllRolesResponse
 (
     string Id,
     string Name,

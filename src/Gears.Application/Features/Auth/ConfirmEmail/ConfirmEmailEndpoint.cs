@@ -5,11 +5,11 @@ using Result = Results<
     NotFound,
     UnprocessableEntity>;
 
-public sealed class Endpoint
+public sealed class ConfirmEmailEndpoint
 (
     UserManager<User> userManager
 )
-    : Endpoint<Request, Result>
+    : Endpoint<ConfirmEmailRequest, Result>
 {
     public override void Configure()
     {
@@ -18,7 +18,7 @@ public sealed class Endpoint
     }
 
     public override async Task<Result> ExecuteAsync(
-        Request request,
+        ConfirmEmailRequest request,
         CancellationToken ct)
     {
         var user = await userManager.FindByIdAsync(request.Id);

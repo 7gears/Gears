@@ -1,6 +1,6 @@
 ﻿namespace Gears.Application.Features.Roles.Add;
 
-public sealed record Request
+public sealed record AddRoleRequest
 (
     string Name,
     string Description,
@@ -8,12 +8,12 @@ public sealed record Request
     HashSet<string> Permissions
 );
 
-public sealed record Response
+public sealed record AddRoleResponse
 (
     string Id
 );
 
-public sealed class RequestValidator : Validator<Request>
+public sealed class RequestValidator : Validator<AddRoleRequest>
 {
     public RequestValidator()
     {

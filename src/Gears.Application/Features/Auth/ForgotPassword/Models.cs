@@ -1,11 +1,11 @@
 ﻿namespace Gears.Application.Features.Auth.ForgotPassword;
 
-public sealed record Request
+public sealed record ForgotPasswordRequest
 (
     string Email
 );
 
-public sealed class RequestValidator : Validator<Request>
+public sealed class RequestValidator : Validator<ForgotPasswordRequest>
 {
     public RequestValidator()
     {

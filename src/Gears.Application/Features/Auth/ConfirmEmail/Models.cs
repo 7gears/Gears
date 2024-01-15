@@ -1,12 +1,12 @@
 ﻿namespace Gears.Application.Features.Auth.ConfirmEmail;
 
-public sealed record Request
+public sealed record ConfirmEmailRequest
 (
     string Id,
     string Token
 );
 
-public sealed class RequestValidator : Validator<Request>
+public sealed class RequestValidator : Validator<ConfirmEmailRequest>
 {
     public RequestValidator()
     {

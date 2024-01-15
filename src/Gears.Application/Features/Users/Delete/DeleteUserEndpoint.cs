@@ -6,11 +6,11 @@ using Result = Results<
     NotFound,
     UnprocessableEntity>;
 
-public sealed class Endpoint
+public sealed class DeleteUserEndpoint
 (
     UserManager<User> userManager
 )
-    : Endpoint<Request, Result>
+    : Endpoint<DeleteUserRequest, Result>
 {
     public override void Configure()
     {
@@ -18,7 +18,7 @@ public sealed class Endpoint
         AccessControl("Users_Delete", Apply.ToThisEndpoint);
     }
 
-    public override async Task<Result> ExecuteAsync(Request request, CancellationToken ct)
+    public override async Task<Result> ExecuteAsync(DeleteUserRequest request, CancellationToken ct)
     {
         var user = await userManager.FindByIdAsync(request.Id);
         if (user == null)

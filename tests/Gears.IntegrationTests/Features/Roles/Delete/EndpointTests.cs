@@ -2,6 +2,9 @@
 
 namespace Gears.IntegrationTests.Features.Roles.Delete;
 
+using Request = DeleteRoleRequest;
+using Endpoint = DeleteRoleEndpoint;
+
 public sealed class EndpointTests(TestFixture f, ITestOutputHelper o) : TestClass<TestFixture>(f, o)
 {
     [Theory]
@@ -49,6 +52,6 @@ public sealed class EndpointTests(TestFixture f, ITestOutputHelper o) : TestClas
         Assert.Null(role);
     }
 
-    private Task<HttpResponseMessage> Act(Request request) =>
-        Fixture.Client.DELETEAsync<Endpoint, Request>(request);
+    private Task<HttpResponseMessage> Act(Request deleteRoleRequest) =>
+        Fixture.Client.DELETEAsync<Endpoint, Request>(deleteRoleRequest);
 }

@@ -1,6 +1,6 @@
 ﻿namespace Gears.Application.Features.Users.GetAll;
 
-public sealed record Response
+public sealed record GetAllUsersResponse
 (
     string Id,
     string UserName,

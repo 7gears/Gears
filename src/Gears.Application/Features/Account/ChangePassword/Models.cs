@@ -1,12 +1,12 @@
 ﻿namespace Gears.Application.Features.Account.ChangePassword;
 
-public sealed record Request
+public sealed record ChangePasswordRequest
 (
     string Password,
     string NewPassword
 );
 
-public sealed class RequestValidator : Validator<Request>
+public sealed class RequestValidator : Validator<ChangePasswordRequest>
 {
     public RequestValidator()
     {

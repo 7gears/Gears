@@ -1,11 +1,11 @@
 ﻿namespace Gears.Application.Features.Users.Delete;
 
-public sealed record Request
+public sealed record DeleteUserRequest
 (
     string Id
 );
 
-public sealed class RequestValidator : Validator<Request>
+public sealed class RequestValidator : Validator<DeleteUserRequest>
 {
     public RequestValidator()
     {

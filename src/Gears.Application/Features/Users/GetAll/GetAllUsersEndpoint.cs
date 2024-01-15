@@ -1,10 +1,10 @@
 ﻿namespace Gears.Application.Features.Users.GetAll;
 
-public sealed class Endpoint
+public sealed class GetAllUsersEndpoint
 (
     UserManager<User> userManager
 )
-    : EndpointWithoutRequest<List<Response>>
+    : EndpointWithoutRequest<List<GetAllUsersResponse>>
 {
     public override void Configure()
     {
@@ -16,7 +16,7 @@ public sealed class Endpoint
     {
         var response = await userManager.Users.AsNoTracking()
             .Where(x => x.UserName != Consts.Auth.RootUser)
-            .Select(x => new Response(
+            .Select(x => new GetAllUsersResponse(
                 x.Id,
                 x.UserName,
                 x.Email,

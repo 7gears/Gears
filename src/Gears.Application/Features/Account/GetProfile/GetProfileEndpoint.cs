@@ -1,10 +1,10 @@
 ﻿namespace Gears.Application.Features.Account.GetProfile;
 
 using Result = Results<
-    Ok<Response>,
+    Ok<GetProfileResponse>,
     NotFound>;
 
-public sealed class Endpoint
+public sealed class GetProfileEndpoint
 (
     IHttpContextAccessor httpContextAccessor,
     UserManager<User> userManager
@@ -25,7 +25,7 @@ public sealed class Endpoint
             return NotFound();
         }
 
-        var response = new Response(
+        var response = new GetProfileResponse(
             user.FirstName,
             user.LastName,
             user.PhoneNumber);

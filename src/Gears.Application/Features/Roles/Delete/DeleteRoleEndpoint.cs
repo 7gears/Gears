@@ -6,11 +6,11 @@ using Result = Results<
     NotFound,
     UnprocessableEntity>;
 
-public sealed class Endpoint
+public sealed class DeleteRoleEndpoint
 (
     RoleManager<Role> roleManager
 )
-    : Endpoint<Request, Result>
+    : Endpoint<DeleteRoleRequest, Result>
 {
     public override void Configure()
     {
@@ -18,7 +18,7 @@ public sealed class Endpoint
         AccessControl("Roles_Delete", Apply.ToThisEndpoint);
     }
 
-    public override async Task<Result> ExecuteAsync(Request request, CancellationToken ct)
+    public override async Task<Result> ExecuteAsync(DeleteRoleRequest request, CancellationToken ct)
     {
         var role = await roleManager.FindByIdAsync(request.Id);
         if (role == null)

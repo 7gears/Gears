@@ -1,11 +1,11 @@
 ﻿namespace Gears.Application.Features.Roles.Delete;
 
-public sealed record Request
+public sealed record DeleteRoleRequest
 (
     string Id
 );
 
-public sealed class RequestValidator : Validator<Request>
+public sealed class RequestValidator : Validator<DeleteRoleRequest>
 {
     public RequestValidator()
     {

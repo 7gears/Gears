@@ -5,19 +5,19 @@ using Result = Results<
     NotFound,
     UnprocessableEntity>;
 
-public sealed class Endpoint
+public sealed class UpdateProfileEndpoint
 (
     IHttpContextAccessor httpContextAccessor,
     UserManager<User> userManager
 )
-    : Endpoint<Request, Result>
+    : Endpoint<UpdateProfileRequest, Result>
 {
     public override void Configure()
     {
         Patch("api/account/profile");
     }
 
-    public override async Task<Result> ExecuteAsync(Request request, CancellationToken ct)
+    public override async Task<Result> ExecuteAsync(UpdateProfileRequest request, CancellationToken ct)
     {
         var userId = userManager.GetUserId(httpContextAccessor.HttpContext!.User);
         var user = await userManager.FindByIdAsync(userId!);

@@ -1,6 +1,6 @@
 ﻿namespace Gears.Application.Features.Roles.Update;
 
-public sealed record Request
+public sealed record UpdateRoleRequest
 (
     string Id,
     string Name,
@@ -9,7 +9,7 @@ public sealed record Request
     HashSet<string> Permissions
 );
 
-public sealed class RequestValidator : Validator<Request>
+public sealed class RequestValidator : Validator<UpdateRoleRequest>
 {
     public RequestValidator()
     {

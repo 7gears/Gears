@@ -1,11 +1,11 @@
 ﻿namespace Gears.Application.Features.Roles.Get;
 
-public sealed record Request
+public sealed record GetRoleRequest
 (
     string Id
 );
 
-public sealed record Response
+public sealed record GetRoleResponse
 (
     string Id,
     string Name,
@@ -14,7 +14,7 @@ public sealed record Response
     IEnumerable<string> Permissions
 );
 
-public sealed class RequestValidator : Validator<Request>
+public sealed class RequestValidator : Validator<GetRoleRequest>
 {
     public RequestValidator()
     {

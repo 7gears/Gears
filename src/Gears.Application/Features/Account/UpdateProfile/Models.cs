@@ -1,6 +1,6 @@
 ﻿namespace Gears.Application.Features.Account.UpdateProfile;
 
-public sealed record Request
+public sealed record UpdateProfileRequest
 (
     string FirstName,
     string LastName,

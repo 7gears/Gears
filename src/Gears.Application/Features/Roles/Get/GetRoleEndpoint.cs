@@ -1,15 +1,15 @@
 ﻿namespace Gears.Application.Features.Roles.Get;
 
 using GetRoleResult = Results<
-    Ok<Response>,
+    Ok<GetRoleResponse>,
     BadRequest,
     NotFound>;
 
-public sealed class Endpoint
+public sealed class GetRoleEndpoint
 (
     RoleManager<Role> roleManager
 )
-    : Endpoint<Request, GetRoleResult>
+    : Endpoint<GetRoleRequest, GetRoleResult>
 {
     public override void Configure()
     {
@@ -17,7 +17,7 @@ public sealed class Endpoint
         AccessControl("Roles_Get", Apply.ToThisEndpoint);
     }
 
-    public override async Task<GetRoleResult> ExecuteAsync(Request request, CancellationToken ct)
+    public override async Task<GetRoleResult> ExecuteAsync(GetRoleRequest request, CancellationToken ct)
     {
         var role = await roleManager.FindByIdAsync(request.Id);
         if (role == null)
@@ -27,7 +27,7 @@ public sealed class Endpoint
 
         var permissions = await roleManager.GetRolePermissionNames(role);
 
-        var response = new Response(
+        var response = new GetRoleResponse(
             role.Id,
             role.Name,
             role.Description,

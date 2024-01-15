@@ -1,6 +1,6 @@
 ﻿namespace Gears.Application.Features.Permissions.GetAll;
 
-public sealed class Endpoint : EndpointWithoutRequest<List<PermissionGroup>>
+public sealed class GetAllPermissionsEndpoint : EndpointWithoutRequest<List<PermissionGroup>>
 {
     public override void Configure()
     {

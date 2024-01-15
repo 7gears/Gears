@@ -1,13 +1,13 @@
 ﻿namespace Gears.Application.Features.Auth.ResetPassword;
 
-public sealed record Request
+public sealed record ResetPasswordRequest
 (
     string Id,
     string Token,
     string Password
 );
 
-public sealed class RequestValidator : Validator<Request>
+public sealed class RequestValidator : Validator<ResetPasswordRequest>
 {
     public RequestValidator()
     {

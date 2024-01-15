@@ -1,50 +1,41 @@
-﻿namespace Gears.Application.Features.Auth.SignUp;
+﻿using Microsoft.Extensions.Options;
 
-using SignUpResult = Results<
-    Created<Response>,
+namespace Gears.Application.Features.Users.Add;
+
+using Result = Results<
+    Created<AddUserResponse>,
     BadRequest,
     UnprocessableEntity>;
 
-public sealed class Endpoint
+public sealed class AddUserEndpoint
 (
+    IOptions<PasswordOptions> passwordOptions,
     UserManager<User> userManager,
     IPasswordHasher<User> passwordHasher,
     IMailService mailService,
     IHttpContextService httpContextService
 )
-    : Endpoint<Request, SignUpResult>
+    : Endpoint<AddUserRequest, Result>
 {
     public override void Configure()
     {
-        Post("api/auth/signup");
-        AllowAnonymous();
+        Post("api/users");
+        AccessControl("Users_Add", Apply.ToThisEndpoint);
     }
 
-    public override async Task<SignUpResult> ExecuteAsync(Request request, CancellationToken ct)
+    public override async Task<Result> ExecuteAsync(AddUserRequest request, CancellationToken ct)
     {
-        var user = await userManager.FindByEmailAsync(request.Email);
-        if (user != null)
-        {
-            return UnprocessableEntity();
-        }
+        var password = Utils.GenerateRandomPassword(passwordOptions.Value);
 
-        user = new User
+        var user = new User
         {
             UserName = request.Email,
             Email = request.Email,
+            PhoneNumber = request.PhoneNumber,
             EmailConfirmed = false,
             IsActive = true,
-            PasswordHash = passwordHasher.HashPassword(null!, request.Password)
+            PasswordHash = passwordHasher.HashPassword(null!, password)
         };
-
-        foreach (var passwordValidator in userManager.PasswordValidators)
-        {
-            var passwordValidationResult = await passwordValidator.ValidateAsync(userManager, user, request.Password);
-            if (passwordValidationResult != IdentityResult.Success)
-            {
-                return BadRequest();
-            }
-        }
 
         var identityResult = await userManager.CreateAsync(user);
         if (identityResult != IdentityResult.Success)
@@ -57,7 +48,7 @@ public sealed class Endpoint
 
         _ = mailService.Send(mailRequest);
 
-        return Created(string.Empty, new Response(user.Id));
+        return Created(string.Empty, new AddUserResponse(user.Id));
     }
 
     private async Task<string> GenerateConfirmEmailLink(User user)

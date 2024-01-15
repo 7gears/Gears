@@ -1,10 +1,10 @@
 ﻿namespace Gears.Application.Features.Roles.GetAll;
 
-public sealed class Endpoint
+public sealed class GetAllRolesEndpoint
 (
     RoleManager<Role> roleManager
 )
-    : EndpointWithoutRequest<List<Response>>
+    : EndpointWithoutRequest<List<GetAllRolesResponse>>
 {
     public override void Configure()
     {
@@ -17,7 +17,7 @@ public sealed class Endpoint
         var response = await roleManager.Roles.AsNoTracking()
             .Where(x => x.Name != Consts.Auth.RootRole)
             .OrderBy(x => x.Name)
-            .Select(x => new Response(
+            .Select(x => new GetAllRolesResponse(
                 x.Id,
                 x.Name,
                 x.Description,

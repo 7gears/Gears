@@ -1,12 +1,12 @@
 ﻿namespace Gears.Application.Features.Auth.ForgotPassword;
 
-public sealed class Endpoint
+public sealed class ForgotPasswordEndpoint
 (
     UserManager<User> userManager,
     IMailService mailService,
     IHttpContextService httpContextService
 )
-    : Endpoint<Request, Ok>
+    : Endpoint<ForgotPasswordRequest, Ok>
 {
     public override void Configure()
     {
@@ -14,7 +14,7 @@ public sealed class Endpoint
         AllowAnonymous();
     }
 
-    public override async Task<Ok> ExecuteAsync(Request request, CancellationToken ct)
+    public override async Task<Ok> ExecuteAsync(ForgotPasswordRequest request, CancellationToken ct)
     {
         var user = await userManager.FindByEmailAsync(request.Email);
         if (user is not { IsActive: true })

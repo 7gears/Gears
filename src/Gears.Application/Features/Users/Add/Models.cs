@@ -1,6 +1,6 @@
 ﻿namespace Gears.Application.Features.Users.Add;
 
-public sealed record Request
+public sealed record AddUserRequest
 (
     string Email,
     string FirstName,
@@ -9,12 +9,12 @@ public sealed record Request
     HashSet<string> RoleIds
 );
 
-public sealed record Response
+public sealed record AddUserResponse
 (
     string Id
 );
 
-public sealed class RequestValidator : Validator<Request>
+public sealed class RequestValidator : Validator<AddUserRequest>
 {
     public RequestValidator()
     {
