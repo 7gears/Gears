@@ -7,6 +7,7 @@ using Result = Results<
 
 public sealed class AddRole
 (
+    IHttpContextService httpContextService,
     RoleManager<Role> roleManager
 )
     : Endpoint<AddRoleRequest, Result>
@@ -19,6 +20,11 @@ public sealed class AddRole
 
     public override async Task<Result> ExecuteAsync(AddRoleRequest request, CancellationToken ct)
     {
+        if (!httpContextService.HasPermission(Allow.Roles_ManagePermissions))
+        {
+            request = request with { Permissions = null };
+        }
+
         if (!ValidatePermissions(request.Permissions))
         {
             return BadRequest();
@@ -31,7 +37,7 @@ public sealed class AddRole
             IsDefault = request.IsDefault
         };
 
-        var saveResult = await roleManager.SaveRoleWithPermissions(
+        var saveResult = await roleManager.SaveRole(
             role,
             true,
             request.Permissions,
@@ -45,8 +51,7 @@ public sealed class AddRole
         return Created(string.Empty, new AddRoleResponse(role.Id));
     }
 
-    private static bool ValidatePermissions(IEnumerable<string> permissions)
-    {
-        return permissions == null || permissions.All(Allow.AllNames().ToHashSet().Contains);
-    }
+    private static bool ValidatePermissions(IEnumerable<string> permissions) =>
+        permissions == null ||
+        permissions.All(Allow.AllNames().ToHashSet().Contains);
 }

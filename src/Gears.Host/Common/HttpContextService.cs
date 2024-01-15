@@ -1,15 +1,8 @@
 ﻿namespace Gears.Host.Common;
 
 [RegisterService<IHttpContextService>(LifeTime.Scoped)]
-internal sealed class HttpContextService : IHttpContextService
+internal sealed class HttpContextService(IHttpContextAccessor httpContextAccessor) : IHttpContextService
 {
-    private readonly IHttpContextAccessor _httpContextAccessor;
-
-    public HttpContextService(IHttpContextAccessor httpContextAccessor)
-    {
-        _httpContextAccessor = httpContextAccessor;
-    }
-
     public string GetOrigin()
     {
         var result = Request.Headers.Origin;
@@ -21,5 +14,14 @@ internal sealed class HttpContextService : IHttpContextService
         return result;
     }
 
-    private HttpRequest Request => _httpContextAccessor.HttpContext!.Request;
+    public bool HasPermission(string permission)
+    {
+        var claim = httpContextAccessor.HttpContext?.User
+            .FindAll(Consts.Auth.PermissionClaimType)
+            .FirstOrDefault(x => x.Value == permission);
+
+        return claim != null;
+    }
+
+    private HttpRequest Request => httpContextAccessor.HttpContext!.Request;
 }

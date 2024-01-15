@@ -14,12 +14,58 @@ public static class RoleManagerExtension
             .ToHashSet();
     }
 
-    public static async Task<bool> SaveRoleWithPermissions(
+    public static async Task<bool> SaveUser(
+        this UserManager<User> userManager,
+        User user,
+        bool isNew,
+        IEnumerable<string> rolesToAdd,
+        IEnumerable<string> rolesToDelete)
+    {
+        using var scope = new TransactionScope(TransactionScopeAsyncFlowOption.Enabled);
+        try
+        {
+            var result = isNew ?
+                await userManager.CreateAsync(user) :
+                await userManager.UpdateAsync(user);
+
+            if (result != IdentityResult.Success)
+            {
+                return false;
+            }
+
+            if (rolesToDelete != null)
+            {
+                result = await userManager.RemoveFromRolesAsync(user, rolesToDelete);
+                if (result != IdentityResult.Success)
+                {
+                    return false;
+                }
+            }
+
+            if (rolesToAdd != null)
+            {
+                result = await userManager.AddToRolesAsync(user, rolesToAdd);
+                if (result != IdentityResult.Success)
+                {
+                    return false;
+                }
+            }
+
+            scope.Complete();
+            return true;
+        }
+        catch
+        {
+            return false;
+        }
+    }
+
+    public static async Task<bool> SaveRole(
             this RoleManager<Role> roleManager,
             Role role,
             bool isNew,
             IEnumerable<string> permissionsToAdd,
-            IEnumerable<string> permissionsToRemove)
+            IEnumerable<string> permissionsToDelete)
     {
         using var scope = new TransactionScope(TransactionScopeAsyncFlowOption.Enabled);
 
@@ -46,9 +92,9 @@ public static class RoleManagerExtension
                 }
             }
 
-            if (permissionsToRemove != null)
+            if (permissionsToDelete != null)
             {
-                foreach (var permission in permissionsToRemove)
+                foreach (var permission in permissionsToDelete)
                 {
                     result = await roleManager.RemoveClaimAsync(role, ToClaim(permission));
                     if (result != IdentityResult.Success)

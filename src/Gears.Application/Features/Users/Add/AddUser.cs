@@ -25,8 +25,12 @@ public sealed class AddUser
 
     public override async Task<Result> ExecuteAsync(AddUserRequest request, CancellationToken ct)
     {
-        var password = Utils.GenerateRandomPassword(passwordOptions.Value);
+        if (!httpContextService.HasPermission(Allow.Users_ManageRoles))
+        {
+            request = request with { RoleIds = null };
+        }
 
+        var password = Utils.GenerateRandomPassword(passwordOptions.Value);
         var user = new User
         {
             Email = request.Email,
@@ -39,8 +43,13 @@ public sealed class AddUser
             PasswordHash = passwordHasher.HashPassword(null!, password)
         };
 
-        var identityResult = await userManager.CreateAsync(user);
-        if (identityResult != IdentityResult.Success)
+        var result = await userManager.SaveUser(
+            user,
+            true,
+            request.RoleIds,
+            null);
+
+        if (!result)
         {
             return UnprocessableEntity();
         }

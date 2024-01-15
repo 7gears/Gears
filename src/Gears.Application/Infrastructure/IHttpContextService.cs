@@ -2,5 +2,7 @@
 
 public interface IHttpContextService
 {
+    bool HasPermission(string permission);
+
     string GetOrigin();
 }

@@ -8,6 +8,7 @@ using Result = Results<
 
 public sealed class UpdateRole
 (
+    IHttpContextService httpContextService,
     RoleManager<Role> roleManager
 )
     : Endpoint<UpdateRoleRequest, Result>
@@ -20,6 +21,11 @@ public sealed class UpdateRole
 
     public override async Task<Result> ExecuteAsync(UpdateRoleRequest request, CancellationToken ct)
     {
+        if (!httpContextService.HasPermission(Allow.Roles_ManagePermissions))
+        {
+            request = request with { Permissions = null };
+        }
+
         if (!ValidatePermissions(request.Permissions))
         {
             return BadRequest();
@@ -37,22 +43,21 @@ public sealed class UpdateRole
         }
 
         var permissions = await roleManager.GetRolePermissionNames(role);
-
-        var permissionsToAdd = request.Permissions
-            .Where(x => !permissions.Contains(x));
-
-        var permissionsToRemove = permissions
-            .Where(x => !request.Permissions.Contains(x));
+        ProcessPermissions(
+            permissions,
+            request,
+            out var permissionsToAdd,
+            out var permissionsToDelete);
 
         role.Name = request.Name;
         role.Description = request.Description;
         role.IsDefault = request.IsDefault;
 
-        var saveResult = await roleManager.SaveRoleWithPermissions(
+        var saveResult = await roleManager.SaveRole(
             role,
             false,
             permissionsToAdd,
-            permissionsToRemove);
+            permissionsToDelete);
         if (!saveResult)
         {
             return UnprocessableEntity();
@@ -61,6 +66,28 @@ public sealed class UpdateRole
         return NoContent();
     }
 
+    private static void ProcessPermissions(
+        HashSet<string> allPermissions,
+        UpdateRoleRequest request,
+        out IEnumerable<string> permissionsToAdd,
+        out IEnumerable<string> permissionsToDelete)
+    {
+        permissionsToAdd = null;
+        permissionsToDelete = null;
+
+        if (request.Permissions == null)
+        {
+            return;
+        }
+
+        permissionsToAdd = request.Permissions
+            .Where(x => !allPermissions.Contains(x));
+
+        permissionsToDelete = allPermissions
+            .Where(x => !request.Permissions.Contains(x));
+    }
+
     private static bool ValidatePermissions(IEnumerable<string> permissions) =>
-        permissions == null || permissions.All(Allow.AllNames().ToHashSet().Contains);
+        permissions == null ||
+        permissions.All(Allow.AllNames().ToHashSet().Contains);
 }

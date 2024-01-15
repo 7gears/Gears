@@ -5,7 +5,6 @@ public sealed class GetAllPermissions : EndpointWithoutRequest<List<PermissionGr
     public override void Configure()
     {
         Get("api/permissions");
-        AccessControl("Permissions_GetAll", Apply.ToThisEndpoint);
     }
 
     public override async Task HandleAsync(CancellationToken ct)
