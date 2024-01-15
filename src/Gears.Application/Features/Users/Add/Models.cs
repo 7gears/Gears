@@ -6,6 +6,7 @@ public sealed record AddUserRequest
     string FirstName,
     string LastName,
     string PhoneNumber,
+    bool IsActive,
     HashSet<string> RoleIds
 );
 

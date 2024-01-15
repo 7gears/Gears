@@ -29,11 +29,13 @@ public sealed class AddUser
 
         var user = new User
         {
-            UserName = request.Email,
             Email = request.Email,
+            UserName = request.Email,
+            FirstName = request.FirstName,
+            LastName = request.LastName,
             PhoneNumber = request.PhoneNumber,
+            IsActive = request.IsActive,
             EmailConfirmed = false,
-            IsActive = true,
             PasswordHash = passwordHasher.HashPassword(null!, password)
         };
 
