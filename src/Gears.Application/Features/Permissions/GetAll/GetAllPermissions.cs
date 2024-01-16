@@ -1,4 +1,6 @@
-﻿namespace Gears.Application.Features.Permissions.GetAll;
+﻿using System.Text.RegularExpressions;
+
+namespace Gears.Application.Features.Permissions.GetAll;
 
 public sealed class GetAllPermissions : EndpointWithoutRequest<List<PermissionGroup>>
 {
@@ -17,7 +19,9 @@ public sealed class GetAllPermissions : EndpointWithoutRequest<List<PermissionGr
             .Select(kvp => new
             {
                 kvp,
-                groupItems = kvp.Value.Select(item => new Permission(item.Name, item.ItemName)).ToList()
+                groupItems = kvp.Value
+                    .Select(item => new Permission(item.Name, item.ItemName, ToVisibleName(item.ItemName)))
+                    .ToList()
             })
             .Select(x => new PermissionGroup(x.kvp.Key, x.kvp.Key, x.groupItems))
             .ToList();
@@ -35,6 +39,9 @@ public sealed class GetAllPermissions : EndpointWithoutRequest<List<PermissionGr
 
         return new(name, parts[0], parts[1]);
     }
+
+    private static string ToVisibleName(string name) =>
+        Regex.Replace(name, "([A-Z])", " $1").Trim();
 
     internal sealed record PermissionsParts(
         string Name,

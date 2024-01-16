@@ -2,8 +2,9 @@
 
 public sealed record Permission
 (
-    string PermissionId,
-    string PermissionName
+    string Id,
+    string Name,
+    string VisibleName
 );
 
 public sealed record PermissionGroup(
