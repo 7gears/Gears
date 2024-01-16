@@ -44,8 +44,8 @@ public sealed class UpdateRole
 
         var permissions = await roleManager.GetRolePermissionNames(role);
         ProcessPermissions(
-            permissions,
             request,
+            permissions,
             out var permissionsToAdd,
             out var permissionsToDelete);
 
@@ -66,9 +66,13 @@ public sealed class UpdateRole
         return NoContent();
     }
 
+    private static bool ValidatePermissions(IEnumerable<string> permissions) =>
+        permissions == null ||
+        permissions.All(Allow.AllNames().ToHashSet().Contains);
+
     private static void ProcessPermissions(
-        HashSet<string> allPermissions,
         UpdateRoleRequest request,
+        HashSet<string> allPermissions,
         out IEnumerable<string> permissionsToAdd,
         out IEnumerable<string> permissionsToDelete)
     {
@@ -86,8 +90,4 @@ public sealed class UpdateRole
         permissionsToDelete = allPermissions
             .Where(x => !request.Permissions.Contains(x));
     }
-
-    private static bool ValidatePermissions(IEnumerable<string> permissions) =>
-        permissions == null ||
-        permissions.All(Allow.AllNames().ToHashSet().Contains);
 }

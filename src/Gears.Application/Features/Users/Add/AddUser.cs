@@ -11,6 +11,7 @@ public sealed class AddUser
 (
     IOptions<PasswordOptions> passwordOptions,
     UserManager<User> userManager,
+    RoleManager<Role> roleManager,
     IPasswordHasher<User> passwordHasher,
     IMailService mailService,
     IHttpContextService httpContextService
@@ -30,6 +31,14 @@ public sealed class AddUser
             request = request with { RoleIds = null };
         }
 
+        var roles = await roleManager.Roles.AsNoTracking()
+            .ToListAsync(ct);
+
+        if (!TryParseRoles(request, roles, out var rolesToAdd))
+        {
+            return BadRequest();
+        }
+
         var password = Utils.GenerateRandomPassword(passwordOptions.Value);
         var user = new User
         {
@@ -39,14 +48,14 @@ public sealed class AddUser
             LastName = request.LastName,
             PhoneNumber = request.PhoneNumber,
             IsActive = request.IsActive,
-            EmailConfirmed = false,
+            EmailConfirmed = true,
             PasswordHash = passwordHasher.HashPassword(null!, password)
         };
 
         var result = await userManager.SaveUser(
             user,
             true,
-            request.RoleIds,
+            rolesToAdd,
             null);
 
         if (!result)
@@ -60,6 +69,39 @@ public sealed class AddUser
         _ = mailService.Send(mailRequest);
 
         return Created(string.Empty, new AddUserResponse(user.Id));
+    }
+
+    private static bool TryParseRoles(
+        AddUserRequest request,
+        List<Role> roles,
+        out HashSet<string> rolesToAdd)
+    {
+        rolesToAdd = null;
+        if (request.RoleIds == null)
+        {
+            return true;
+        }
+
+        var rolesMap = roles.ToDictionary(x => x.Id, x => x);
+
+        if (!request.RoleIds.All(rolesMap.ContainsKey))
+        {
+            return false;
+        }
+
+        rolesToAdd = [];
+
+        foreach (var role in rolesMap.Values.Where(role => role.IsDefault))
+        {
+            rolesToAdd.Add(role.Name);
+        }
+
+        foreach (var roleId in request.RoleIds)
+        {
+            rolesToAdd.Add(rolesMap[roleId].Name);
+        }
+
+        return true;
     }
 
     private async Task<string> GenerateConfirmEmailLink(User user)
