@@ -1,4 +1,5 @@
-﻿using Microsoft.Extensions.Options;
+﻿using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
+using Microsoft.Extensions.Options;
 
 namespace Gears.Application.Features.Users.Add;
 
@@ -14,7 +15,8 @@ public sealed class AddUser
     RoleManager<Role> roleManager,
     IPasswordHasher<User> passwordHasher,
     IMailService mailService,
-    IHttpContextService httpContextService
+    IHttpContextService httpContextService,
+    IEnumerable<IUserValidator<User>> userValidators
 )
     : Endpoint<AddUserRequest, Result>
 {

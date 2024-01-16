@@ -10,15 +10,17 @@ internal static class IdentityConfiguration
         builder.Services
             .AddIdentityCore<User>(x =>
             {
-                x.Tokens.EmailConfirmationTokenProvider = EmailConfirmationTokenProviderName;
-                x.Tokens.PasswordResetTokenProvider = PasswordResetTokenProviderName;
-
-                x.User.RequireUniqueEmail = true;
-                x.Password.RequiredLength = 8;
+                x.Password.RequiredLength = 6;
                 x.Password.RequireDigit = false;
                 x.Password.RequireLowercase = false;
                 x.Password.RequireUppercase = false;
                 x.Password.RequireNonAlphanumeric = false;
+
+                x.Tokens.EmailConfirmationTokenProvider = EmailConfirmationTokenProviderName;
+                x.Tokens.PasswordResetTokenProvider = PasswordResetTokenProviderName;
+
+                x.User.AllowedUserNameCharacters = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789-._@/";
+                x.User.RequireUniqueEmail = true;
             })
             .AddRoles<Role>()
             .AddEntityFrameworkStores<ApplicationDbContext>()
