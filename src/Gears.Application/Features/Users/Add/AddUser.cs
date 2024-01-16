@@ -89,13 +89,11 @@ public sealed class AddUser
             return false;
         }
 
-        rolesToAdd = [];
+        var defaultRoles = rolesMap.Values
+            .Where(role => role.IsDefault)
+            .Select(x => x.Name);
 
-        foreach (var role in rolesMap.Values.Where(role => role.IsDefault))
-        {
-            rolesToAdd.Add(role.Name);
-        }
-
+        rolesToAdd = [.. defaultRoles];
         foreach (var roleId in request.RoleIds)
         {
             rolesToAdd.Add(rolesMap[roleId].Name);
