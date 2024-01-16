@@ -2,8 +2,8 @@
 
 namespace Gears.IntegrationTests.Features.Auth.ResetPassword;
 
-using Request = ResetPasswordRequest;
 using Endpoint = Application.Features.Auth.ResetPassword.ResetPassword;
+using Request = ResetPasswordRequest;
 
 public sealed class ResetPasswordTests(TestFixture f, ITestOutputHelper o) : TestClass<TestFixture>(f, o)
 {

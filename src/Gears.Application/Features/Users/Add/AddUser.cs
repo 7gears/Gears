@@ -1,7 +1,4 @@
-﻿using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
-using Microsoft.Extensions.Options;
-
-namespace Gears.Application.Features.Users.Add;
+﻿namespace Gears.Application.Features.Users.Add;
 
 using Result = Results<
     Created<AddUserResponse>,
@@ -15,8 +12,7 @@ public sealed class AddUser
     RoleManager<Role> roleManager,
     IPasswordHasher<User> passwordHasher,
     IMailService mailService,
-    IHttpContextService httpContextService,
-    IEnumerable<IUserValidator<User>> userValidators
+    IHttpContextService httpContextService
 )
     : Endpoint<AddUserRequest, Result>
 {

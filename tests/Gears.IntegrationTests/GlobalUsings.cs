@@ -8,7 +8,6 @@ global using FluentAssertions;
 global using Gears.Application;
 global using Gears.Application.Auth;
 global using Gears.Application.Entities;
-global using Gears.Application.Features.Auth;
 global using Gears.Application.Infrastructure;
 global using Gears.Host.Db;
 global using Gears.IntegrationTests.Infrastructure;

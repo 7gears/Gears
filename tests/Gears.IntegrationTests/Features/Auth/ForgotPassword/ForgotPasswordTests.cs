@@ -2,8 +2,8 @@
 
 namespace Gears.IntegrationTests.Features.Auth.ForgotPassword;
 
-using Request = ForgotPasswordRequest;
 using Endpoint = Application.Features.Auth.ForgotPassword.ForgotPassword;
+using Request = ForgotPasswordRequest;
 
 public sealed class ForgotPasswordTests(TestFixture f, ITestOutputHelper o) : TestClass<TestFixture>(f, o), IDisposable
 {

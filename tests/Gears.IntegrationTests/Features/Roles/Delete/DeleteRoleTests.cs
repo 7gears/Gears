@@ -2,8 +2,8 @@
 
 namespace Gears.IntegrationTests.Features.Roles.Delete;
 
-using Request = DeleteRoleRequest;
 using Endpoint = DeleteRole;
+using Request = DeleteRoleRequest;
 
 public sealed class DeleteRoleTests(TestFixture f, ITestOutputHelper o) : TestClass<TestFixture>(f, o)
 {

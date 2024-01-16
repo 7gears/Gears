@@ -11,6 +11,7 @@ global using Microsoft.AspNetCore.Http;
 global using Microsoft.AspNetCore.Http.HttpResults;
 global using Microsoft.AspNetCore.Identity;
 global using Microsoft.EntityFrameworkCore;
+global using Microsoft.Extensions.Options;
 global using static Microsoft.AspNetCore.Http.TypedResults;
 
 namespace Gears.Application

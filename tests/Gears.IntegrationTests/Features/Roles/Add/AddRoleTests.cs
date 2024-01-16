@@ -2,9 +2,9 @@
 
 namespace Gears.IntegrationTests.Features.Roles.Add;
 
+using Endpoint = AddRole;
 using Request = AddRoleRequest;
 using Response = AddRoleResponse;
-using Endpoint = AddRole;
 
 public sealed class AddRoleTests(TestFixture f, ITestOutputHelper o) : TestClass<TestFixture>(f, o)
 {
