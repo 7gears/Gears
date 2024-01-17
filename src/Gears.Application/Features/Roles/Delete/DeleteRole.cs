@@ -14,7 +14,7 @@ public sealed class DeleteRole
 {
     public override void Configure()
     {
-        Delete("api/roles");
+        Delete("api/roles/{id}");
         AccessControl("Roles_Delete", Apply.ToThisEndpoint);
     }
 

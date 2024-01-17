@@ -14,7 +14,7 @@ public sealed class DeleteUser
 {
     public override void Configure()
     {
-        Delete("api/users");
+        Delete("api/users/{id}");
         AccessControl("Users_Delete", Apply.ToThisEndpoint);
     }
 

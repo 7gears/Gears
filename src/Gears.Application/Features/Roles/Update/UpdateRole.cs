@@ -15,7 +15,7 @@ public sealed class UpdateRole
 {
     public override void Configure()
     {
-        Put("api/roles");
+        Put("api/roles/{id}");
         AccessControl("Roles_Update", Apply.ToThisEndpoint);
     }
 
