@@ -22,38 +22,27 @@ public sealed class UpdateUser
 
     public override async Task<Result> ExecuteAsync(UpdateUserRequest request, CancellationToken ct)
     {
-        if (!httpContextService.HasPermission(Allow.Users_ManageRoles))
-        {
-            request = request with { RoleIds = null };
-        }
-        else if (request.RoleIds == null)
-        {
-            request = request with { RoleIds = [] };
-        }
-
         var user = await userManager.FindByIdAsync(request.Id);
         if (user == null)
         {
             return NotFound();
         }
-
         if (user.UserName == Consts.Auth.RootUserUserName)
         {
-            return UnprocessableEntity();
+            return BadRequest();
         }
 
-        var allRoles = await roleManager.Roles.AsNoTracking()
-            .ToListAsync(ct);
-        var userRoles = await userManager.GetRolesAsync(user);
+        var rolesToAdd = Enumerable.Empty<string>();
+        var rolesToDelete = Enumerable.Empty<string>();
 
-        if (!UserRoleProcessor.TryParseRoles(
-                request,
-                allRoles,
-                userRoles,
-                out var rolesToAdd,
-                out var rolesToDelete))
+        if (httpContextService.HasPermission(Allow.Users_ManageRoles))
         {
-            return BadRequest();
+            var roleInfos = await GetRoleInfos(request, user, ct);
+
+            if (!UpdateUserRequestRoleParser.TryParseRoles(roleInfos, out rolesToAdd, out rolesToDelete))
+            {
+                return BadRequest();
+            }
         }
 
         user.Email = request.Email;
@@ -75,4 +64,23 @@ public sealed class UpdateUser
 
         return NoContent();
     }
+
+    private async Task<RoleInfos> GetRoleInfos(
+        UpdateUserRequest request,
+        User user,
+        CancellationToken ct)
+    {
+        var allRoles = await roleManager.Roles.AsNoTracking()
+            .ToListAsync(ct);
+
+        var userRoleNames = await userManager.GetRolesAsync(user);
+
+        return new(request.RoleIds ?? [], allRoles, userRoleNames);
+    }
 }
+
+internal sealed record RoleInfos(
+    HashSet<string> RequestRoleIds,
+    List<Role> AllRoles,
+    IList<string> UserRoleNames
+);

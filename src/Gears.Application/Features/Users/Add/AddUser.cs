@@ -24,21 +24,15 @@ public sealed class AddUser
 
     public override async Task<Result> ExecuteAsync(AddUserRequest request, CancellationToken ct)
     {
-        if (!httpContextService.HasPermission(Allow.Users_ManageRoles))
-        {
-            request = request with { RoleIds = null };
-        }
-        else if (request.RoleIds == null)
-        {
-            request = request with { RoleIds = [] };
-        }
+        var rolesToAdd = Enumerable.Empty<string>();
 
-        var roles = await roleManager.Roles.AsNoTracking()
-            .ToListAsync(ct);
-
-        if (!TryParseRoles(request, roles, out var rolesToAdd))
+        if (httpContextService.HasPermission(Allow.Users_ManageRoles))
         {
-            return BadRequest();
+            var roleInfos = await GetRoleInfos(request, ct);
+            if (!AddUserRequestRoleParser.TryParseRoles(roleInfos, out rolesToAdd))
+            {
+                return BadRequest();
+            }
         }
 
         var password = Utils.GenerateRandomPassword(passwordOptions.Value);
@@ -73,37 +67,6 @@ public sealed class AddUser
         return Created(string.Empty, new AddUserResponse(user.Id));
     }
 
-    private static bool TryParseRoles(
-        AddUserRequest request,
-        List<Role> roles,
-        out HashSet<string> rolesToAdd)
-    {
-        rolesToAdd = null;
-        if (request.RoleIds == null)
-        {
-            return true;
-        }
-
-        var rolesMap = roles.ToDictionary(x => x.Id, x => x);
-
-        if (!request.RoleIds.All(rolesMap.ContainsKey))
-        {
-            return false;
-        }
-
-        var defaultRoles = rolesMap.Values
-            .Where(role => role.IsDefault)
-            .Select(x => x.Name);
-
-        rolesToAdd = [.. defaultRoles];
-        foreach (var roleId in request.RoleIds)
-        {
-            rolesToAdd.Add(rolesMap[roleId].Name);
-        }
-
-        return true;
-    }
-
     private async Task<string> GenerateConfirmEmailLink(User user)
     {
         var origin = httpContextService.GetOrigin();
@@ -120,4 +83,17 @@ public sealed class AddUser
 
         return builder.ToString();
     }
+
+    private async Task<RoleInfos> GetRoleInfos(AddUserRequest request, CancellationToken ct)
+    {
+        var allRoles = await roleManager.Roles.AsNoTracking()
+            .ToListAsync(ct);
+
+        return new(request.RoleIds ?? [], allRoles);
+    }
 }
+
+internal sealed record RoleInfos(
+    HashSet<string> RequestRoleIds,
+    List<Role> AllRoles
+);

@@ -9,5 +9,5 @@ public sealed record UpdateUserRequest
     string LastName,
     string PhoneNumber,
     bool IsActive,
-    IEnumerable<string> RoleIds
+    HashSet<string> RoleIds
 );
