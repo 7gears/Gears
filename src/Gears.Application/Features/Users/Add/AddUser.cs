@@ -28,6 +28,10 @@ public sealed class AddUser
         {
             request = request with { RoleIds = null };
         }
+        else if (request.RoleIds == null)
+        {
+            request = request with { RoleIds = [] };
+        }
 
         var roles = await roleManager.Roles.AsNoTracking()
             .ToListAsync(ct);

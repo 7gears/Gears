@@ -42,10 +42,10 @@ public sealed class UpdateRole
             return UnprocessableEntity();
         }
 
-        var permissions = await roleManager.GetRolePermissionNames(role);
+        var rolePermissions = await roleManager.GetRolePermissionNames(role);
         ProcessPermissions(
             request,
-            permissions,
+            rolePermissions,
             out var permissionsToAdd,
             out var permissionsToDelete);
 
@@ -72,7 +72,7 @@ public sealed class UpdateRole
 
     private static void ProcessPermissions(
         UpdateRoleRequest request,
-        HashSet<string> allPermissions,
+        HashSet<string> rolePermissions,
         out IEnumerable<string> permissionsToAdd,
         out IEnumerable<string> permissionsToDelete)
     {
@@ -85,9 +85,9 @@ public sealed class UpdateRole
         }
 
         permissionsToAdd = request.Permissions
-            .Where(x => !allPermissions.Contains(x));
+            .Where(x => !rolePermissions.Contains(x));
 
-        permissionsToDelete = allPermissions
+        permissionsToDelete = rolePermissions
             .Where(x => !request.Permissions.Contains(x));
     }
 }

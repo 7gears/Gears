@@ -26,7 +26,7 @@ public sealed class DeleteUser
             return NotFound();
         }
 
-        if (user.UserName == Consts.Auth.RootUser)
+        if (user.UserName == Consts.Auth.RootUserUserName)
         {
             return UnprocessableEntity();
         }

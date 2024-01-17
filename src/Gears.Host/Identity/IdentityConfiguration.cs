@@ -70,8 +70,8 @@ internal static class IdentityConfiguration
         };
         var rootUser = new User
         {
-            UserName = Consts.Auth.RootUser,
-            NormalizedUserName = Consts.Auth.RootUser.ToUpper(),
+            UserName = Consts.Auth.RootUserUserName,
+            NormalizedUserName = Consts.Auth.RootUserUserName.ToUpper(),
             Email = "root@root",
             NormalizedEmail = "ROOT@ROOT",
             EmailConfirmed = true,

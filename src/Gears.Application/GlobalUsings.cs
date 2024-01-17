@@ -14,6 +14,11 @@ global using Microsoft.EntityFrameworkCore;
 global using Microsoft.Extensions.Options;
 global using static Microsoft.AspNetCore.Http.TypedResults;
 
+using System.Runtime.CompilerServices;
+
+[assembly: InternalsVisibleTo("Gears.IntegrationTests")]
+[assembly: InternalsVisibleTo("Gears.UnitTests")]
+
 namespace Gears.Application
 {
     public sealed class Info;
