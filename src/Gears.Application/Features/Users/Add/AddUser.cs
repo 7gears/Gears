@@ -45,7 +45,7 @@ public sealed class AddUser
         var user = new User
         {
             Email = request.Email,
-            UserName = request.UserName,
+            UserName = request.UserName != string.Empty ? request.UserName : request.Email,
             FirstName = request.FirstName,
             LastName = request.LastName,
             PhoneNumber = request.PhoneNumber,
