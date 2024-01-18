@@ -41,7 +41,12 @@ public sealed class GetAllPermissions : EndpointWithoutRequest<List<PermissionGr
     }
 
     private static string ToVisibleName(string name) =>
-        Regex.Replace(name, "([A-Z])", " $1").Trim();
+        Regex.Replace(
+                name, "([A-Z])",
+                " $1",
+                RegexOptions.None,
+                TimeSpan.FromSeconds(2))
+            .Trim();
 
     internal sealed record PermissionsParts(
         string Name,
