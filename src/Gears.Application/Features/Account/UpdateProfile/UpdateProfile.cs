@@ -26,6 +26,7 @@ public sealed class UpdateProfile
             return NotFound();
         }
 
+        user.UserName = request.UserName;
         user.FirstName = request.FirstName;
         user.LastName = request.LastName;
         user.PhoneNumber = request.PhoneNumber;

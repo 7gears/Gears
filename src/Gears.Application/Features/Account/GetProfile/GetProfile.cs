@@ -26,6 +26,8 @@ public sealed class GetProfile
         }
 
         var response = new GetProfileResponse(
+            user.Email,
+            user.UserName,
             user.FirstName,
             user.LastName,
             user.PhoneNumber);
