@@ -1,0 +1,28 @@
+version: '3.8'
+
+networks:
+    gears:        
+
+services:
+
+    mssql:
+        container_name: SqlServerContainer
+        image: mcr.microsoft.com/mssql/server:2022-latest
+        ports:
+            - 2433:1433
+        environment:
+            - ACCEPT_EULA=Y
+            - MSSQL_SA_PASSWORD=Password123!
+            
+    web-api:
+        container_name: WebApiContainer
+        ports:
+            - 8001:8080
+        build:
+          context: .
+          dockerfile: Dockerfile
+        environment:
+            - Db__ConnectionString=Server=mssql;Database=Gears;User Id=SA;Password=Password123!;MultipleActiveResultSets=true;TrustServerCertificate=True
+        depends_on:
+            - mssql
+        
