@@ -1,24 +1,15 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk.Web">
     <ItemGroup>
-        <PackageReference Include="FastEndpoints" Version="5.21.2" />
-        <PackageReference Include="FastEndpoints.ClientGen" Version="5.21.2" />
-        <PackageReference Include="FastEndpoints.Generator" Version="5.21.2">
-            <PrivateAssets>all</PrivateAssets>
-            <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
-        </PackageReference>
-        <PackageReference Include="FastEndpoints.Security" Version="5.21.2" />
-        <PackageReference Include="FastEndpoints.Swagger" Version="5.21.2" />
-        <PackageReference Include="MailKit" Version="4.3.0" />
-        <PackageReference Include="Microsoft.EntityFrameworkCore" Version="8.0.1" />
-        <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="8.0.1" />
-        <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="8.0.1">
-            <PrivateAssets>all</PrivateAssets>
-            <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
-        </PackageReference>
-        <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="8.0.1">
-            <PrivateAssets>all</PrivateAssets>
-            <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
-        </PackageReference>
+        <PackageReference Include="FastEndpoints" />
+        <PackageReference Include="FastEndpoints.ClientGen" />
+        <PackageReference Include="FastEndpoints.Generator" />
+        <PackageReference Include="FastEndpoints.Security" />
+        <PackageReference Include="FastEndpoints.Swagger" />
+        <PackageReference Include="MailKit" />
+        <PackageReference Include="Microsoft.EntityFrameworkCore" />
+        <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" />
+        <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" />
+        <PackageReference Include="Microsoft.EntityFrameworkCore.Design" />
     </ItemGroup>
     <ItemGroup>
         <ProjectReference Include="..\Gears.Application\Gears.Application.csproj" />
