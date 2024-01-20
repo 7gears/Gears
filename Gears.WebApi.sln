@@ -12,9 +12,9 @@ EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "settings", "settings", "{F6D221A4-6C09-491B-8815-77F0E0751CC5}"
 	ProjectSection(SolutionItems) = preProject
 		.editorconfig = .editorconfig
+		compose.yaml = compose.yaml
 		Directory.Build.props = Directory.Build.props
 		Directory.Packages.props = Directory.Packages.props
-		docker-compose.yml = docker-compose.yml
 		Dockerfile = Dockerfile
 	EndProjectSection
 EndProject
