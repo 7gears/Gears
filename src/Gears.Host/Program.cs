@@ -11,7 +11,6 @@ builder
 builder.Host.UseDefaultServiceProvider(x =>
 {
     x.ValidateOnBuild = true;
-    x.ValidateScopes = true;
 });
 
 var app = builder.Build();
