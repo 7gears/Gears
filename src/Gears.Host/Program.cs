@@ -8,6 +8,12 @@ builder
     .AddMailServices()
     .AddDbServices();
 
+builder.Host.UseDefaultServiceProvider(x =>
+{
+    x.ValidateOnBuild = true;
+    x.ValidateScopes = true;
+});
+
 var app = builder.Build();
 
 app
