@@ -8,13 +8,10 @@ using Result = Results<
 
 public sealed class UpdateRole : Endpoint<UpdateRoleRequest, Result>
 {
-    private readonly IHttpContextService _httpContextService;
     private readonly RoleManager<Role> _roleManager;
 
-    public UpdateRole(IHttpContextService httpContextService,
-        RoleManager<Role> roleManager)
+    public UpdateRole(RoleManager<Role> roleManager)
     {
-        _httpContextService = httpContextService;
         _roleManager = roleManager;
     }
 
@@ -26,7 +23,7 @@ public sealed class UpdateRole : Endpoint<UpdateRoleRequest, Result>
 
     public override async Task<Result> ExecuteAsync(UpdateRoleRequest request, CancellationToken ct)
     {
-        if (!_httpContextService.HasPermission(Allow.Roles_ManagePermissions))
+        if (!HttpContext.User.HasPermission(Allow.Roles_ManagePermissions))
         {
             request = request with { Permissions = null };
         }

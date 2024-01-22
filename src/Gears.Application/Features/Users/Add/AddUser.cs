@@ -11,19 +11,17 @@ public sealed class AddUser : Endpoint<AddUserRequest, Result>
     private readonly UserManager<User> _userManager;
     private readonly RoleManager<Role> _roleManager;
     private readonly IPasswordHasher<User> _passwordHasher;
-    private readonly IHttpContextService _httpContextService;
 
-    public AddUser(IOptions<PasswordOptions> passwordOptions,
+    public AddUser(
+        IOptions<PasswordOptions> passwordOptions,
         UserManager<User> userManager,
         RoleManager<Role> roleManager,
-        IPasswordHasher<User> passwordHasher,
-        IHttpContextService httpContextService)
+        IPasswordHasher<User> passwordHasher)
     {
         _passwordOptions = passwordOptions;
         _userManager = userManager;
         _roleManager = roleManager;
         _passwordHasher = passwordHasher;
-        _httpContextService = httpContextService;
     }
 
     public override void Configure()
@@ -36,7 +34,7 @@ public sealed class AddUser : Endpoint<AddUserRequest, Result>
     {
         var rolesToAdd = Enumerable.Empty<string>();
 
-        if (_httpContextService.HasPermission(Allow.Users_ManageRoles))
+        if (HttpContext.User.HasPermission(Allow.Users_ManageRoles))
         {
             var roleInfos = await GetRoleInfos(request, ct);
             if (!AddUserRequestRoleParser.TryParseRoles(roleInfos, out rolesToAdd))

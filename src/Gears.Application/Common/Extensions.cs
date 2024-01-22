@@ -1,6 +1,17 @@
 ﻿namespace Gears.Application.Common;
 
-public static class RoleManagerExtension
+public static class ClaimExtensions
+{
+    public static bool HasPermission(this ClaimsPrincipal user, string permission)
+    {
+        var claim = user.FindAll(Consts.Auth.PermissionClaimType)
+                        .FirstOrDefault(x => string.Equals(x.Value, permission, StringComparison.Ordinal));
+
+        return claim != null;
+    }
+}
+
+public static class RoleManagerExtensions
 {
     public static async Task<HashSet<string>> GetRolePermissionNames(
         this RoleManager<Role> roleManager,
@@ -12,52 +23,6 @@ public static class RoleManagerExtension
             .Where(x => x.Type == Consts.Auth.PermissionClaimType)
             .Select(x => x.Value)
             .ToHashSet();
-    }
-
-    public static async Task<bool> SaveUser(
-        this UserManager<User> userManager,
-        User user,
-        bool isNew,
-        IEnumerable<string> rolesToAdd,
-        IEnumerable<string> rolesToDelete)
-    {
-        using var scope = new TransactionScope(TransactionScopeAsyncFlowOption.Enabled);
-        try
-        {
-            var result = isNew ?
-                await userManager.CreateAsync(user) :
-                await userManager.UpdateAsync(user);
-
-            if (result != IdentityResult.Success)
-            {
-                return false;
-            }
-
-            if (rolesToDelete != null)
-            {
-                result = await userManager.RemoveFromRolesAsync(user, rolesToDelete);
-                if (result != IdentityResult.Success)
-                {
-                    return false;
-                }
-            }
-
-            if (rolesToAdd != null)
-            {
-                result = await userManager.AddToRolesAsync(user, rolesToAdd);
-                if (result != IdentityResult.Success)
-                {
-                    return false;
-                }
-            }
-
-            scope.Complete();
-            return true;
-        }
-        catch
-        {
-            return false;
-        }
     }
 
     public static async Task<bool> SaveRole(
@@ -115,4 +80,53 @@ public static class RoleManagerExtension
 
     private static Claim ToClaim(string permission) =>
         new(Consts.Auth.PermissionClaimType, permission);
+}
+
+public static class UserManagerExtensions
+{
+    public static async Task<bool> SaveUser(
+        this UserManager<User> userManager,
+        User user,
+        bool isNew,
+        IEnumerable<string> rolesToAdd,
+        IEnumerable<string> rolesToDelete)
+    {
+        using var scope = new TransactionScope(TransactionScopeAsyncFlowOption.Enabled);
+        try
+        {
+            var result = isNew ?
+                await userManager.CreateAsync(user) :
+                await userManager.UpdateAsync(user);
+
+            if (result != IdentityResult.Success)
+            {
+                return false;
+            }
+
+            if (rolesToDelete != null)
+            {
+                result = await userManager.RemoveFromRolesAsync(user, rolesToDelete);
+                if (result != IdentityResult.Success)
+                {
+                    return false;
+                }
+            }
+
+            if (rolesToAdd != null)
+            {
+                result = await userManager.AddToRolesAsync(user, rolesToAdd);
+                if (result != IdentityResult.Success)
+                {
+                    return false;
+                }
+            }
+
+            scope.Complete();
+            return true;
+        }
+        catch
+        {
+            return false;
+        }
+    }
 }

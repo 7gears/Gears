@@ -10,15 +10,13 @@ public sealed class UpdateUser : Endpoint<UpdateUserRequest, Result>
 {
     private readonly RoleManager<Role> _roleManager;
     private readonly UserManager<User> _userManager;
-    private readonly IHttpContextService _httpContextService;
 
-    public UpdateUser(RoleManager<Role> roleManager,
-        UserManager<User> userManager,
-        IHttpContextService httpContextService)
+    public UpdateUser(
+        RoleManager<Role> roleManager,
+        UserManager<User> userManager)
     {
         _roleManager = roleManager;
         _userManager = userManager;
-        _httpContextService = httpContextService;
     }
 
     public override void Configure()
@@ -42,7 +40,7 @@ public sealed class UpdateUser : Endpoint<UpdateUserRequest, Result>
         var rolesToAdd = Enumerable.Empty<string>();
         var rolesToDelete = Enumerable.Empty<string>();
 
-        if (_httpContextService.HasPermission(Allow.Users_ManageRoles))
+        if (HttpContext.User.HasPermission(Allow.Users_ManageRoles))
         {
             var roleInfos = await GetRoleInfos(request, user, ct);
 

@@ -21,14 +21,5 @@ internal sealed class HttpContextService : IHttpContextService
         return result;
     }
 
-    public bool HasPermission(string permission)
-    {
-        var claim = _httpContextAccessor.HttpContext?.User
-            .FindAll(Consts.Auth.PermissionClaimType)
-            .FirstOrDefault(x => x.Value == permission);
-
-        return claim != null;
-    }
-
     private HttpRequest Request => _httpContextAccessor.HttpContext!.Request;
 }

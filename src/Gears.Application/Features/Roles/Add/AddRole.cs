@@ -7,13 +7,10 @@ using Result = Results<
 
 public sealed class AddRole : Endpoint<AddRoleRequest, Result>
 {
-    private readonly IHttpContextService _httpContextService;
     private readonly RoleManager<Role> _roleManager;
 
-    public AddRole(IHttpContextService httpContextService,
-        RoleManager<Role> roleManager)
+    public AddRole(RoleManager<Role> roleManager)
     {
-        _httpContextService = httpContextService;
         _roleManager = roleManager;
     }
 
@@ -25,7 +22,7 @@ public sealed class AddRole : Endpoint<AddRoleRequest, Result>
 
     public override async Task<Result> ExecuteAsync(AddRoleRequest request, CancellationToken ct)
     {
-        if (!_httpContextService.HasPermission(Allow.Roles_ManagePermissions))
+        if (!HttpContext.User.HasPermission(Allow.Roles_ManagePermissions))
         {
             request = request with { Permissions = null };
         }
