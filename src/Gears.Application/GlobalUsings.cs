@@ -21,5 +21,5 @@ using System.Runtime.CompilerServices;
 
 namespace Gears.Application
 {
-    public sealed class Info;
+    public sealed class ApplicationInfo;
 }
