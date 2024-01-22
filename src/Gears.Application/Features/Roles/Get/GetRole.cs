@@ -5,12 +5,15 @@ using Result = Results<
     BadRequest,
     NotFound>;
 
-public sealed class GetRole
-(
-    RoleManager<Role> roleManager
-)
-    : Endpoint<GetRoleRequest, Result>
+public sealed class GetRole : Endpoint<GetRoleRequest, Result>
 {
+    private readonly RoleManager<Role> _roleManager;
+
+    public GetRole(RoleManager<Role> roleManager)
+    {
+        _roleManager = roleManager;
+    }
+
     public override void Configure()
     {
         Get("api/roles/{id}");
@@ -19,13 +22,13 @@ public sealed class GetRole
 
     public override async Task<Result> ExecuteAsync(GetRoleRequest request, CancellationToken ct)
     {
-        var role = await roleManager.FindByIdAsync(request.Id);
+        var role = await _roleManager.FindByIdAsync(request.Id);
         if (role == null)
         {
             return NotFound();
         }
 
-        var permissions = await roleManager.GetRolePermissionNames(role);
+        var permissions = await _roleManager.GetRolePermissionNames(role);
 
         var response = new GetRoleResponse(
             role.Id,

@@ -48,8 +48,26 @@ public sealed class GetAllPermissions : EndpointWithoutRequest<List<PermissionGr
                 TimeSpan.FromSeconds(2))
             .Trim();
 
-    internal sealed record PermissionsParts(
-        string Name,
-        string GroupName,
-        string ItemName);
+    internal sealed record PermissionsParts
+    {
+        public PermissionsParts(string Name,
+            string GroupName,
+            string ItemName)
+        {
+            this.Name = Name;
+            this.GroupName = GroupName;
+            this.ItemName = ItemName;
+        }
+
+        public string Name { get; init; }
+        public string GroupName { get; init; }
+        public string ItemName { get; init; }
+
+        public void Deconstruct(out string Name, out string GroupName, out string ItemName)
+        {
+            Name = this.Name;
+            GroupName = this.GroupName;
+            ItemName = this.ItemName;
+        }
+    }
 }

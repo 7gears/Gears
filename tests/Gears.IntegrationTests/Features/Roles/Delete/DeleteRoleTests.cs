@@ -5,8 +5,12 @@ namespace Gears.IntegrationTests.Features.Roles.Delete;
 using Endpoint = DeleteRole;
 using Request = DeleteRoleRequest;
 
-public sealed class DeleteRoleTests(TestFixture f, ITestOutputHelper o) : TestClass<TestFixture>(f, o)
+public sealed class DeleteRoleTests : TestClass<TestFixture>
 {
+    public DeleteRoleTests(TestFixture f, ITestOutputHelper o) : base(f, o)
+    {
+    }
+
     [Theory]
     [InlineData(null)]
     [InlineData("")]

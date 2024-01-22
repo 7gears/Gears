@@ -1,11 +1,14 @@
 ﻿namespace Gears.Application.Features.Roles.GetAll;
 
-public sealed class GetAllRoles
-(
-    RoleManager<Role> roleManager
-)
-    : EndpointWithoutRequest<List<GetAllRolesResponse>>
+public sealed class GetAllRoles : EndpointWithoutRequest<List<GetAllRolesResponse>>
 {
+    private readonly RoleManager<Role> _roleManager;
+
+    public GetAllRoles(RoleManager<Role> roleManager)
+    {
+        _roleManager = roleManager;
+    }
+
     public override void Configure()
     {
         Get("api/roles");
@@ -14,7 +17,7 @@ public sealed class GetAllRoles
 
     public override async Task HandleAsync(CancellationToken ct)
     {
-        var response = await roleManager.Roles.AsNoTracking()
+        var response = await _roleManager.Roles.AsNoTracking()
             .Where(x => x.Name != Consts.Auth.RootRole)
             .OrderBy(x => x.Name)
             .Select(x => new GetAllRolesResponse(

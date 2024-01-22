@@ -1,11 +1,14 @@
 ﻿namespace Gears.Application.Features.Users.GetAll;
 
-public sealed class GetAllUsers
-(
-    UserManager<User> userManager
-)
-    : EndpointWithoutRequest<List<GetAllUsersResponse>>
+public sealed class GetAllUsers : EndpointWithoutRequest<List<GetAllUsersResponse>>
 {
+    private readonly UserManager<User> _userManager;
+
+    public GetAllUsers(UserManager<User> userManager)
+    {
+        _userManager = userManager;
+    }
+
     public override void Configure()
     {
         Get("api/users");
@@ -14,7 +17,7 @@ public sealed class GetAllUsers
 
     public override async Task HandleAsync(CancellationToken ct)
     {
-        var response = await userManager.Users.AsNoTracking()
+        var response = await _userManager.Users.AsNoTracking()
             .Where(x => x.UserName != Consts.Auth.RootUserUserName)
             .Select(x => new GetAllUsersResponse(
                 x.Id,

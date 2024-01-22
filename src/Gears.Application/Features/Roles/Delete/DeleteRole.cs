@@ -6,12 +6,15 @@ using Result = Results<
     NotFound,
     UnprocessableEntity>;
 
-public sealed class DeleteRole
-(
-    RoleManager<Role> roleManager
-)
-    : Endpoint<DeleteRoleRequest, Result>
+public sealed class DeleteRole : Endpoint<DeleteRoleRequest, Result>
 {
+    private readonly RoleManager<Role> _roleManager;
+
+    public DeleteRole(RoleManager<Role> roleManager)
+    {
+        _roleManager = roleManager;
+    }
+
     public override void Configure()
     {
         Delete("api/roles/{id}");
@@ -20,7 +23,7 @@ public sealed class DeleteRole
 
     public override async Task<Result> ExecuteAsync(DeleteRoleRequest request, CancellationToken ct)
     {
-        var role = await roleManager.FindByIdAsync(request.Id);
+        var role = await _roleManager.FindByIdAsync(request.Id);
         if (role == null)
         {
             return NotFound();
@@ -31,7 +34,7 @@ public sealed class DeleteRole
             return UnprocessableEntity();
         }
 
-        var identityResult = await roleManager.DeleteAsync(role);
+        var identityResult = await _roleManager.DeleteAsync(role);
         if (identityResult != IdentityResult.Success)
         {
             return UnprocessableEntity();

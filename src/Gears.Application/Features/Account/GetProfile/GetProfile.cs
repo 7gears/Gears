@@ -4,13 +4,19 @@ using Result = Results<
     Ok<GetProfileResponse>,
     NotFound>;
 
-public sealed class GetProfile
-(
-    IHttpContextAccessor httpContextAccessor,
-    UserManager<User> userManager
-)
-    : EndpointWithoutRequest<Result>
+public sealed class GetProfile : EndpointWithoutRequest<Result>
 {
+    private readonly IHttpContextAccessor _httpContextAccessor;
+    private readonly UserManager<User> _userManager;
+
+    public GetProfile(
+        IHttpContextAccessor httpContextAccessor,
+        UserManager<User> userManager)
+    {
+        _httpContextAccessor = httpContextAccessor;
+        _userManager = userManager;
+    }
+
     public override void Configure()
     {
         Get("api/account/profile");
@@ -18,8 +24,8 @@ public sealed class GetProfile
 
     public override async Task<Result> ExecuteAsync(CancellationToken ct)
     {
-        var userId = userManager.GetUserId(httpContextAccessor.HttpContext!.User);
-        var user = await userManager.FindByIdAsync(userId!);
+        var userId = _userManager.GetUserId(_httpContextAccessor.HttpContext!.User);
+        var user = await _userManager.FindByIdAsync(userId!);
         if (user == null)
         {
             return NotFound();

@@ -6,14 +6,21 @@ using Result = Results<
     NotFound,
     UnprocessableEntity>;
 
-public sealed class UpdateUser
-(
-    RoleManager<Role> roleManager,
-    UserManager<User> userManager,
-    IHttpContextService httpContextService
-)
-    : Endpoint<UpdateUserRequest, Result>
+public sealed class UpdateUser : Endpoint<UpdateUserRequest, Result>
 {
+    private readonly RoleManager<Role> _roleManager;
+    private readonly UserManager<User> _userManager;
+    private readonly IHttpContextService _httpContextService;
+
+    public UpdateUser(RoleManager<Role> roleManager,
+        UserManager<User> userManager,
+        IHttpContextService httpContextService)
+    {
+        _roleManager = roleManager;
+        _userManager = userManager;
+        _httpContextService = httpContextService;
+    }
+
     public override void Configure()
     {
         Put("api/users/{id}");
@@ -22,7 +29,7 @@ public sealed class UpdateUser
 
     public override async Task<Result> ExecuteAsync(UpdateUserRequest request, CancellationToken ct)
     {
-        var user = await userManager.FindByIdAsync(request.Id);
+        var user = await _userManager.FindByIdAsync(request.Id);
         if (user == null)
         {
             return NotFound();
@@ -35,7 +42,7 @@ public sealed class UpdateUser
         var rolesToAdd = Enumerable.Empty<string>();
         var rolesToDelete = Enumerable.Empty<string>();
 
-        if (httpContextService.HasPermission(Allow.Users_ManageRoles))
+        if (_httpContextService.HasPermission(Allow.Users_ManageRoles))
         {
             var roleInfos = await GetRoleInfos(request, user, ct);
 
@@ -52,7 +59,7 @@ public sealed class UpdateUser
         user.PhoneNumber = request.PhoneNumber;
         user.IsActive = request.IsActive;
 
-        var saveResult = await userManager.SaveUser(
+        var saveResult = await _userManager.SaveUser(
             user,
             false,
             rolesToAdd,
@@ -70,10 +77,10 @@ public sealed class UpdateUser
         User user,
         CancellationToken ct)
     {
-        var allRoles = await roleManager.Roles.AsNoTracking()
+        var allRoles = await _roleManager.Roles.AsNoTracking()
             .ToListAsync(ct);
 
-        var userRoleNames = await userManager.GetRolesAsync(user);
+        var userRoleNames = await _userManager.GetRolesAsync(user);
 
         return new(request.RoleIds ?? [], allRoles, userRoleNames);
     }

@@ -6,12 +6,15 @@ using Result = Results<
     NotFound,
     UnprocessableEntity>;
 
-public sealed class DeleteUser
-(
-    UserManager<User> userManager
-)
-    : Endpoint<DeleteUserRequest, Result>
+public sealed class DeleteUser : Endpoint<DeleteUserRequest, Result>
 {
+    private readonly UserManager<User> _userManager;
+
+    public DeleteUser(UserManager<User> userManager)
+    {
+        _userManager = userManager;
+    }
+
     public override void Configure()
     {
         Delete("api/users/{id}");
@@ -20,7 +23,7 @@ public sealed class DeleteUser
 
     public override async Task<Result> ExecuteAsync(DeleteUserRequest request, CancellationToken ct)
     {
-        var user = await userManager.FindByIdAsync(request.Id);
+        var user = await _userManager.FindByIdAsync(request.Id);
         if (user == null)
         {
             return NotFound();
@@ -31,7 +34,7 @@ public sealed class DeleteUser
             return UnprocessableEntity();
         }
 
-        var identityResult = await userManager.DeleteAsync(user);
+        var identityResult = await _userManager.DeleteAsync(user);
         if (identityResult != IdentityResult.Success)
         {
             return UnprocessableEntity();

@@ -6,8 +6,12 @@ using Endpoint = AddRole;
 using Request = AddRoleRequest;
 using Response = AddRoleResponse;
 
-public sealed class AddRoleTests(TestFixture f, ITestOutputHelper o) : TestClass<TestFixture>(f, o)
+public sealed class AddRoleTests : TestClass<TestFixture>
 {
+    public AddRoleTests(TestFixture f, ITestOutputHelper o) : base(f, o)
+    {
+    }
+
     [Theory]
     [InlineData(null)]
     [InlineData("")]

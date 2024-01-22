@@ -5,13 +5,18 @@ using Result = Results<
     BadRequest,
     NotFound>;
 
-public sealed class GetUser
-(
-    RoleManager<Role> roleManager,
-    UserManager<User> userManager
-)
-    : Endpoint<GetUserRequest, Result>
+public sealed class GetUser : Endpoint<GetUserRequest, Result>
 {
+    private readonly RoleManager<Role> _roleManager;
+    private readonly UserManager<User> _userManager;
+
+    public GetUser(RoleManager<Role> roleManager,
+        UserManager<User> userManager)
+    {
+        _roleManager = roleManager;
+        _userManager = userManager;
+    }
+
     public override void Configure()
     {
         Get("api/users/{id}");
@@ -20,7 +25,7 @@ public sealed class GetUser
 
     public override async Task<Result> ExecuteAsync(GetUserRequest request, CancellationToken ct)
     {
-        var user = await userManager.FindByIdAsync(request.Id);
+        var user = await _userManager.FindByIdAsync(request.Id);
         if (user == null)
         {
             return NotFound();
@@ -44,9 +49,9 @@ public sealed class GetUser
 
     private async Task<IEnumerable<string>> GetRoleIds(User user, CancellationToken ct)
     {
-        var roleNames = await userManager.GetRolesAsync(user);
+        var roleNames = await _userManager.GetRolesAsync(user);
 
-        return await roleManager.Roles.AsNoTracking()
+        return await _roleManager.Roles.AsNoTracking()
             .Where(x => roleNames.Contains(x.Name))
             .Select(x => x.Id)
             .ToListAsync(ct);

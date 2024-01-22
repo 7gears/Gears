@@ -5,12 +5,15 @@ using Result = Results<
     NotFound,
     UnprocessableEntity>;
 
-public sealed class ConfirmEmail
-(
-    UserManager<User> userManager
-)
-    : Endpoint<ConfirmEmailRequest, Result>
+public sealed class ConfirmEmail : Endpoint<ConfirmEmailRequest, Result>
 {
+    private readonly UserManager<User> _userManager;
+
+    public ConfirmEmail(UserManager<User> userManager)
+    {
+        _userManager = userManager;
+    }
+
     public override void Configure()
     {
         Post("api/auth/confirm-email");
@@ -21,13 +24,13 @@ public sealed class ConfirmEmail
         ConfirmEmailRequest request,
         CancellationToken ct)
     {
-        var user = await userManager.FindByIdAsync(request.Id);
+        var user = await _userManager.FindByIdAsync(request.Id);
         if (user is not { IsActive: true })
         {
             return NotFound();
         }
 
-        var result = await userManager.ConfirmEmailAsync(user, request.Token);
+        var result = await _userManager.ConfirmEmailAsync(user, request.Token);
 
         return result.Succeeded ? Ok() : UnprocessableEntity();
     }

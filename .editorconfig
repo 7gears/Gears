@@ -203,8 +203,8 @@ csharp_indent_labels = flush_left
 
 # Whitespace options
 csharp_style_allow_embedded_statements_on_same_line_experimental = false
-csharp_style_allow_blank_lines_between_consecutive_braces_experimental = false
-csharp_style_allow_blank_line_after_colon_in_constructor_initializer_experimental = false
+csharp_style_allow_blank_lines_between_consecutive_braces_experimental = false:silent
+csharp_style_allow_blank_line_after_colon_in_constructor_initializer_experimental = false:silent
 csharp_style_allow_blank_line_after_token_in_conditional_expression_experimental = false
 csharp_style_allow_blank_line_after_token_in_arrow_expression_clause_experimental = false
 
@@ -267,9 +267,10 @@ csharp_prefer_simple_using_statement = true:suggestion
 csharp_style_namespace_declarations = block_scoped:silent
 csharp_style_prefer_method_group_conversion = true:silent
 csharp_style_prefer_top_level_statements = true:silent
-csharp_style_prefer_primary_constructors = true:suggestion
+csharp_style_prefer_primary_constructors = false:suggestion
 csharp_style_expression_bodied_lambdas = true:silent
 csharp_style_expression_bodied_local_functions = false:silent
+csharp_style_deconstructed_variable_declaration = true:suggestion
 
 [src/{Compilers,ExpressionEvaluator,Scripting}/**Test**/*.{cs,vb}]
 

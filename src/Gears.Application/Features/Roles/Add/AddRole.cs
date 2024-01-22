@@ -5,13 +5,18 @@ using Result = Results<
     BadRequest,
     UnprocessableEntity>;
 
-public sealed class AddRole
-(
-    IHttpContextService httpContextService,
-    RoleManager<Role> roleManager
-)
-    : Endpoint<AddRoleRequest, Result>
+public sealed class AddRole : Endpoint<AddRoleRequest, Result>
 {
+    private readonly IHttpContextService _httpContextService;
+    private readonly RoleManager<Role> _roleManager;
+
+    public AddRole(IHttpContextService httpContextService,
+        RoleManager<Role> roleManager)
+    {
+        _httpContextService = httpContextService;
+        _roleManager = roleManager;
+    }
+
     public override void Configure()
     {
         Post("api/roles");
@@ -20,7 +25,7 @@ public sealed class AddRole
 
     public override async Task<Result> ExecuteAsync(AddRoleRequest request, CancellationToken ct)
     {
-        if (!httpContextService.HasPermission(Allow.Roles_ManagePermissions))
+        if (!_httpContextService.HasPermission(Allow.Roles_ManagePermissions))
         {
             request = request with { Permissions = null };
         }
@@ -37,7 +42,7 @@ public sealed class AddRole
             IsDefault = request.IsDefault
         };
 
-        var saveResult = await roleManager.SaveRole(
+        var saveResult = await _roleManager.SaveRole(
             role,
             true,
             request.Permissions,

@@ -5,16 +5,27 @@ using Result = Results<
     BadRequest,
     UnprocessableEntity>;
 
-public sealed class AddUser
-(
-    IOptions<PasswordOptions> passwordOptions,
-    UserManager<User> userManager,
-    RoleManager<Role> roleManager,
-    IPasswordHasher<User> passwordHasher,
-    IHttpContextService httpContextService
-)
-    : Endpoint<AddUserRequest, Result>
+public sealed class AddUser : Endpoint<AddUserRequest, Result>
 {
+    private readonly IOptions<PasswordOptions> _passwordOptions;
+    private readonly UserManager<User> _userManager;
+    private readonly RoleManager<Role> _roleManager;
+    private readonly IPasswordHasher<User> _passwordHasher;
+    private readonly IHttpContextService _httpContextService;
+
+    public AddUser(IOptions<PasswordOptions> passwordOptions,
+        UserManager<User> userManager,
+        RoleManager<Role> roleManager,
+        IPasswordHasher<User> passwordHasher,
+        IHttpContextService httpContextService)
+    {
+        _passwordOptions = passwordOptions;
+        _userManager = userManager;
+        _roleManager = roleManager;
+        _passwordHasher = passwordHasher;
+        _httpContextService = httpContextService;
+    }
+
     public override void Configure()
     {
         Post("api/users");
@@ -25,7 +36,7 @@ public sealed class AddUser
     {
         var rolesToAdd = Enumerable.Empty<string>();
 
-        if (httpContextService.HasPermission(Allow.Users_ManageRoles))
+        if (_httpContextService.HasPermission(Allow.Users_ManageRoles))
         {
             var roleInfos = await GetRoleInfos(request, ct);
             if (!AddUserRequestRoleParser.TryParseRoles(roleInfos, out rolesToAdd))
@@ -34,7 +45,7 @@ public sealed class AddUser
             }
         }
 
-        var password = Utils.GenerateRandomPassword(passwordOptions.Value);
+        var password = Utils.GenerateRandomPassword(_passwordOptions.Value);
         var user = new User
         {
             Email = request.Email,
@@ -44,10 +55,10 @@ public sealed class AddUser
             PhoneNumber = request.PhoneNumber,
             IsActive = request.IsActive,
             EmailConfirmed = true,
-            PasswordHash = passwordHasher.HashPassword(null!, password)
+            PasswordHash = _passwordHasher.HashPassword(null!, password)
         };
 
-        var result = await userManager.SaveUser(
+        var result = await _userManager.SaveUser(
             user,
             true,
             rolesToAdd,
@@ -63,7 +74,7 @@ public sealed class AddUser
 
     private async Task<RoleInfos> GetRoleInfos(AddUserRequest request, CancellationToken ct)
     {
-        var allRoles = await roleManager.Roles.AsNoTracking()
+        var allRoles = await _roleManager.Roles.AsNoTracking()
             .ToListAsync(ct);
 
         return new(request.RoleIds ?? [], allRoles);

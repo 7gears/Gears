@@ -6,13 +6,18 @@ using Result = Results<
     NotFound,
     UnprocessableEntity>;
 
-public sealed class UpdateRole
-(
-    IHttpContextService httpContextService,
-    RoleManager<Role> roleManager
-)
-    : Endpoint<UpdateRoleRequest, Result>
+public sealed class UpdateRole : Endpoint<UpdateRoleRequest, Result>
 {
+    private readonly IHttpContextService _httpContextService;
+    private readonly RoleManager<Role> _roleManager;
+
+    public UpdateRole(IHttpContextService httpContextService,
+        RoleManager<Role> roleManager)
+    {
+        _httpContextService = httpContextService;
+        _roleManager = roleManager;
+    }
+
     public override void Configure()
     {
         Put("api/roles/{id}");
@@ -21,7 +26,7 @@ public sealed class UpdateRole
 
     public override async Task<Result> ExecuteAsync(UpdateRoleRequest request, CancellationToken ct)
     {
-        if (!httpContextService.HasPermission(Allow.Roles_ManagePermissions))
+        if (!_httpContextService.HasPermission(Allow.Roles_ManagePermissions))
         {
             request = request with { Permissions = null };
         }
@@ -31,7 +36,7 @@ public sealed class UpdateRole
             return BadRequest();
         }
 
-        var role = await roleManager.FindByIdAsync(request.Id);
+        var role = await _roleManager.FindByIdAsync(request.Id);
         if (role == null)
         {
             return NotFound();
@@ -42,7 +47,7 @@ public sealed class UpdateRole
             return UnprocessableEntity();
         }
 
-        var rolePermissions = await roleManager.GetRolePermissionNames(role);
+        var rolePermissions = await _roleManager.GetRolePermissionNames(role);
         ProcessPermissions(
             request,
             rolePermissions,
@@ -53,7 +58,7 @@ public sealed class UpdateRole
         role.Description = request.Description;
         role.IsDefault = request.IsDefault;
 
-        var saveResult = await roleManager.SaveRole(
+        var saveResult = await _roleManager.SaveRole(
             role,
             false,
             permissionsToAdd,

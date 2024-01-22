@@ -5,15 +5,24 @@ using Result = Results<
     BadRequest,
     UnprocessableEntity>;
 
-public sealed class SignUp
-(
-    UserManager<User> userManager,
-    IPasswordHasher<User> passwordHasher,
-    IMailService mailService,
-    IHttpContextService httpContextService
-)
-    : Endpoint<SignUpRequest, Result>
+public sealed class SignUp : Endpoint<SignUpRequest, Result>
 {
+    private readonly UserManager<User> _userManager;
+    private readonly IPasswordHasher<User> _passwordHasher;
+    private readonly IMailService _mailService;
+    private readonly IHttpContextService _httpContextService;
+
+    public SignUp(UserManager<User> userManager,
+        IPasswordHasher<User> passwordHasher,
+        IMailService mailService,
+        IHttpContextService httpContextService)
+    {
+        _userManager = userManager;
+        _passwordHasher = passwordHasher;
+        _mailService = mailService;
+        _httpContextService = httpContextService;
+    }
+
     public override void Configure()
     {
         Post("api/auth/signup");
@@ -22,7 +31,7 @@ public sealed class SignUp
 
     public override async Task<Result> ExecuteAsync(SignUpRequest request, CancellationToken ct)
     {
-        var user = await userManager.FindByEmailAsync(request.Email);
+        var user = await _userManager.FindByEmailAsync(request.Email);
         if (user != null)
         {
             return UnprocessableEntity();
@@ -34,19 +43,19 @@ public sealed class SignUp
             Email = request.Email,
             EmailConfirmed = false,
             IsActive = true,
-            PasswordHash = passwordHasher.HashPassword(null!, request.Password)
+            PasswordHash = _passwordHasher.HashPassword(null!, request.Password)
         };
 
-        foreach (var passwordValidator in userManager.PasswordValidators)
+        foreach (var passwordValidator in _userManager.PasswordValidators)
         {
-            var passwordValidationResult = await passwordValidator.ValidateAsync(userManager, user, request.Password);
+            var passwordValidationResult = await passwordValidator.ValidateAsync(_userManager, user, request.Password);
             if (passwordValidationResult != IdentityResult.Success)
             {
                 return BadRequest();
             }
         }
 
-        var identityResult = await userManager.CreateAsync(user);
+        var identityResult = await _userManager.CreateAsync(user);
         if (identityResult != IdentityResult.Success)
         {
             return UnprocessableEntity();
@@ -55,15 +64,15 @@ public sealed class SignUp
         var link = await GenerateConfirmEmailLink(user);
         var mailRequest = new MailRequest(user.Email, "Confirm Email", link);
 
-        _ = mailService.Send(mailRequest);
+        _ = _mailService.Send(mailRequest);
 
         return Created(string.Empty, new SignUpResponse(user.Id));
     }
 
     private async Task<string> GenerateConfirmEmailLink(User user)
     {
-        var origin = httpContextService.GetOrigin();
-        var token = await userManager.GenerateEmailConfirmationTokenAsync(user);
+        var origin = _httpContextService.GetOrigin();
+        var token = await _userManager.GenerateEmailConfirmationTokenAsync(user);
 
         UriBuilder builder = new(origin)
         {

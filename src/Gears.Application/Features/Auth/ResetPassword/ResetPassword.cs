@@ -5,13 +5,18 @@ using Result = Results<
     BadRequest,
     NotFound>;
 
-public sealed class ResetPassword
-(
-    UserManager<User> userManager,
-    IPasswordHasher<User> passwordHasher
-)
-    : Endpoint<ResetPasswordRequest, Result>
+public sealed class ResetPassword : Endpoint<ResetPasswordRequest, Result>
 {
+    private readonly UserManager<User> _userManager;
+    private readonly IPasswordHasher<User> _passwordHasher;
+
+    public ResetPassword(UserManager<User> userManager,
+        IPasswordHasher<User> passwordHasher)
+    {
+        _userManager = userManager;
+        _passwordHasher = passwordHasher;
+    }
+
     public override void Configure()
     {
         Post("api/auth/reset-password");
@@ -20,24 +25,24 @@ public sealed class ResetPassword
 
     public override async Task<Result> ExecuteAsync(ResetPasswordRequest request, CancellationToken ct)
     {
-        var user = await userManager.FindByIdAsync(request.Id);
+        var user = await _userManager.FindByIdAsync(request.Id);
         if (user is not { IsActive: true })
         {
             return NotFound();
         }
 
-        foreach (var passwordValidator in userManager.PasswordValidators)
+        foreach (var passwordValidator in _userManager.PasswordValidators)
         {
-            var passwordValidationResult = await passwordValidator.ValidateAsync(userManager, user, request.Password);
+            var passwordValidationResult = await passwordValidator.ValidateAsync(_userManager, user, request.Password);
             if (passwordValidationResult != IdentityResult.Success)
             {
                 return BadRequest();
             }
         }
 
-        var tokenValidationResult = await userManager.VerifyUserTokenAsync(
+        var tokenValidationResult = await _userManager.VerifyUserTokenAsync(
             user,
-            userManager.Options.Tokens.PasswordResetTokenProvider,
+            _userManager.Options.Tokens.PasswordResetTokenProvider,
             UserManager<User>.ResetPasswordTokenPurpose,
             request.Token);
 
@@ -46,9 +51,9 @@ public sealed class ResetPassword
             return BadRequest();
         }
 
-        var encryptedPassword = passwordHasher.HashPassword(user, request.Password);
+        var encryptedPassword = _passwordHasher.HashPassword(user, request.Password);
         user.PasswordHash = encryptedPassword;
-        await userManager.UpdateAsync(user);
+        await _userManager.UpdateAsync(user);
 
         return Ok();
     }

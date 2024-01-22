@@ -5,13 +5,19 @@ using Result = Results<
     NotFound,
     UnprocessableEntity>;
 
-public sealed class UpdateProfile
-(
-    IHttpContextAccessor httpContextAccessor,
-    UserManager<User> userManager
-)
-    : Endpoint<UpdateProfileRequest, Result>
+public sealed class UpdateProfile : Endpoint<UpdateProfileRequest, Result>
 {
+    private readonly IHttpContextAccessor _httpContextAccessor;
+    private readonly UserManager<User> _userManager;
+
+    public UpdateProfile(
+        IHttpContextAccessor httpContextAccessor,
+        UserManager<User> userManager)
+    {
+        _httpContextAccessor = httpContextAccessor;
+        _userManager = userManager;
+    }
+
     public override void Configure()
     {
         Patch("api/account/profile");
@@ -19,8 +25,8 @@ public sealed class UpdateProfile
 
     public override async Task<Result> ExecuteAsync(UpdateProfileRequest request, CancellationToken ct)
     {
-        var userId = userManager.GetUserId(httpContextAccessor.HttpContext!.User);
-        var user = await userManager.FindByIdAsync(userId!);
+        var userId = _userManager.GetUserId(_httpContextAccessor.HttpContext!.User);
+        var user = await _userManager.FindByIdAsync(userId!);
         if (user == null)
         {
             return NotFound();
@@ -31,7 +37,7 @@ public sealed class UpdateProfile
         user.LastName = request.LastName;
         user.PhoneNumber = request.PhoneNumber;
 
-        var identityResult = await userManager.UpdateAsync(user);
+        var identityResult = await _userManager.UpdateAsync(user);
         if (!identityResult.Succeeded)
         {
             return UnprocessableEntity();
