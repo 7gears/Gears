@@ -7,14 +7,10 @@ using Result = Results<
 
 public sealed class UpdateProfile : Endpoint<UpdateProfileRequest, Result>
 {
-    private readonly IHttpContextAccessor _httpContextAccessor;
     private readonly UserManager<User> _userManager;
 
-    public UpdateProfile(
-        IHttpContextAccessor httpContextAccessor,
-        UserManager<User> userManager)
+    public UpdateProfile(UserManager<User> userManager)
     {
-        _httpContextAccessor = httpContextAccessor;
         _userManager = userManager;
     }
 
@@ -25,7 +21,7 @@ public sealed class UpdateProfile : Endpoint<UpdateProfileRequest, Result>
 
     public override async Task<Result> ExecuteAsync(UpdateProfileRequest request, CancellationToken ct)
     {
-        var userId = _userManager.GetUserId(_httpContextAccessor.HttpContext!.User);
+        var userId = _userManager.GetUserId(HttpContext.User);
         var user = await _userManager.FindByIdAsync(userId!);
         if (user == null)
         {
