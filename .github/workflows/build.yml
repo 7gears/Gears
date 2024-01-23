@@ -13,13 +13,21 @@ jobs:
 
     steps:
     - uses: actions/checkout@v3
+
     - name: Setup .NET
+      working-directory: ./api
       uses: actions/setup-dotnet@v3
       with:
         dotnet-version: 8.0.x
+
     - name: Restore dependencies
+      working-directory: ./api
       run: dotnet restore
+
     - name: Build
+      working-directory: ./api
       run: dotnet build --no-restore
+
     - name: Test
+      working-directory: ./api
       run: dotnet test --no-build --verbosity normal
