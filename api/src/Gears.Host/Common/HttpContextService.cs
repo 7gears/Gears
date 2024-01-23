@@ -1,5 +1,6 @@
 ﻿namespace Gears.Host.Common;
 
+[RegisterService<IHttpContextService>(LifeTime.Scoped)]
 internal sealed class HttpContextService : IHttpContextService
 {
     private readonly IHttpContextAccessor _httpContextAccessor;

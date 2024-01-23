@@ -1,18 +1,17 @@
 ﻿namespace Gears.Host.FastEndpoints;
 
+[RegisterService<IJwtTokenProvider>(LifeTime.Scoped)]
 internal sealed class JwtTokenProvider : IJwtTokenProvider
 {
     private readonly JwtSettings _jwtSettings;
-    private readonly TimeProvider _timeProvider;
     private readonly UserManager<User> _userManager;
     private readonly RoleManager<Role> _roleManager;
 
-    public JwtTokenProvider(IOptions<JwtSettings> jwtOptions,
-        TimeProvider timeProvider,
+    public JwtTokenProvider(
+        IOptions<JwtSettings> jwtOptions,
         UserManager<User> userManager,
         RoleManager<Role> roleManager)
     {
-        _timeProvider = timeProvider;
         _userManager = userManager;
         _roleManager = roleManager;
         _jwtSettings = jwtOptions.Value;
@@ -24,7 +23,7 @@ internal sealed class JwtTokenProvider : IJwtTokenProvider
         var claims = GetClaims(user);
         var permissions = await GetPermissions(new HashSet<string>(roles));
 
-        var expireAt = _timeProvider.GetUtcNow().AddSeconds(_jwtSettings.DurationInSeconds).DateTime;
+        var expireAt = DateTime.UtcNow.AddSeconds(_jwtSettings.DurationInSeconds);
 
         var token = JWTBearer.CreateToken(
             signingKey: _jwtSettings.Key,

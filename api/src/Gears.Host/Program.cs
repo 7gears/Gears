@@ -1,6 +1,4 @@
-﻿using Gears.Host;
-
-var builder = WebApplication.CreateBuilder(args);
+﻿var builder = WebApplication.CreateBuilder(args);
 
 builder
     .AddCorsServices()
@@ -9,8 +7,6 @@ builder
     .AddIdentityServices()
     .AddMailServices()
     .AddDbServices();
-
-builder.Services.LoadServices();
 
 builder.Host.UseDefaultServiceProvider(x =>
 {

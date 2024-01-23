@@ -1,5 +1,6 @@
 ﻿namespace Gears.Host.Mail;
 
+[RegisterService<IMailService>(LifeTime.Scoped)]
 internal sealed class MailService : IMailService
 {
     private readonly MailSettings _mailSettings;
