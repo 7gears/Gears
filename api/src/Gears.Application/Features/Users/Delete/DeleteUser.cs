@@ -1,12 +1,6 @@
 ﻿namespace Gears.Application.Features.Users.Delete;
 
-using Result = Results<
-    Ok,
-    BadRequest,
-    NotFound,
-    UnprocessableEntity>;
-
-public sealed class DeleteUser : Endpoint<DeleteUserRequest, Result>
+public sealed class DeleteUser : Endpoint<DeleteUserRequest>
 {
     private readonly UserManager<User> _userManager;
 
@@ -21,25 +15,28 @@ public sealed class DeleteUser : Endpoint<DeleteUserRequest, Result>
         AccessControl("Users_Delete", Apply.ToThisEndpoint);
     }
 
-    public override async Task<Result> ExecuteAsync(DeleteUserRequest request, CancellationToken ct)
+    public override async Task HandleAsync(DeleteUserRequest request, CancellationToken ct)
     {
         var user = await _userManager.FindByIdAsync(request.Id);
         if (user == null)
         {
-            return NotFound();
+            await SendNotFoundAsync();
+            return;
         }
 
         if (user.UserName == Consts.Auth.RootUserUserName)
         {
-            return UnprocessableEntity();
+            await SendErrorsAsync();
+            return;
         }
 
         var identityResult = await _userManager.DeleteAsync(user);
         if (identityResult != IdentityResult.Success)
         {
-            return UnprocessableEntity();
+            await SendErrorsAsync();
+            return;
         }
 
-        return Ok();
+        await SendNoContentAsync();
     }
 }

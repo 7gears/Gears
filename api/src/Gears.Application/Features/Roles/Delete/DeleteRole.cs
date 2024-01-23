@@ -1,12 +1,6 @@
 ﻿namespace Gears.Application.Features.Roles.Delete;
 
-using Result = Results<
-    Ok,
-    BadRequest,
-    NotFound,
-    UnprocessableEntity>;
-
-public sealed class DeleteRole : Endpoint<DeleteRoleRequest, Result>
+public sealed class DeleteRole : Endpoint<DeleteRoleRequest>
 {
     private readonly RoleManager<Role> _roleManager;
 
@@ -21,25 +15,28 @@ public sealed class DeleteRole : Endpoint<DeleteRoleRequest, Result>
         AccessControl("Roles_Delete", Apply.ToThisEndpoint);
     }
 
-    public override async Task<Result> ExecuteAsync(DeleteRoleRequest request, CancellationToken ct)
+    public override async Task HandleAsync(DeleteRoleRequest request, CancellationToken ct)
     {
         var role = await _roleManager.FindByIdAsync(request.Id);
         if (role == null)
         {
-            return NotFound();
+            await SendNotFoundAsync();
+            return;
         }
 
         if (role.Name == Consts.Auth.RootRole)
         {
-            return UnprocessableEntity();
+            await SendErrorsAsync();
+            return;
         }
 
         var identityResult = await _roleManager.DeleteAsync(role);
         if (identityResult != IdentityResult.Success)
         {
-            return UnprocessableEntity();
+            await SendErrorsAsync();
+            return;
         }
 
-        return Ok();
+        await SendNoContentAsync();
     }
 }

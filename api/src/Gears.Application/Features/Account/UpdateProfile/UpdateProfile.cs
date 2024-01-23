@@ -1,11 +1,6 @@
 ﻿namespace Gears.Application.Features.Account.UpdateProfile;
 
-using Result = Results<
-    Ok,
-    NotFound,
-    UnprocessableEntity>;
-
-public sealed class UpdateProfile : Endpoint<UpdateProfileRequest, Result>
+public sealed class UpdateProfile : Endpoint<UpdateProfileRequest>
 {
     private readonly UserManager<User> _userManager;
 
@@ -19,13 +14,14 @@ public sealed class UpdateProfile : Endpoint<UpdateProfileRequest, Result>
         Patch("api/account/profile");
     }
 
-    public override async Task<Result> ExecuteAsync(UpdateProfileRequest request, CancellationToken ct)
+    public override async Task HandleAsync(UpdateProfileRequest request, CancellationToken ct)
     {
         var userId = _userManager.GetUserId(HttpContext.User);
         var user = await _userManager.FindByIdAsync(userId!);
         if (user == null)
         {
-            return NotFound();
+            await SendNotFoundAsync();
+            return;
         }
 
         user.UserName = request.UserName;
@@ -36,9 +32,10 @@ public sealed class UpdateProfile : Endpoint<UpdateProfileRequest, Result>
         var identityResult = await _userManager.UpdateAsync(user);
         if (!identityResult.Succeeded)
         {
-            return UnprocessableEntity();
+            await SendErrorsAsync();
+            return;
         }
 
-        return Ok();
+        await SendOkAsync();
     }
 }

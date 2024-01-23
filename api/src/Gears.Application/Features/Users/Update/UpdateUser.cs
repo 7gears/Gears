@@ -1,12 +1,6 @@
 ﻿namespace Gears.Application.Features.Users.Update;
 
-using Result = Results<
-    NoContent,
-    BadRequest,
-    NotFound,
-    UnprocessableEntity>;
-
-public sealed class UpdateUser : Endpoint<UpdateUserRequest, Result>
+public sealed class UpdateUser : Endpoint<UpdateUserRequest>
 {
     private readonly RoleManager<Role> _roleManager;
     private readonly UserManager<User> _userManager;
@@ -25,16 +19,18 @@ public sealed class UpdateUser : Endpoint<UpdateUserRequest, Result>
         AccessControl("Users_Update", Apply.ToThisEndpoint);
     }
 
-    public override async Task<Result> ExecuteAsync(UpdateUserRequest request, CancellationToken ct)
+    public override async Task HandleAsync(UpdateUserRequest request, CancellationToken ct)
     {
         var user = await _userManager.FindByIdAsync(request.Id);
         if (user == null)
         {
-            return NotFound();
+            await SendNotFoundAsync();
+            return;
         }
         if (user.UserName == Consts.Auth.RootUserUserName)
         {
-            return BadRequest();
+            await SendErrorsAsync();
+            return;
         }
 
         var rolesToAdd = Enumerable.Empty<string>();
@@ -46,7 +42,8 @@ public sealed class UpdateUser : Endpoint<UpdateUserRequest, Result>
 
             if (!UpdateUserRequestRoleParser.TryParseRoles(roleInfos, out rolesToAdd, out rolesToDelete))
             {
-                return BadRequest();
+                await SendErrorsAsync();
+                return;
             }
         }
 
@@ -64,10 +61,11 @@ public sealed class UpdateUser : Endpoint<UpdateUserRequest, Result>
             rolesToDelete);
         if (!saveResult)
         {
-            return UnprocessableEntity();
+            await SendErrorsAsync();
+            return;
         }
 
-        return NoContent();
+        await SendNoContentAsync();
     }
 
     private async Task<RoleInfos> GetRoleInfos(

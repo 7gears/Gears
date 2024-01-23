@@ -1,16 +1,12 @@
 ﻿namespace Gears.Application.Features.Users.Get;
 
-using Result = Results<
-    Ok<GetUserResponse>,
-    BadRequest,
-    NotFound>;
-
-public sealed class GetUser : Endpoint<GetUserRequest, Result>
+public sealed class GetUser : Endpoint<GetUserRequest>
 {
     private readonly RoleManager<Role> _roleManager;
     private readonly UserManager<User> _userManager;
 
-    public GetUser(RoleManager<Role> roleManager,
+    public GetUser(
+        RoleManager<Role> roleManager,
         UserManager<User> userManager)
     {
         _roleManager = roleManager;
@@ -23,12 +19,13 @@ public sealed class GetUser : Endpoint<GetUserRequest, Result>
         AccessControl("Users_Get", Apply.ToThisEndpoint);
     }
 
-    public override async Task<Result> ExecuteAsync(GetUserRequest request, CancellationToken ct)
+    public override async Task HandleAsync(GetUserRequest request, CancellationToken ct)
     {
         var user = await _userManager.FindByIdAsync(request.Id);
         if (user == null)
         {
-            return NotFound();
+            await SendNotFoundAsync();
+            return;
         }
 
         var roleIds = await GetRoleIds(user, ct);
@@ -44,7 +41,7 @@ public sealed class GetUser : Endpoint<GetUserRequest, Result>
             roleIds
         );
 
-        return Ok(response);
+        await SendOkAsync(response);
     }
 
     private async Task<IEnumerable<string>> GetRoleIds(User user, CancellationToken ct)

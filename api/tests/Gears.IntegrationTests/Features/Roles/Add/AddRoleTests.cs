@@ -44,7 +44,7 @@ public sealed class AddRoleTests : TestClass<TestFixture>
     }
 
     [Fact]
-    public async Task UnprocessableEntity()
+    public async Task BadRequest_ExistingRole()
     {
         var request = new Request(
             "Existing",
@@ -54,7 +54,7 @@ public sealed class AddRoleTests : TestClass<TestFixture>
 
         var testResult = await Act(request);
 
-        Assert.Equal(HttpStatusCode.UnprocessableEntity, testResult.Response.StatusCode);
+        Assert.Equal(HttpStatusCode.BadRequest, testResult.Response.StatusCode);
     }
 
     [Fact]
@@ -68,7 +68,7 @@ public sealed class AddRoleTests : TestClass<TestFixture>
 
         var testResult = await Act(request);
 
-        Assert.Equal(HttpStatusCode.Created, testResult.Response.StatusCode);
+        Assert.Equal(HttpStatusCode.OK, testResult.Response.StatusCode);
 
         var role = Fixture.RoleManager.Roles.Single(x => x.Id == testResult.Result.Id);
         var claims = await Fixture.RoleManager.GetClaimsAsync(role);
@@ -90,7 +90,7 @@ public sealed class AddRoleTests : TestClass<TestFixture>
 
         var testResult = await Act(request);
 
-        Assert.Equal(HttpStatusCode.Created, testResult.Response.StatusCode);
+        Assert.Equal(HttpStatusCode.OK, testResult.Response.StatusCode);
 
         var role = Fixture.RoleManager.Roles.Single(x => x.Id == testResult.Result.Id);
         var claims = await Fixture.RoleManager.GetClaimsAsync(role);

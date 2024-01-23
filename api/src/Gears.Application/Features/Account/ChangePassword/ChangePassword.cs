@@ -1,20 +1,11 @@
 ﻿namespace Gears.Application.Features.Account.ChangePassword;
 
-using Result = Results<
-    Ok,
-    BadRequest,
-    NotFound>;
-
-public sealed class ChangePassword : Endpoint<ChangePasswordRequest, Result>
+public sealed class ChangePassword : Endpoint<ChangePasswordRequest>
 {
-    private readonly IHttpContextAccessor _httpContextAccessor;
     private readonly UserManager<User> _userManager;
 
-    public ChangePassword(
-        IHttpContextAccessor httpContextAccessor,
-        UserManager<User> userManager)
+    public ChangePassword(UserManager<User> userManager)
     {
-        _httpContextAccessor = httpContextAccessor;
         _userManager = userManager;
     }
 
@@ -23,21 +14,23 @@ public sealed class ChangePassword : Endpoint<ChangePasswordRequest, Result>
         Post("api/account/change-password");
     }
 
-    public override async Task<Result> ExecuteAsync(ChangePasswordRequest request, CancellationToken ct)
+    public override async Task HandleAsync(ChangePasswordRequest request, CancellationToken ct)
     {
-        var userId = _userManager.GetUserId(_httpContextAccessor.HttpContext!.User);
+        var userId = _userManager.GetUserId(HttpContext.User);
         var user = await _userManager.FindByIdAsync(userId!);
         if (user == null)
         {
-            return NotFound();
+            await SendNotFoundAsync();
+            return;
         }
 
         var identityResult = await _userManager.ChangePasswordAsync(user, request.Password, request.NewPassword);
         if (!identityResult.Succeeded)
         {
-            return BadRequest();
+            await SendErrorsAsync();
+            return;
         }
 
-        return Ok();
+        await SendOkAsync();
     }
 }

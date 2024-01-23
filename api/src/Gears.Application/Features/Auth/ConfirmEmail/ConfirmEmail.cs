@@ -1,11 +1,6 @@
 ﻿namespace Gears.Application.Features.Auth.ConfirmEmail;
 
-using Result = Results<
-    Ok,
-    NotFound,
-    UnprocessableEntity>;
-
-public sealed class ConfirmEmail : Endpoint<ConfirmEmailRequest, Result>
+public sealed class ConfirmEmail : Endpoint<ConfirmEmailRequest>
 {
     private readonly UserManager<User> _userManager;
 
@@ -20,18 +15,22 @@ public sealed class ConfirmEmail : Endpoint<ConfirmEmailRequest, Result>
         AllowAnonymous();
     }
 
-    public override async Task<Result> ExecuteAsync(
-        ConfirmEmailRequest request,
-        CancellationToken ct)
+    public override async Task HandleAsync(ConfirmEmailRequest request, CancellationToken ct)
     {
         var user = await _userManager.FindByIdAsync(request.Id);
         if (user is not { IsActive: true })
         {
-            return NotFound();
+            await SendNotFoundAsync();
+            return;
         }
 
         var result = await _userManager.ConfirmEmailAsync(user, request.Token);
+        if (!result.Succeeded)
+        {
+            await SendErrorsAsync();
+            return;
+        }
 
-        return result.Succeeded ? Ok() : UnprocessableEntity();
+        await SendOkAsync();
     }
 }

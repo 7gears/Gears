@@ -35,23 +35,23 @@ public sealed class DeleteRoleTests : TestClass<TestFixture>
     }
 
     [Fact]
-    public async Task UnprocessableEntity_RootRole()
+    public async Task BadRequest_RootRole()
     {
         var request = new Request(Fixture.RootRole.Id);
 
         var testResult = await Act(request);
 
-        Assert.Equal(HttpStatusCode.UnprocessableEntity, testResult.StatusCode);
+        Assert.Equal(HttpStatusCode.BadRequest, testResult.StatusCode);
     }
 
     [Fact]
-    public async Task Success()
+    public async Task NoContent()
     {
         var request = new Request(Fixture.RegularRole.Id);
 
         var testResult = await Act(request);
 
-        Assert.Equal(HttpStatusCode.OK, testResult.StatusCode);
+        Assert.Equal(HttpStatusCode.NoContent, testResult.StatusCode);
         var role = Fixture.RoleManager.Roles.SingleOrDefault(x => x.Id == Fixture.RegularRole.Id);
         Assert.Null(role);
     }

@@ -1,12 +1,6 @@
 ﻿namespace Gears.Application.Features.Roles.Update;
 
-using Result = Results<
-    NoContent,
-    BadRequest,
-    NotFound,
-    UnprocessableEntity>;
-
-public sealed class UpdateRole : Endpoint<UpdateRoleRequest, Result>
+public sealed class UpdateRole : Endpoint<UpdateRoleRequest>
 {
     private readonly RoleManager<Role> _roleManager;
 
@@ -21,7 +15,7 @@ public sealed class UpdateRole : Endpoint<UpdateRoleRequest, Result>
         AccessControl("Roles_Update", Apply.ToThisEndpoint);
     }
 
-    public override async Task<Result> ExecuteAsync(UpdateRoleRequest request, CancellationToken ct)
+    public override async Task HandleAsync(UpdateRoleRequest request, CancellationToken ct)
     {
         if (!HttpContext.User.HasPermission(Allow.Roles_ManagePermissions))
         {
@@ -30,18 +24,21 @@ public sealed class UpdateRole : Endpoint<UpdateRoleRequest, Result>
 
         if (!ValidatePermissions(request.Permissions))
         {
-            return BadRequest();
+            await SendErrorsAsync();
+            return;
         }
 
         var role = await _roleManager.FindByIdAsync(request.Id);
         if (role == null)
         {
-            return NotFound();
+            await SendNotFoundAsync();
+            return;
         }
 
         if (role.Name == Consts.Auth.RootRole)
         {
-            return UnprocessableEntity();
+            await SendNotFoundAsync();
+            return;
         }
 
         var rolePermissions = await _roleManager.GetRolePermissionNames(role);
@@ -62,10 +59,11 @@ public sealed class UpdateRole : Endpoint<UpdateRoleRequest, Result>
             permissionsToDelete);
         if (!saveResult)
         {
-            return UnprocessableEntity();
+            await SendErrorsAsync();
+            return;
         }
 
-        return NoContent();
+        await SendNoContentAsync();
     }
 
     private static bool ValidatePermissions(IEnumerable<string> permissions) =>

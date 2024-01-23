@@ -1,11 +1,6 @@
 ﻿namespace Gears.Application.Features.Auth.SignUp;
 
-using Result = Results<
-    Created<SignUpResponse>,
-    BadRequest,
-    UnprocessableEntity>;
-
-public sealed class SignUp : Endpoint<SignUpRequest, Result>
+public sealed class SignUp : Endpoint<SignUpRequest>
 {
     private readonly UserManager<User> _userManager;
     private readonly IPasswordHasher<User> _passwordHasher;
@@ -29,12 +24,13 @@ public sealed class SignUp : Endpoint<SignUpRequest, Result>
         AllowAnonymous();
     }
 
-    public override async Task<Result> ExecuteAsync(SignUpRequest request, CancellationToken ct)
+    public override async Task HandleAsync(SignUpRequest request, CancellationToken ct)
     {
         var user = await _userManager.FindByEmailAsync(request.Email);
         if (user != null)
         {
-            return UnprocessableEntity();
+            await SendErrorsAsync();
+            return;
         }
 
         user = new User
@@ -51,14 +47,16 @@ public sealed class SignUp : Endpoint<SignUpRequest, Result>
             var passwordValidationResult = await passwordValidator.ValidateAsync(_userManager, user, request.Password);
             if (passwordValidationResult != IdentityResult.Success)
             {
-                return BadRequest();
+                await SendErrorsAsync();
+                return;
             }
         }
 
         var identityResult = await _userManager.CreateAsync(user);
         if (identityResult != IdentityResult.Success)
         {
-            return UnprocessableEntity();
+            await SendErrorsAsync();
+            return;
         }
 
         var link = await GenerateConfirmEmailLink(user);
@@ -66,7 +64,7 @@ public sealed class SignUp : Endpoint<SignUpRequest, Result>
 
         _ = _mailService.Send(mailRequest);
 
-        return Created(string.Empty, new SignUpResponse(user.Id));
+        await SendOkAsync(new SignUpResponse(user.Id));
     }
 
     private async Task<string> GenerateConfirmEmailLink(User user)

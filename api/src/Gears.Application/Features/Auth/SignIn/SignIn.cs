@@ -1,16 +1,12 @@
 ﻿namespace Gears.Application.Features.Auth.SignIn;
 
-using Result = Results<
-    Ok<SignInResponse>,
-    NotFound,
-    UnauthorizedHttpResult>;
-
-public sealed class SignIn : Endpoint<SignInRequest, Result>
+public sealed class SignIn : Endpoint<SignInRequest>
 {
     private readonly UserManager<User> _userManager;
     private readonly IJwtTokenProvider _jwtTokenProvider;
 
-    public SignIn(UserManager<User> userManager,
+    public SignIn(
+        UserManager<User> userManager,
         IJwtTokenProvider jwtTokenProvider)
     {
         _userManager = userManager;
@@ -23,27 +19,29 @@ public sealed class SignIn : Endpoint<SignInRequest, Result>
         AllowAnonymous();
     }
 
-    public override async Task<Result> ExecuteAsync(SignInRequest request, CancellationToken ct)
+    public override async Task HandleAsync(SignInRequest request, CancellationToken ct)
     {
         var user = await _userManager.FindByEmailAsync(request.Email);
         if (user is not { IsActive: true })
         {
-            return NotFound();
+            await SendNotFoundAsync();
+            return;
         }
 
         if (!user.EmailConfirmed)
         {
-            return Unauthorized();
+            await SendForbiddenAsync();
         }
 
         var isPasswordValid = await _userManager.CheckPasswordAsync(user, request.Password);
         if (!isPasswordValid)
         {
-            return Unauthorized();
+            await SendForbiddenAsync();
         }
 
         var token = await _jwtTokenProvider.GetToken(user);
+        var response = new SignInResponse(token);
 
-        return Ok(new SignInResponse(token));
+        await SendOkAsync(response);
     }
 }

@@ -1,6 +1,6 @@
 ﻿namespace Gears.Application.Features.Auth.ForgotPassword;
 
-public sealed class ForgotPassword : Endpoint<ForgotPasswordRequest, Ok>
+public sealed class ForgotPassword : Endpoint<ForgotPasswordRequest>
 {
     private readonly UserManager<User> _userManager;
     private readonly IMailService _mailService;
@@ -21,13 +21,14 @@ public sealed class ForgotPassword : Endpoint<ForgotPasswordRequest, Ok>
         AllowAnonymous();
     }
 
-    public override async Task<Ok> ExecuteAsync(ForgotPasswordRequest request, CancellationToken ct)
+    public override async Task HandleAsync(ForgotPasswordRequest request, CancellationToken ct)
     {
         var user = await _userManager.FindByEmailAsync(request.Email);
         if (user is not { IsActive: true })
         {
             // Return a consistent response for both existent and non-existent accounts
-            return Ok();
+            await SendOkAsync();
+            return;
         }
 
         var link = await GenerateResetPasswordLink(user);
@@ -36,7 +37,7 @@ public sealed class ForgotPassword : Endpoint<ForgotPasswordRequest, Ok>
 
         _ = _mailService.Send(mailRequest);
 
-        return Ok();
+        await SendOkAsync();
     }
 
     private async Task<string> GenerateResetPasswordLink(User user)

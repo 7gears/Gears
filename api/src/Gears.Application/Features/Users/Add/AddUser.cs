@@ -1,11 +1,6 @@
 ﻿namespace Gears.Application.Features.Users.Add;
 
-using Result = Results<
-    Created<AddUserResponse>,
-    BadRequest,
-    UnprocessableEntity>;
-
-public sealed class AddUser : Endpoint<AddUserRequest, Result>
+public sealed class AddUser : Endpoint<AddUserRequest>
 {
     private readonly IOptions<PasswordOptions> _passwordOptions;
     private readonly UserManager<User> _userManager;
@@ -30,7 +25,7 @@ public sealed class AddUser : Endpoint<AddUserRequest, Result>
         AccessControl("Users_Add", Apply.ToThisEndpoint);
     }
 
-    public override async Task<Result> ExecuteAsync(AddUserRequest request, CancellationToken ct)
+    public override async Task HandleAsync(AddUserRequest request, CancellationToken ct)
     {
         var rolesToAdd = Enumerable.Empty<string>();
 
@@ -39,7 +34,8 @@ public sealed class AddUser : Endpoint<AddUserRequest, Result>
             var roleInfos = await GetRoleInfos(request, ct);
             if (!AddUserRequestRoleParser.TryParseRoles(roleInfos, out rolesToAdd))
             {
-                return BadRequest();
+                await SendErrorsAsync();
+                return;
             }
         }
 
@@ -64,10 +60,12 @@ public sealed class AddUser : Endpoint<AddUserRequest, Result>
 
         if (!result)
         {
-            return UnprocessableEntity();
+            await SendErrorsAsync();
+            return;
         }
 
-        return Created(string.Empty, new AddUserResponse(user.Id));
+        var response = new AddUserResponse(user.Id);
+        await SendOkAsync(response);
     }
 
     private async Task<RoleInfos> GetRoleInfos(AddUserRequest request, CancellationToken ct)

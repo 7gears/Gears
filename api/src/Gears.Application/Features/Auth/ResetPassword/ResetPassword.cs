@@ -1,16 +1,12 @@
 ﻿namespace Gears.Application.Features.Auth.ResetPassword;
 
-using Result = Results<
-    Ok,
-    BadRequest,
-    NotFound>;
-
-public sealed class ResetPassword : Endpoint<ResetPasswordRequest, Result>
+public sealed class ResetPassword : Endpoint<ResetPasswordRequest>
 {
     private readonly UserManager<User> _userManager;
     private readonly IPasswordHasher<User> _passwordHasher;
 
-    public ResetPassword(UserManager<User> userManager,
+    public ResetPassword(
+        UserManager<User> userManager,
         IPasswordHasher<User> passwordHasher)
     {
         _userManager = userManager;
@@ -23,12 +19,13 @@ public sealed class ResetPassword : Endpoint<ResetPasswordRequest, Result>
         AllowAnonymous();
     }
 
-    public override async Task<Result> ExecuteAsync(ResetPasswordRequest request, CancellationToken ct)
+    public override async Task HandleAsync(ResetPasswordRequest request, CancellationToken ct)
     {
         var user = await _userManager.FindByIdAsync(request.Id);
         if (user is not { IsActive: true })
         {
-            return NotFound();
+            await SendNotFoundAsync();
+            return;
         }
 
         foreach (var passwordValidator in _userManager.PasswordValidators)
@@ -36,7 +33,8 @@ public sealed class ResetPassword : Endpoint<ResetPasswordRequest, Result>
             var passwordValidationResult = await passwordValidator.ValidateAsync(_userManager, user, request.Password);
             if (passwordValidationResult != IdentityResult.Success)
             {
-                return BadRequest();
+                await SendErrorsAsync();
+                return;
             }
         }
 
@@ -48,13 +46,14 @@ public sealed class ResetPassword : Endpoint<ResetPasswordRequest, Result>
 
         if (!tokenValidationResult)
         {
-            return BadRequest();
+            await SendErrorsAsync();
+            return;
         }
 
         var encryptedPassword = _passwordHasher.HashPassword(user, request.Password);
         user.PasswordHash = encryptedPassword;
         await _userManager.UpdateAsync(user);
 
-        return Ok();
+        await SendOkAsync();
     }
 }
