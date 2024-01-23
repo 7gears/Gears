@@ -10,4 +10,6 @@ internal sealed class EmailConfirmationTokenProvider : DataProtectorTokenProvide
     }
 }
 
-internal sealed class EmailConfirmationTokenProviderOptions : DataProtectionTokenProviderOptions;
+internal sealed class EmailConfirmationTokenProviderOptions : DataProtectionTokenProviderOptions
+{
+}

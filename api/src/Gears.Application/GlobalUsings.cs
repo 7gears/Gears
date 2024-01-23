@@ -7,12 +7,9 @@ global using Gears.Application.Auth;
 global using Gears.Application.Common;
 global using Gears.Application.Entities;
 global using Gears.Application.Infrastructure;
-global using Microsoft.AspNetCore.Http;
-global using Microsoft.AspNetCore.Http.HttpResults;
 global using Microsoft.AspNetCore.Identity;
 global using Microsoft.EntityFrameworkCore;
 global using Microsoft.Extensions.Options;
-global using static Microsoft.AspNetCore.Http.TypedResults;
 
 using System.Runtime.CompilerServices;
 
@@ -21,5 +18,7 @@ using System.Runtime.CompilerServices;
 
 namespace Gears.Application
 {
-    public sealed class ApplicationInfo;
+    public sealed class ApplicationInfo
+    {
+    }
 }

@@ -23,7 +23,7 @@ internal sealed class JwtTokenProvider : IJwtTokenProvider
     {
         var roles = await _userManager.GetRolesAsync(user);
         var claims = GetClaims(user);
-        var permissions = await GetPermissions([.. roles]);
+        var permissions = await GetPermissions(new HashSet<string>(roles));
 
         var expireAt = _timeProvider.GetUtcNow().AddSeconds(_jwtSettings.DurationInSeconds).DateTime;
 

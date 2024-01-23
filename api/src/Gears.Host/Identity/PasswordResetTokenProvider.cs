@@ -10,4 +10,6 @@ internal sealed class PasswordResetTokenProvider : DataProtectorTokenProvider<Us
     }
 }
 
-internal sealed class PasswordResetTokenProviderOptions : DataProtectionTokenProviderOptions;
+internal sealed class PasswordResetTokenProviderOptions : DataProtectionTokenProviderOptions
+{
+}

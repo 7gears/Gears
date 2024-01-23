@@ -30,5 +30,7 @@ app.Run();
 
 namespace Gears.Host
 {
-    public sealed class Program;
+    public sealed class Program
+    {
+    }
 }
