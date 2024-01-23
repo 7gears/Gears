@@ -31,12 +31,14 @@ public sealed class SignIn : Endpoint<SignInRequest>
         if (!user.EmailConfirmed)
         {
             await SendForbiddenAsync();
+            return;
         }
 
         var isPasswordValid = await _userManager.CheckPasswordAsync(user, request.Password);
         if (!isPasswordValid)
         {
             await SendForbiddenAsync();
+            return;
         }
 
         var token = await _jwtTokenProvider.GetToken(user);
