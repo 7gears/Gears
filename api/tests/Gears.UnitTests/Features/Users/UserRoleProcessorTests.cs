@@ -9,7 +9,9 @@ public sealed class UserRoleProcessorTests
     public void EmptyRequest()
     {
         var result = UpdateUserRequestRoleParser.TryParseRoles(
-            new([], [], []),
+            new(new HashSet<string>(),
+                new List<Role>(),
+                new List<string>()),
             out var rolesToAdd,
             out var rolesToDelete);
 
@@ -22,7 +24,9 @@ public sealed class UserRoleProcessorTests
     public void RoleDoesNotExist()
     {
         var result = UpdateUserRequestRoleParser.TryParseRoles(
-            new(["UnknownRoleId"], [AdminRole, ViewerRole], []),
+            new(new HashSet<string> { "UnknownRoleId" },
+                new List<Role> { AdminRole, ViewerRole },
+                new List<string>()),
             out var rolesToAdd,
             out var rolesToDelete);
 
@@ -35,7 +39,9 @@ public sealed class UserRoleProcessorTests
     public void DefaultRoleDoesNotExist()
     {
         var result = UpdateUserRequestRoleParser.TryParseRoles(
-            new([AdminRole.Id], [AdminRole, ViewerRole], []),
+            new(new HashSet<string> { AdminRole.Id },
+                new List<Role> { AdminRole, ViewerRole },
+                new List<string>()),
             out var rolesToAdd,
             out var rolesToDelete);
 
@@ -48,7 +54,9 @@ public sealed class UserRoleProcessorTests
     public void AddRole()
     {
         var result = UpdateUserRequestRoleParser.TryParseRoles(
-            new([AdminRole.Id, ViewerRole.Id], [AdminRole, ViewerRole], ["viewer"]),
+            new(new HashSet<string> { AdminRole.Id, ViewerRole.Id },
+                new List<Role> { AdminRole, ViewerRole },
+                new List<string> { "viewer" }),
             out var rolesToAdd,
             out var rolesToDelete);
 
@@ -61,7 +69,9 @@ public sealed class UserRoleProcessorTests
     public void DeleteRole()
     {
         var result = UpdateUserRequestRoleParser.TryParseRoles(
-            new([ViewerRole.Id], [AdminRole, ViewerRole], ["viewer", "admin"]),
+            new(new HashSet<string> { ViewerRole.Id },
+                new List<Role> { AdminRole, ViewerRole },
+                new List<string> { "viewer", "admin" }),
             out var rolesToAdd,
             out var rolesToDelete);
 

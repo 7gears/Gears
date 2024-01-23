@@ -80,7 +80,7 @@ public sealed class UpdateUser : Endpoint<UpdateUserRequest, Result>
 
         var userRoleNames = await _userManager.GetRolesAsync(user);
 
-        return new(request.RoleIds ?? [], allRoles, userRoleNames);
+        return new(request.RoleIds ?? new HashSet<string>(), allRoles, userRoleNames);
     }
 }
 

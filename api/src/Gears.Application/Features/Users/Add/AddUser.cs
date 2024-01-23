@@ -75,7 +75,7 @@ public sealed class AddUser : Endpoint<AddUserRequest, Result>
         var allRoles = await _roleManager.Roles.AsNoTracking()
             .ToListAsync(ct);
 
-        return new(request.RoleIds ?? [], allRoles);
+        return new(request.RoleIds ?? new HashSet<string>(), allRoles);
     }
 }
 

@@ -36,7 +36,7 @@ public sealed class AddRoleTests : TestClass<TestFixture>
             "NewRoleWithWrongPermission",
             "description0",
             false,
-            ["NotExisting_AllowAll", "Roles_Get"]);
+            new HashSet<string> { "NotExisting_AllowAll", "Roles_Get" });
 
         var testResult = await Act(request);
 
@@ -86,7 +86,7 @@ public sealed class AddRoleTests : TestClass<TestFixture>
             "NewRoleWithPermissions",
             "description2",
             false,
-            ["Users_GetAll", "Roles_Get"]);
+            new HashSet<string> { "Users_GetAll", "Roles_Get" });
 
         var testResult = await Act(request);
 
