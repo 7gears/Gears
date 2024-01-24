@@ -2,6 +2,6 @@
 
 public static partial class Allow
 {
-    public const string Roles_ManagePermissions = "100";
-    public const string Users_ManageRoles = "101";
+    public static readonly string Roles_ManagePermissions = "100";
+    public static readonly string Users_ManageRoles = "101";
 }
