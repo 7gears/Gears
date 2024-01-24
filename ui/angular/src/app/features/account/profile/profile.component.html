@@ -1,0 +1,99 @@
+<div class="grid grid-cols-4">
+
+    <div>
+      <h2 class="text-base font-medium ">Account Profile</h2>
+    </div>
+
+    <form [formGroup]="form" (ngSubmit)="onSubmit()" class="app-color-background-color shadow-sm ring-1 ring-gray-900/5 rounded-xl col-span-3">
+
+      <div class="py-6 p-8">        
+
+        <div class="grid gap-x-6 gap-y-8 grid-cols-4">
+
+          <div class="col-span-2">
+            <label for="email" class="block text-sm font-medium text-gray-900">Email</label>
+            <div class="mt-2">
+              <input pInputText
+                id="email"
+                type="text"
+                name="email"
+                formControlName="email"                 
+                class="p-inputtext disabled:cursor-not-allowed disabled:bg-gray-50 disabled:text-gray-500 disabled:ring-gray-200"/>
+            </div>
+          </div>
+
+          <div class="col-span-2">
+            <label for="userName" class="block text-sm font-medium text-gray-900">User Name</label>
+            <div class="mt-2">
+
+              <input pInputText
+                id="userName"
+                type="text"
+                name="userName"
+                formControlName="userName"
+                class="p-inputtext">
+
+            </div>  
+          </div>
+
+          <div class="col-span-2">
+            <label for="firstName" class="block text-sm font-medium text-gray-900">First name</label>
+            <div class="mt-2">
+
+              <input pInputText
+                id="firstName"
+                type="text"
+                name="firstName"
+                formControlName="firstName"
+                autocomplete="given-name"
+                class="p-inputtext"/>
+
+            </div>
+          </div>
+
+          <div class="col-span-2">
+            <label for="lastName" class="block text-sm font-medium text-gray-900">Last name</label>
+            <div class="mt-2">
+
+              <input pInputText
+                id="lastName"
+                type="text"
+                name="lastName"
+                formControlName="lastName"
+                autocomplete="family-name"
+                class="p-inputtext">
+
+            </div>  
+          </div>
+
+          <div class="sm:col-span-2">
+            <label for="phone" class="block text-sm font-medium text-gray-900">Phone number</label>
+            <div class="mt-2">
+
+              <input pInputText
+                id="phoneNumber"
+                type="tel"
+                name="phoneNumber"
+                formControlName="phoneNumber"
+                autocomplete="tel"
+                class="p-inputtext">
+                
+            </div>
+          </div>
+
+        </div>
+
+      </div>
+
+      <div class="flex items-center justify-end py-4 px-8">
+        <button 
+          type="submit"
+          [disabled]="loading"
+          class="app-primary-botton">         
+          Save
+        </button>
+      </div>
+      
+    </form>
+
+</div>

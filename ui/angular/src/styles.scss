@@ -1,0 +1,179 @@
+@import "primeng/resources/primeng.min.css";
+@import "primeng/resources/themes/lara-light-blue/theme.css";
+@import "primeicons/primeicons.css";
+
+@layer tailwind-base, primeng, tailwind-utilities;
+        
+@layer tailwind-base {
+    @tailwind base;
+}
+
+@layer tailwind-utilities {
+    @tailwind components;
+    @tailwind utilities;
+}
+
+.app-color-surface-ground {
+    @apply bg-gray-100
+}
+
+.app-color-surface-border {
+    border-color: var(--surface-border);
+}
+
+.app-color-background-color {
+    background-color: white;
+}
+
+.app-primary-botton {
+    @apply 
+        rounded-md
+        bg-indigo-600
+        px-3
+        py-2
+        text-sm
+        font-semibold
+        text-white
+        shadow-sm
+        hover:bg-indigo-500
+        focus-visible:outline
+        focus-visible:outline-2
+        focus-visible:outline-offset-2
+        focus-visible:outline-indigo-600
+        w-32
+}
+
+.app-secondary-botton {
+    @apply
+        rounded-md
+        bg-white
+        px-3
+        py-2
+        text-sm
+        font-semibold
+        text-gray-700
+        shadow-sm ring-1
+        ring-inset
+        ring-gray-300
+        hover:bg-gray-50
+        w-32
+}
+
+.app-badge-green {
+    @apply 
+        inline-flex
+        items-center
+        rounded-md
+        bg-green-50
+        px-2
+        py-1
+        text-xs
+        font-medium
+        text-green-700
+        ring-1
+        ring-inset
+        ring-green-600/20
+        mr-2
+}
+
+.app-badge-red {
+    @apply 
+        inline-flex
+        items-center
+        rounded-md
+        bg-red-50
+        px-2
+        py-1
+        text-xs
+        font-medium
+        text-red-700
+        ring-1
+        ring-inset
+        ring-red-600/20
+        mr-2
+}
+
+// prime-ng overrides
+
+.p-menuitem-text {
+    @apply
+        text-gray-700
+        hover:border-gray-300
+        text-sm
+        font-semibold
+        leading-4
+}
+
+div.p-checkbox-box {
+    @apply 
+        border
+        border-gray-200
+        size-5
+}
+
+.p-tree .p-tree-container .p-treenode:focus > .p-treenode-content {
+    @apply 
+        shadow-none
+}
+
+div:not([role="checkbox"]).p-highlight
+{
+    background: none;
+    @apply border-0
+}
+
+div[role="checkbox"].p-highlight {
+    @apply 
+        text-indigo-600
+        hover:text-indigo-500
+}
+
+.p-treenode-content {
+    @apply p-0
+}
+
+.p-treenode-label {
+    @apply text-sm
+}
+
+.p-treenode-leaf {
+    @apply px-8
+}
+
+.p-tabview-nav-container {
+    @apply border-b border-gray-200
+}
+
+.p-datatable-tbody {
+    @apply divide-y divide-gray-200
+}
+
+.p-menubar {
+    @apply bg-white
+}
+
+.p-inputwrapper {
+    @apply 
+        block
+        w-full
+}
+
+.p-inputtext {
+    @apply 
+        block
+        w-full
+        px-3 
+        py-1.5 
+        rounded-md 
+        border-0
+        ring-1
+        ring-inset 
+        ring-gray-300
+        text-gray-900
+        text-sm 
+        leading-6
+        focus:ring-inset
+        focus:ring-indigo-600
+}
+
+

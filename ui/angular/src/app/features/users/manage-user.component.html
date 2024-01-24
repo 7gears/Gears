@@ -1,0 +1,128 @@
+<div class="w-[32rem]">
+
+    <form [formGroup]="form" (ngSubmit)="onSubmit()">
+  
+      <p-tabView>
+  
+        <p-tabPanel header="Settings">
+          <div class="grid gap-x-6 gap-y-8 grid-cols-4">
+            
+            <div class="col-span-4">
+              <label for="email" class="block text-sm font-medium text-gray-900">Email</label>
+              <div class="mt-2">
+                <input pInputText
+                  id="email"
+                  type="text"
+                  name="email"
+                  formControlName="email"
+                  autocomplete="off"
+                  required
+                  class="p-inputtext"/>
+              </div>
+            </div>
+
+            <div class="col-span-4">
+              <label for="userName" class="block text-sm font-medium text-gray-900">User Name</label>
+              <div class="mt-2">
+                <input pInputText
+                  id="userName"
+                  type="text"
+                  name="userName"
+                  formControlName="userName"
+                  autocomplete="off"
+                  class="p-inputtext">
+              </div>
+            </div>
+      
+            <div class="col-span-4">
+              <label for="firstName" class="block text-sm font-medium text-gray-900">First Name</label>
+              <div class="mt-2">
+                <input pInputText
+                  id="firstName"
+                  type="text"
+                  name="firstName"
+                  formControlName="firstName"
+                  autocomplete="off"
+                  class="p-inputtext">
+              </div>
+            </div>
+
+            <div class="col-span-4">
+              <label for="lastName" class="block text-sm font-medium text-gray-900">Last Name</label>
+              <div class="mt-2">
+                <input pInputText
+                  id="lastName"
+                  type="text"
+                  name="lastName"
+                  formControlName="lastName"
+                  autocomplete="off"
+                  class="p-inputtext">
+              </div>
+            </div>
+
+            <div class="col-span-4">
+              <label for="phoneNumber" class="block text-sm font-medium text-gray-900">Phone Number</label>
+              <div class="mt-2">
+                <input pInputText
+                  id="phoneNumber"
+                  type="text"
+                  name="phoneNumber"
+                  formControlName="phoneNumber"
+                  autocomplete="off"
+                  class="p-inputtext">
+              </div>
+            </div>
+                  
+            <div class="col-span-4">
+                <div class="flex items-center">
+                    <input 
+                      id="isActive"
+                      name="isActive"
+                      type="checkbox"
+                      formControlName="isActive"
+                      class="h-4 w-4 rounded border-gray-300 text-indigo-600 focus:ring-indigo-500">
+                      <div class="ml-2">
+                          <label for="isActive" class="text-sm font-medium text-gray-900">Is Active</label>
+                      </div>
+                </div>
+            </div> 
+
+          </div>
+        </p-tabPanel>
+
+        <p-tabPanel header="Roles">
+            <p>
+              <p-tree [value]="roles" selectionMode="checkbox" [(selection)]="selectedRoles"></p-tree>
+            </p>
+        </p-tabPanel>
+
+      </p-tabView>
+  
+      <div class="grid gap-x-6 gap-y-8 grid-cols-4 mt-8">
+        <div class="col-span-2">
+          <div class="flex items-center justify-start">
+            <button
+              type="submit"
+              [disabled]="loading" 
+              class="app-primary-botton">         
+              Save
+            </button>
+          </div>
+        </div>
+    
+        <div class="col-span-2">
+          <div class="flex items-center justify-end">
+            <button
+              type="button" 
+              (click)="onClose()"
+              class="app-secondary-botton">         
+              Cancel
+            </button>
+          </div>
+        </div>
+      </div>
+      
+    </form>
+  
+  </div>
+  

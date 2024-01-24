@@ -1,0 +1,58 @@
+<div class="px-40">
+    <div class="mt-6">
+
+        <p-toolbar styleClass="app-color-surface-ground">
+            <ng-template pTemplate="left">
+            </ng-template>
+        
+            <ng-template pTemplate="right">
+                <button pButton label="New" icon="pi pi-plus" (click)="add()" class="app-primary-botton"></button>
+            </ng-template>
+        </p-toolbar>
+
+        <div [ngClass]="{'divide-y divide-gray-300 overflow-hidden shadow ring-1 ring-black ring-opacity-0 rounded-lg': items && items!.length > 0}">
+            <p-table [value]="items" tableStyleClass="px-6">            
+                <ng-template pTemplate="header">
+                    @if(items && items!.length > 0) {
+                        <tr>
+                            <th class="text-sm font-semibold">Role Name</th>
+                            <th class="text-sm font-semibold">Description</th>
+                            <th class="text-sm font-semibold">Status</th>
+                            <th></th>
+                        </tr>
+                    }
+                </ng-template>
+                <ng-template pTemplate="body" let-item>
+                    <tr>
+                        <td class="text-sm font-semibold">{{ item.name }}</td>
+                        <td class="text-sm">{{ item.description }}</td>
+                        <td class="text-sm">
+                            @if( item.isDefault ){
+                                <span class="app-badge-green">Default</span>
+                            }
+                        </td>
+                        <td class="text-sm text-right">
+                            <button 
+                                pButton
+                                type="button"
+                                (click)="menuSelectedItem = item; menu.toggle($event)"
+                                icon="pi pi-cog"
+                                label="Actions"
+                                class="app-secondary-botton px-1">
+                            </button>
+                            <p-menu #menu [popup]="true" [model]="menuItems" appendTo="body"></p-menu>
+                        </td>
+                    </tr>
+                </ng-template>
+                <ng-template pTemplate="emptymessage">
+                    <div class="mt-8 flex justify-center">
+                        No Roles Found
+                    </div>
+                </ng-template>
+            
+            </p-table>
+        </div>
+
+
+    </div>
+</div>

@@ -1,0 +1,24 @@
+<div class="h-16 px-24 flex app-color-background-color shadow-sm">
+
+    <div class="flex">
+        <div class="flex items-center">
+            <img [routerLink]="['/']" class="h-14 cursor-pointer" src="../../../assets/images/logo.svg" alt="logo"/>
+            <div class="mx-4 self-center h-8 app-color-surface-border border-l"></div>
+        </div>
+    </div>
+    
+    <div class="grow">
+        <app-main-menu></app-main-menu>
+    </div>
+    
+    <div class="flex">
+
+        <div class="flex items-center">
+            <div>
+                <p-menu #menu [model]="items" [popup]="true"></p-menu>
+                <i class="pi pi-user" (click)="menu.toggle($event)" style="font-size: 1.25rem"></i>
+            </div>
+        </div>
+
+    </div>
+</div>

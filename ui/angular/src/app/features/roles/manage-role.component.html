@@ -1,0 +1,85 @@
+<div class="w-[32rem]">
+
+  <form [formGroup]="form" (ngSubmit)="onSubmit()">
+
+    <p-tabView>
+
+      <p-tabPanel header="Settings">
+        <div class="grid gap-x-6 gap-y-8 grid-cols-4">
+          <div class="col-span-4">
+            <label for="name" class="block text-sm font-medium text-gray-900">Role name</label>
+            <div class="mt-2">
+              <input pInputText
+                id="name"
+                type="text"
+                name="name"
+                formControlName="name"
+                autocomplete="off"
+                required
+                class="p-inputtext"/>
+            </div>
+          </div>
+    
+          <div class="col-span-4">
+            <label for="description" class="block text-sm font-medium text-gray-900">Description</label>
+            <div class="mt-2">
+              <input pInputText
+                id="description"
+                type="text"
+                name="description"
+                formControlName="description"
+                autocomplete="off"
+                class="p-inputtext">
+            </div> 
+          </div>
+
+          <div class="col-span-4">
+            <div class="flex items-center">
+              <input 
+                id="isDefault"
+                name="isDefault"
+                type="checkbox"
+                formControlName="isDefault"
+                class="h-4 w-4 rounded border-gray-300 text-indigo-600 focus:ring-indigo-500">
+                <div class="ml-2">
+                  <label for="isDefault" class="text-sm font-medium text-gray-900">Is Default</label>
+                </div>
+            </div>
+          </div> 
+
+        </div>
+      </p-tabPanel>
+      <p-tabPanel header="Permissions">
+          <p>
+            <p-tree [value]="permissions" selectionMode="checkbox" [(selection)]="selectedPermissions"></p-tree>
+          </p>
+      </p-tabPanel>
+    </p-tabView>
+
+    <div class="grid gap-x-6 gap-y-8 grid-cols-4 mt-8">
+      <div class="col-span-2">
+        <div class="flex items-center justify-start">
+          <button
+            type="submit"
+            [disabled]="loading" 
+            class="app-primary-botton">         
+            Save
+          </button>
+        </div>
+      </div>
+  
+      <div class="col-span-2">
+        <div class="flex items-center justify-end">
+          <button
+            type="button" 
+            (click)="onClose()"
+            class="app-secondary-botton">         
+            Cancel
+          </button>
+        </div>
+      </div>
+    </div>
+    
+  </form>
+
+</div>

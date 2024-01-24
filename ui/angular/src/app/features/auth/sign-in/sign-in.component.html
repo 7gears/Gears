@@ -1,0 +1,84 @@
+<div class="flex h-screen">
+  <div class="m-auto w-1/4">
+  
+    <h2 class="text-center text-2xl font-bold tracking-tight">Sign in to your account</h2>
+
+    <div class="mt-10">
+      <div class="app-color-background-color px-6 py-12 shadow sm:rounded-lg">
+
+        <input 
+          disabled *ngIf="error"
+          placeholder="{{error}}"
+          class="mb-6 px-2 py-1.5 block w-full rounded-md border-0 shadow-sm ring-1 ring-inset ring-rose-500 placeholder:text-rose-500 text-sm leading-6">
+
+        <form class="space-y-6" [formGroup]="form" (ngSubmit)="onSubmit()">
+          <div>
+            <label for="email" class="block text-sm font-medium text-gray-900">Email address</label>
+            <div class="mt-2">
+              
+              <input
+                pInputText
+                name="email"
+                type="email"
+                autocomplete="email"
+                formControlName="email"
+                required
+                class="p-inputtext"/>
+                
+            </div>
+            <div *ngIf="submitted && f['email'].errors" class="text-xs text-rose-500">
+              <div *ngIf="f['email'].errors['required']">Email address is required </div>
+              <div *ngIf="f['email'].errors['email']">Please enter a valid email address</div>
+            </div>
+          </div>
+  
+          <div>
+            <label for="password" class="block text-sm font-medium">Password</label>
+            <div class="mt-2">
+              <div class="relative mt-2 rounded-md shadow-sm">
+
+                <p-password 
+                  formControlName="password"
+                  [toggleMask]="true"
+                  [feedback]="false"
+                  class="w-full">
+                </p-password>
+
+              </div>
+            </div>
+            <div *ngIf="submitted && f['password'].errors" class="text-xs text-rose-500">
+              <div *ngIf="f['password'].errors['required']">Password is required </div>
+            </div>
+          </div>
+  
+          <div class="flex items-center justify-between">
+            
+            <div class="flex items-center">
+            </div>
+  
+            <div class="text-sm leading-6">
+              <a href="/forgot-password" class="font-semibold text-indigo-600 hover:text-indigo-500">Forgot password?</a>
+            </div>
+          </div>
+  
+          <div>
+            <button type="submit" [disabled]="loading" class="flex w-full justify-center rounded-md bg-indigo-600 px-3 py-1.5 text-sm font-semibold leading-6 text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600">
+              <svg *ngIf="loading" class="animate-spin mt-px -ml-1 mr-3 h-5 w-5 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+              </svg>
+              Sign in
+            </button>
+          </div>
+        </form>
+        
+        <p class="mt-10 text-center text-sm text-gray-500">
+          Don't have an account?
+          <a href="/sign-up" class="font-semibold leading-6 text-indigo-600 hover:text-indigo-500">Sign up</a>
+        </p>
+
+      </div>
+    </div>
+  </div>
+</div>
+
