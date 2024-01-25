@@ -64,14 +64,14 @@ internal static class IdentityConfiguration
 
         rootRole = new Role
         {
-            Name = Consts.Auth.RootRole,
-            NormalizedName = Consts.Auth.RootRole.ToUpper(),
+            Name = Consts.Auth.RootRoleName,
+            NormalizedName = Consts.Auth.RootRoleName.ToUpper(),
             IsDefault = false
         };
         var rootUser = new User
         {
-            UserName = Consts.Auth.RootUserUserName,
-            NormalizedUserName = Consts.Auth.RootUserUserName.ToUpper(),
+            UserName = Consts.Auth.RootUserName,
+            NormalizedUserName = Consts.Auth.RootUserName.ToUpper(),
             Email = "root@root",
             NormalizedEmail = "ROOT@ROOT",
             EmailConfirmed = true,

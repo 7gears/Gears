@@ -18,7 +18,7 @@ public sealed class GetAllRoles : EndpointWithoutRequest<List<GetAllRolesRespons
     public override async Task HandleAsync(CancellationToken ct)
     {
         var response = await _roleManager.Roles.AsNoTracking()
-            .Where(x => x.Name != Consts.Auth.RootRole)
+            .Where(x => x.Name != Consts.Auth.RootRoleName)
             .OrderBy(x => x.Name)
             .Select(x => new GetAllRolesResponse(
                 x.Id,

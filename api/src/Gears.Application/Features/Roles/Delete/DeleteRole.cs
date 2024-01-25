@@ -24,7 +24,7 @@ public sealed class DeleteRole : Endpoint<DeleteRoleRequest>
             return;
         }
 
-        if (role.Name == Consts.Auth.RootRole)
+        if (role.Name == Consts.Auth.RootRoleName)
         {
             await SendErrorsAsync();
             return;

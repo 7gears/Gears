@@ -27,7 +27,7 @@ public sealed class UpdateUser : Endpoint<UpdateUserRequest>
             await SendNotFoundAsync();
             return;
         }
-        if (user.UserName == Consts.Auth.RootUserUserName)
+        if (user.UserName == Consts.Auth.RootUserName)
         {
             await SendErrorsAsync();
             return;
