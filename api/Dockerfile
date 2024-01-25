@@ -20,4 +20,4 @@ EXPOSE 8080
 
 
 
-ENTRYPOINT ["dotnet", "Gears.Host.dll"]
+ENTRYPOINT ["dotnet", "Host.dll"]
