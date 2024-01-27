@@ -5,6 +5,8 @@ internal sealed class DbSettings
     public string ConnectionString { get; init; }
 
     public bool UseMigrations { get; init; }
+
+    public bool UseSeedData { get; init; }
 }
 
 internal static class DbConfiguration
@@ -20,19 +22,5 @@ internal static class DbConfiguration
             });
 
         return builder;
-    }
-
-    public static WebApplication AddDbData(this WebApplication app)
-    {
-        using var scope = app.Services.CreateScope();
-        var context = scope.ServiceProvider.GetRequiredService<ApplicationDbContext>();
-        var options = scope.ServiceProvider.GetRequiredService<IOptions<DbSettings>>();
-
-        if (options.Value.UseMigrations && context.Database.GetPendingMigrations().Any())
-        {
-            context.Database.Migrate();
-        }
-
-        return app;
     }
 }

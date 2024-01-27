@@ -24,12 +24,6 @@ public sealed class DeleteUser : Endpoint<DeleteUserRequest>
             return;
         }
 
-        if (user.UserName == Consts.Auth.RootUserName)
-        {
-            await SendErrorsAsync();
-            return;
-        }
-
         var identityResult = await _userManager.DeleteAsync(user);
         if (identityResult != IdentityResult.Success)
         {

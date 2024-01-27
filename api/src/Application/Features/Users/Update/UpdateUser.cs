@@ -27,11 +27,6 @@ public sealed class UpdateUser : Endpoint<UpdateUserRequest>
             await SendNotFoundAsync();
             return;
         }
-        if (user.UserName == Consts.Auth.RootUserName)
-        {
-            await SendErrorsAsync();
-            return;
-        }
 
         var rolesToAdd = Enumerable.Empty<string>();
         var rolesToDelete = Enumerable.Empty<string>();

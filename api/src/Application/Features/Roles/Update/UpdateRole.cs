@@ -35,12 +35,6 @@ public sealed class UpdateRole : Endpoint<UpdateRoleRequest>
             return;
         }
 
-        if (role.Name == Consts.Auth.RootRoleName)
-        {
-            await SendNotFoundAsync();
-            return;
-        }
-
         var rolePermissions = await _roleManager.GetRolePermissionNames(role);
         ProcessPermissions(
             request,

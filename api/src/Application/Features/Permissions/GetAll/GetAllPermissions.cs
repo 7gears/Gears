@@ -1,9 +1,10 @@
-﻿using System.Text.RegularExpressions;
-
+﻿
 namespace Application.Features.Permissions.GetAll;
 
 public sealed class GetAllPermissions : EndpointWithoutRequest<List<PermissionGroup>>
 {
+    public static readonly char PermissionDelimiter = '_';
+
     public override void Configure()
     {
         Get("api/permissions");
@@ -31,7 +32,7 @@ public sealed class GetAllPermissions : EndpointWithoutRequest<List<PermissionGr
 
     private static PermissionsParts Split(string name)
     {
-        var parts = name.Split(Consts.Auth.PermissionDelimiter, StringSplitOptions.RemoveEmptyEntries);
+        var parts = name.Split(PermissionDelimiter, StringSplitOptions.RemoveEmptyEntries);
         if (parts.Length != 2)
         {
             return default;

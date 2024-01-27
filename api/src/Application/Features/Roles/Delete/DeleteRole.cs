@@ -24,12 +24,6 @@ public sealed class DeleteRole : Endpoint<DeleteRoleRequest>
             return;
         }
 
-        if (role.Name == Consts.Auth.RootRoleName)
-        {
-            await SendErrorsAsync();
-            return;
-        }
-
         var identityResult = await _roleManager.DeleteAsync(role);
         if (identityResult != IdentityResult.Success)
         {

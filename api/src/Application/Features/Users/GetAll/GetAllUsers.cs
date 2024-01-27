@@ -18,7 +18,6 @@ public sealed class GetAllUsers : EndpointWithoutRequest<List<GetAllUsersRespons
     public override async Task HandleAsync(CancellationToken ct)
     {
         var response = await _userManager.Users.AsNoTracking()
-            .Where(x => x.UserName != Consts.Auth.RootUserName)
             .Select(x => new GetAllUsersResponse(
                 x.Id,
                 x.UserName,

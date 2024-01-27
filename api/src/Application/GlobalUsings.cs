@@ -1,4 +1,5 @@
 ﻿global using System.Security.Claims;
+global using System.Text.RegularExpressions;
 global using System.Transactions;
 global using System.Web;
 global using FastEndpoints;

@@ -1,4 +1,4 @@
-﻿namespace Host.FastEndpoints;
+﻿namespace Host.Endpoints;
 
 internal sealed class CorsSettings
 {

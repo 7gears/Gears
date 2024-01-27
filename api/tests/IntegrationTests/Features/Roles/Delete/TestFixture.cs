@@ -14,7 +14,7 @@ public sealed class TestFixture : InMemoryFixture
 
         RegularRole = new Role { Name = "RegularRole" };
 
-        RootRole = RoleManager.Roles.Single(x => x.Name == Consts.Auth.RootRoleName);
+        RootRole = RoleManager.Roles.Single(x => x.Name == IdentityDataSeeder.RootRoleName);
         await RoleManager.CreateAsync(RegularRole);
     }
 }

@@ -1,4 +1,6 @@
-﻿var builder = WebApplication.CreateBuilder(args);
+﻿using Host.Endpoints;
+
+var builder = WebApplication.CreateBuilder(args);
 
 builder
     .AddCorsServices()
@@ -23,8 +25,8 @@ app
 app
     .AddGeneratedClientEndpoints();
 app
-    .AddDbData()
-    .AddIdentityData();
+    .ApplyMigrations()
+    .SeedIdentity();
 
 app.Run();
 

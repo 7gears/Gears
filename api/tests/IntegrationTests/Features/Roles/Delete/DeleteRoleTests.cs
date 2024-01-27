@@ -35,16 +35,6 @@ public sealed class DeleteRoleTests : TestClass<TestFixture>
     }
 
     [Fact]
-    public async Task BadRequest_RootRole()
-    {
-        var request = new Request(Fixture.RootRole.Id);
-
-        var testResult = await Act(request);
-
-        Assert.Equal(HttpStatusCode.BadRequest, testResult.StatusCode);
-    }
-
-    [Fact]
     public async Task NoContent()
     {
         var request = new Request(Fixture.RegularRole.Id);

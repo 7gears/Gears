@@ -1,4 +1,4 @@
-﻿namespace Host.FastEndpoints;
+﻿namespace Host.Endpoints;
 
 [RegisterService<IJwtTokenProvider>(LifeTime.Scoped)]
 internal sealed class JwtTokenProvider : IJwtTokenProvider
@@ -53,14 +53,6 @@ internal sealed class JwtTokenProvider : IJwtTokenProvider
 
     private async Task<IEnumerable<string>> GetPermissions(HashSet<string> roles)
     {
-        if (roles.Contains(Consts.Auth.RootRoleName))
-        {
-            return Allow.AllPermissions()
-                .Where(x => !string.Equals(x.PermissionName, "Descriptions", StringComparison.Ordinal))
-                .Select(x => x.PermissionCode);
-        }
-
-
         var map = Allow.AllPermissions()
             .ToDictionary(x => x.PermissionName, x => x.PermissionCode);
 
