@@ -17,6 +17,9 @@ builder.Host.UseDefaultServiceProvider(x =>
 
 var app = builder.Build();
 
+app.UseDefaultFiles();
+app.UseStaticFiles();
+
 app
     .AddCors()
     .AddIdentity()
@@ -27,6 +30,8 @@ app
 app
     .ApplyMigrations()
     .SeedIdentity();
+
+app.MapFallbackToFile("/index.html");
 
 app.Run();
 
