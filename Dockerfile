@@ -28,4 +28,4 @@ EXPOSE 443
 EXPOSE 8080
 
 
-ENTRYPOINT ["dotnet", "Host.dll"]
+ENTRYPOINT ["dotnet", "Host.dll", "--launch-profile Docker"]

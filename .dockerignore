@@ -1,0 +1,16 @@
+.dockerignore
+.env
+.git
+.gitignore
+.vs
+.vscode
+**/bin
+**/obj
+**/.toolstarget
+.editorconfig
+.gitattributes
+.prettierignore
+.prettierrc
+README.md
+**/node_modules
+**/Dockerfile
