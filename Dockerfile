@@ -23,9 +23,8 @@ ENV ASPNETCORE_ENVIRONMENT=${ENVIRONMENT} \
     LANG=en_US.UTF-8
 
 
-EXPOSE 80
-EXPOSE 443
+
 EXPOSE 8080
 
 
-ENTRYPOINT ["dotnet", "Host.dll", "--launch-profile Docker"]
+ENTRYPOINT ["dotnet", "Host.dll"]

@@ -17,10 +17,9 @@ builder.Host.UseDefaultServiceProvider(x =>
 
 var app = builder.Build();
 
-app.UseDefaultFiles();
-app.UseStaticFiles();
-
 app
+    .UseDefaultFiles()
+    .UseStaticFiles()
     .AddCors()
     .AddIdentity()
     .AddFastEndpoints()
