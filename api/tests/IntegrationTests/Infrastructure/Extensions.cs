@@ -10,14 +10,18 @@ internal static class Extensions
     public static void CreateRootHttpClient(this TestFixture<Host.Program> testFixture)
     {
         var jwtKey = testFixture.Services.GetRequiredService<IConfiguration>()["Jwt:Key"];
-        var bearerToken = JWTBearer.CreateToken(
-            jwtKey!,
-            permissions: Allow.AllCodes());
+
+        var token = JwtBearer.CreateToken(
+            x =>
+            {
+                x.SigningKey = jwtKey!;
+                x.User.Permissions.Add(Allow.AllCodes().ToArray());
+            });
 
         testFixture.Client = testFixture.CreateClient(
             x =>
             {
-                x.DefaultRequestHeaders.Authorization = new("Bearer", bearerToken);
+                x.DefaultRequestHeaders.Authorization = new("Bearer", token);
             });
     }
 }

@@ -1,4 +1,7 @@
-﻿namespace Host.Endpoints;
+﻿using Application.Entities;
+using FastEndpoints.Security;
+
+namespace Host.Endpoints;
 
 [RegisterService<IJwtTokenProvider>(LifeTime.Scoped)]
 internal sealed class JwtTokenProvider : IJwtTokenProvider
@@ -25,13 +28,15 @@ internal sealed class JwtTokenProvider : IJwtTokenProvider
 
         var expireAt = DateTime.UtcNow.AddSeconds(_jwtSettings.DurationInSeconds);
 
-        var token = JWTBearer.CreateToken(
-            signingKey: _jwtSettings.Key,
-            expireAt: expireAt,
-            claims: claims,
-            roles: roles,
-            permissions: permissions
-        );
+        var token = JwtBearer.CreateToken(
+            x =>
+            {
+                x.SigningKey = _jwtSettings.Key;
+                x.ExpireAt = expireAt;
+                x.User.Claims.Add(claims.ToArray());
+                x.User.Roles.Add(roles.ToArray());
+                x.User.Permissions.Add(permissions.ToArray());
+            });
 
         return token;
     }
